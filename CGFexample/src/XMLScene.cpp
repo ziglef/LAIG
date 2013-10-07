@@ -583,6 +583,9 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  // Graph values //
 			  char *rootid;
 
+			  /* TODO create a vector of nodes */
+			  vector<GraphNode> nodesVector;
+
 			  // Node values //
 			  char *id;
 
@@ -596,9 +599,46 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  float scaleX, scaleY, scaleZ;
 			  char *rotateAxis;
 			  float rotateAngle;
+			  float translateMatrix[4][4] = {0};
+			  float scaleMatrix[4][4] = {0};
+			  float rotateMatrix[4][4] = {0};
 
 			  // Children Values //
 			  char *nodeRefId;
+			  vector<string> nodeRefIdVector;	
+
+			  // Primitive Values //
+
+			  // Rectangle Values //
+			  char *xy1;
+			  char *xy2;
+			  float rx1, ry1, rx2, ry2;
+
+			  // Triangle Values //
+			  char *xyz1;
+			  char *xyz2;
+			  char *xyz3;
+			  float tx1, ty1, tz1;
+			  float tx2, ty2, tz2;
+			  float tx3, ty3, tz3;
+
+			  // Cylinder Values //
+			  float cbase;
+			  float ctop;
+			  float cheight;
+			  int cslices;
+			  int cstacks;
+
+			  // Sphere Values //
+			  float sradius;
+		      int sslices;
+		      int sstacks;
+
+			  // Torus Values //
+			  float tinner;
+			  float touter;
+			  int tslices;
+			  int tloops;
 
 			  // Process the Graph ID //
 			  rootid = (char*)sceneGraph->Attribute( "rootid" );
@@ -619,6 +659,11 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  appearanceRefNodeGraph = nodeGraph->FirstChildElement( "appearanceref" );
 					  childrenNodeGraph = nodeGraph->FirstChildElement( "children" );
 					  noderefChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "noderef" );
+					  rectangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "rectangle" );
+					  triangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "triangle" );
+					  cylinderChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "cylinder" );
+					  sphereChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "sphere" );
+					  torusChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "torus" );
 
 					  // Node ID //
 					  if( id && debug )
@@ -628,50 +673,86 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 					  // Tranformations //
 
+					  // Initialize the translation matrix //
+					  translateMatrix[0][0] = 1;
+					  translateMatrix[1][1] = 1;
+					  translateMatrix[2][2] = 1;
+					  translateMatrix[3][3] = 1;
+
 					  // Translate //
 					  if( translateTransformsNodeGraph ){
-						  translate = (char *)translateTransformsNodeGraph->Attribute( "to" );
-						if( sscanf(translate, "%f %f %f %f", &translateX, &translateY, &translateZ )==3 && debug )
-							printf("\tTranslate: %f %f %f\n", translateX, translateY, translateZ);
-						else
-							if( debug ) printf("\t!! Error parsing Translate values !!\n");
+						  do{
+							  translate = (char *)translateTransformsNodeGraph->Attribute( "to" );
+							  if( sscanf(translate, "%f %f %f %f", &translateX, &translateY, &translateZ )==3 && debug )
+								 printf("\tTranslate: %f %f %f\n", translateX, translateY, translateZ);
+							  else
+								 if( debug ) printf("\t!! Error parsing Translate values !!\n");
+
+							  if( translateMatrix[0][3] != 0 || translateMatrix[1][3] != 0 || translateMatrix[2][3] != 0 ){
+								//multiply ?
+							  }else{
+								 translateMatrix[0][3] = translateX;
+								 translateMatrix[1][3] = translateY;
+								 translateMatrix[2][3] = translateZ;
+							  }
+
+							  translateTransformsNodeGraph = translateTransformsNodeGraph->NextSiblingElement( "translate" );
+						  }while( translateTransformsNodeGraph );
 					  }
 
-					  // Scale //
+					   // Scale //
 					  if( scaleTransformsNodeGraph ){
-						  scale = (char *)scaleTransformsNodeGraph->Attribute( "factor" );
-						if( sscanf(scale, "%f %f %f %f", &scaleX, &scaleY, &scaleZ )==3 && debug )
-							printf("\tScale: %f %f %f\n", scaleX, scaleY, scaleZ);
-						else
-							if( debug ) printf("\t!! Error parsing scale values !!\n");
+						  do{
+							  scale = (char *)scaleTransformsNodeGraph->Attribute( "factor" );
+							  if( sscanf(scale, "%f %f %f %f", &scaleX, &scaleY, &scaleZ )==3 && debug )
+								printf("\tScale: %f %f %f\n", scaleX, scaleY, scaleZ);
+							  else
+								if( debug ) printf("\t!! Error parsing scale values !!\n");
+
+							  if( scaleMatrix[0][0] != 0 || scaleMatrix[1][1] != 0 || scaleMatrix[2][2] != 0 ){
+								//multiply ?
+							  }else{
+								 scaleMatrix[0][0] = scaleX;
+								 scaleMatrix[1][1] = scaleY;
+								 scaleMatrix[2][2] = scaleZ;
+							  }
+
+							  scaleTransformsNodeGraph = scaleTransformsNodeGraph->NextSiblingElement( "scale" );
+						  }while( scaleTransformsNodeGraph );
 					  }
 
 					  // Rotate //
 					  if( rotateTransformsNodeGraph ){
-						  // Axis //
-						  rotateAxis = (char *)rotateTransformsNodeGraph->Attribute( "axis" );
-						  if( rotateAxis && debug )
-							  printf("\tRotation Axis: %s ", rotateAxis);
-						  else
-							  if( debug ) printf("\t!! Error parsing rotation angle !!\n");
+						  do{
+							   // Axis //
+							   rotateAxis = (char *)rotateTransformsNodeGraph->Attribute( "axis" );
+						       if( rotateAxis && debug )
+							     printf("\tRotation Axis: %s ", rotateAxis);
+						       else
+							     if( debug ) printf("\t!! Error parsing rotation angle !!\n");
 
-						  // Angle //
-						  if( rotateTransformsNodeGraph->QueryFloatAttribute( "angle", &rotateAngle )==TIXML_SUCCESS && debug )
-							  printf("\tRotation Angle: %f\n",rotateAngle);
-						  else
-							  if( debug ) printf("\t!! Error parsing rotation angle !!\n");
+						       // Angle //
+						       if( rotateTransformsNodeGraph->QueryFloatAttribute( "angle", &rotateAngle )==TIXML_SUCCESS && debug )
+							     printf("\tRotation Angle: %f\n",rotateAngle);
+						       else
+							     if( debug ) printf("\t!! Error parsing rotation angle !!\n");
+
+							   rotateTransformsNodeGraph = rotateTransformsNodeGraph->NextSiblingElement( "rotate" );
+						  }while( rotateTransformsNodeGraph );
 					  }
 
 					  // Appearance Reference //
 					  if( appearanceRefNodeGraph ){
-						  appRefId = (char *)appearanceRefNodeGraph->Attribute( "id" );
-						  if( appRefId && debug )
-							  printf("\tAppearance Reference: %s\n", appRefId);
-						  else
-							  if( debug ) printf("\t!! Error parsing appearance reference !!\n");
+						appRefId = (char *)appearanceRefNodeGraph->Attribute( "id" );
+						if( appRefId && debug )
+							printf("\tAppearance Reference: %s\n", appRefId);
+						else
+							if( debug ) printf("\t!! Error parsing appearance reference !!\n");
 					  }
 
 					  // Children //
+
+					  // Node ref //
 					  if( noderefChildrenNodeGraph ){
 						  do{
 							  // Reference ID //
@@ -681,8 +762,144 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  else
 								  if( debug ) printf("\t!! Error parsing node reference ID !!\n");
 							  noderefChildrenNodeGraph = noderefChildrenNodeGraph->NextSiblingElement( "noderef" );
+
+							  nodeRefIdVector.push_back( nodeRefId );
 						  }while( noderefChildrenNodeGraph );
 					  }
+
+					  // Primitives //
+
+					  // Rectangle //
+					  if( rectangleChildrenNodeGraph ){
+						  do{
+							  xy1 = (char *)rectangleChildrenNodeGraph->Attribute( "xy1" );
+							  if( sscanf(xy1, "%f %f", &rx1, &ry1 )==2 && debug )
+								printf("\tRectangle : x1:%f y1:%f", rx1, ry1 );
+							  else
+								if( debug ) printf("\t!! Error parsing xy1 rectangle values !!\n");
+
+							  xy2 = (char *)rectangleChildrenNodeGraph->Attribute( "xy2" );
+							  if( sscanf(xy2, "%f %f", &rx2, &ry2 )==2 && debug )
+								printf(" x2:%f y2:%f\n", rx2, ry2 );
+							  else
+								if( debug ) printf("\t!! Error parsing xy2 rectangle values !!\n");
+
+							  rectangleChildrenNodeGraph = rectangleChildrenNodeGraph->NextSiblingElement( "rectangle" );
+							  printf("\n");
+						  }while( rectangleChildrenNodeGraph );
+					  }
+
+					  // Triangle //
+					  if( triangleChildrenNodeGraph ){
+						  do{
+							  xyz1 = (char *)triangleChildrenNodeGraph->Attribute( "xyz1" );
+							  if( sscanf(xyz1, "%f %f %f", &tx1, &ty1, &tz1 )==3 && debug )
+								printf("\Triangle xyz1: x1:%f y1:%f z1:%f\n" , tx1, ty1, tz1 );
+							  else
+								if( debug ) printf("\t!! Error parsing xyz1 triangle values !!\n");
+
+							  xyz2 = (char *)triangleChildrenNodeGraph->Attribute( "xyz2" );
+							  if( sscanf(xyz2, "%f %f %f", &tx2, &ty2, &tz2 )==3 && debug )
+								printf("\Triangle xyz1: x1:%f y1:%f z1:%f\n" , tx2, ty2, tz2 );
+							  else
+								if( debug ) printf("\t!! Error parsing xyz2 triangle values !!\n");
+
+							  xyz3 = (char *)triangleChildrenNodeGraph->Attribute( "xyz3" );
+							  if( sscanf(xyz3, "%f %f %f", &tx3, &ty3, &tz3 )==3 && debug )
+								printf("\Triangle xyz1: x1:%f y1:%f z1:%f\n" , tx3, ty3, tz3 );
+							  else
+								if( debug ) printf("\t!! Error parsing xyz3 triangle values !!\n");
+
+							  triangleChildrenNodeGraph = triangleChildrenNodeGraph->NextSiblingElement( "triangle" );
+							  printf("\n");
+						  }while( triangleChildrenNodeGraph );
+					  }
+
+					  // Cylinder //
+					  if( cylinderChildrenNodeGraph ){
+						  do{
+							  if( cylinderChildrenNodeGraph->QueryFloatAttribute( "base", &cbase )==TIXML_SUCCESS && debug )
+								printf("\tCylinder Base: %f\n", cbase);
+							  else
+								if( debug ) printf("\t!! Error parsing base value !!\n");
+
+							   if( cylinderChildrenNodeGraph->QueryFloatAttribute( "top", &ctop )==TIXML_SUCCESS && debug )
+								printf("\tCylinder Top: %f\n", ctop);
+							  else
+								if( debug ) printf("\t!! Error parsing top value !!\n");
+
+							  if( cylinderChildrenNodeGraph->QueryFloatAttribute( "height", &cheight )==TIXML_SUCCESS && debug )
+								printf("\tCylinder Height: %f\n", cheight);
+							  else
+								if( debug ) printf("\t!! Error parsing height value !!\n");
+
+							  if( cylinderChildrenNodeGraph->QueryIntAttribute( "slices", &cslices )==TIXML_SUCCESS && debug )
+								printf("\tCylinder Slices: %d\n", cslices);
+							  else
+								if( debug ) printf("\t!! Error parsing slices value !!\n");
+
+							  if( cylinderChildrenNodeGraph->QueryIntAttribute( "stacks", &cstacks )==TIXML_SUCCESS && debug )
+								  printf("\tCylinder Stacks: %d\n", cstacks);
+							  else
+								if( debug ) printf("\t!! Error parsing stacks value !!\n");
+
+							  cylinderChildrenNodeGraph = cylinderChildrenNodeGraph->NextSiblingElement( "cylinder" );
+							  printf("\n");
+						  }while( cylinderChildrenNodeGraph );
+					  }
+
+					  // Sphere //
+					  if( sphereChildrenNodeGraph ){
+						  do{
+							  if( sphereChildrenNodeGraph->QueryFloatAttribute( "radius", &sradius )==TIXML_SUCCESS && debug )
+								printf("\tSphere radius: %f\n", sradius);
+							  else
+								if( debug ) printf("\t!! Error parsing radius value !!\n");
+
+							  if( sphereChildrenNodeGraph->QueryIntAttribute( "slices", &sslices )==TIXML_SUCCESS && debug )
+								printf("\tSphere slices: %d\n", sslices);
+							  else
+								if( debug ) printf("\t!! Error parsing radius value !!\n");
+
+							   if( sphereChildrenNodeGraph->QueryIntAttribute( "stacks", &sstacks )==TIXML_SUCCESS && debug )
+								printf("\tSphere stacks: %d\n", sstacks);
+							  else
+								if( debug ) printf("\t!! Error parsing stacks value !!\n");
+
+							  sphereChildrenNodeGraph = sphereChildrenNodeGraph->NextSiblingElement( "sphere" );
+							  printf("\n");
+						  }while( sphereChildrenNodeGraph );
+					  }
+
+					  // Torus //
+					  if( torusChildrenNodeGraph ){
+						  do{
+							  if(torusChildrenNodeGraph->QueryFloatAttribute( "inner", &tinner )==TIXML_SUCCESS && debug )
+								printf("\tTorus inner: %f\n", tinner);
+							  else
+								if( debug ) printf("\t!! Error parsing inner value !!\n");
+
+							  if( torusChildrenNodeGraph->QueryFloatAttribute( "outer", &touter )==TIXML_SUCCESS && debug )
+								printf("\tTorus outers: %f\n", touter);
+							  else
+								if( debug ) printf("\t!! Error parsing stacks value !!\n");
+
+							  if( torusChildrenNodeGraph->QueryIntAttribute( "slices", &tslices )==TIXML_SUCCESS && debug )
+								printf("\tTorus slices: %d\n", tslices);
+							  else
+								if( debug ) printf("\t!! Error parsing slices value !!\n");
+
+							  if( torusChildrenNodeGraph->QueryIntAttribute( "loops", &tloops )==TIXML_SUCCESS && debug )
+								printf("\tTorus loops: %d\n", tloops);
+							  else
+								if( debug ) printf("\t!! Error parsing loops value !!\n");
+
+							  torusChildrenNodeGraph = torusChildrenNodeGraph->NextSiblingElement( "torus" );
+							   printf("\n");
+						  }while( torusChildrenNodeGraph );
+					  }
+
+					  //nodesVector.push_back( *( new GraphNode( id, appRefId, nodeRefIdVector, translateMatrix, scaleMatrix, rotateMatrix ) ));
 					  nodeGraph = nodeGraph->NextSiblingElement( "node" );
 					  if( debug ) printf("\n");
 				  }while( nodeGraph );
