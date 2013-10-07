@@ -32,9 +32,9 @@ protected:
 		TiXmlElement* perspectiveCamera;	// Perspective Cameras //
 
 	// Scene Lightning //
-	TiXmlElement* lightning;
-		TiXmlElement* omniLightning;	// Omnidirection Lightning //
-		TiXmlElement* spotLightning;	// Spot Lightning //
+	TiXmlElement* lighting;
+		TiXmlElement* omniLighting;	// Omnidirection Lightning //
+		TiXmlElement* spotLighting;	// Spot Lightning //
 
 	// Scene Textures //
 	TiXmlElement* textures;
