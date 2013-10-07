@@ -9,19 +9,16 @@ using std::vector;
 
 class GraphNode{
 	public:
-		GraphNode();
+		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector, float translate[4][4], float scale[4][4], float rotate[4][4] );
 		~GraphNode();
 
 	protected:
-		string *id;
-		string *appRefId;
-		string *translate;
-		float translateX, translateY, translateZ;
-		string *scale;
-		float scaleX, scaleY, scaleZ;
-		string *rotateAxis;
-	    float rotateAngle;
-		vector<string> nodeRefIds;
+		string id;
+		string appRefId;
+		vector<string> nodeRefIdVector;
+		float translate[4][4];
+		float scale[4][4];
+	    float rotate[4][4];
 };
 
 #endif
