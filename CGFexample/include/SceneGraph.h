@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "PerspectiveCamera.h"
 #include "OrthogonalCamera.h"
-#include "Lightning.h"
+#include "Lighting.h"
 #include "OmniLight.h"
 #include "SpotLight.h"
 #include "Texture.h"
@@ -27,12 +27,12 @@ class SceneGraph {
 		void setInitialCamera( char *initCamera );
 
 		// Sets lightning initial values //
-		void addLightningValues( char *doublesided, char *local, char *LightningEnabled, char *LightningAmbient, float LightningAmbientX, float LightningAmbientY, float LightningAmbientZ, float LightningAmbientAlfa);
+		void addLightingValues( char *doublesided, char *local, char *LightingEnabled, char *LightingAmbient, float LightingAmbientX, float LightingAmbientY, float LightingAmbientZ, float LightingAmbientAlfa);
 		
 		// Adds cameras to the map //
 		void addCamera( Camera *camera );
 
-		void addLight( Lightning *light );
+		void addLight( Lighting *light );
 
 		void addTextures( vector<Texture> &textures );
 		void addAppearences( vector<Appearence> &appearences );
@@ -50,13 +50,13 @@ class SceneGraph {
 		string *initialCamera;
 		map<string, Camera*> *cameras;
 
-		// Lightning Values //
+		// Lighting Values //
 		string *doublesided;
 		string *local;
-		string *LightningEnabled;
-		string *LightningAmbient;
-		float LightningAmbientX, LightningAmbientY, LightningAmbientZ, LightningAmbientAlfa;
-		map<string, Lightning*> *lights;
+		string *LightingEnabled;
+		string *LightingAmbient;
+		float LightingAmbientX, LightingAmbientY, LightingAmbientZ, LightingAmbientAlfa;
+		map<string, Lighting*> *lights;
 
 		// Texture Values //
 		vector<Texture> textures;

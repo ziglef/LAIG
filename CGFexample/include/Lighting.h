@@ -1,13 +1,13 @@
-#ifndef _LIGHTNING_H
-#define _LIGHTNING_H
+#ifndef _LIGHTING_H
+#define _LIGHTING_H
 
 #include <string>
 using std::string;
 
-class Lightning{
+class Lighting{
 	public:
-		Lightning();
-		~Lightning();
+		Lighting();
+		~Lighting();
 		virtual string getType();
 		virtual string getID();
 
