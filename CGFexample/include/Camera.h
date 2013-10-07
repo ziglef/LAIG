@@ -7,11 +7,13 @@ using std::string;
 class Camera{
 	public:
 		Camera();
+		Camera(string _id, float _near, float _far);
 		~Camera();
-		virtual string getType()=0;
+		virtual string getType();
+		virtual string getID();
 
 	protected:
-		string *id;
+		string id;
 		float near;
 		float far;
 };

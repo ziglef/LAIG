@@ -13,9 +13,9 @@
 #include "Texture.h"
 #include "Appearence.h"
 #include "GraphNode.h"
+#include <map>
 
-using std::string;
-using std::vector;
+using namespace std;
 
 class SceneGraph {
 	public:
@@ -23,11 +23,16 @@ class SceneGraph {
 		SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmode, char *shading, char *cullface, char *cullorder );
 		~SceneGraph();
 
+		// Sets initial camera //
 		void setInitialCamera( char *initCamera );
+
+		// Sets lightning initial values //
 		void addLightingValues( char *doublesided, char *local, char *lightingEnabled, char *lightingAmbient, float lightingAmbientX, float lightingAmbientY, float lightingAmbientZ, float lightingAmbientAlfa);
-		//void addCameras( vector<Camera> &cameras );
-		void addPerspectiveCameras( vector<PerspectiveCamera> &cameras );
-		void addOrthogonalCameras( vector<OrthogonalCamera> &cameras );
+		
+		void addCamera( Camera *camera );
+		// OLD STUFF //
+		// void addPerspectiveCameras( vector<PerspectiveCamera> &cameras );
+		// void addOrthogonalCameras( vector<OrthogonalCamera> &cameras );
 		//void addLights( vector<Lighting> &lights );
 		void addOmniLights( vector<OmniLight> &lights );
 		void addSpotLights( vector<SpotLight> &lights );
@@ -45,9 +50,11 @@ class SceneGraph {
 		
 		// Camera Values //
 		string *initialCamera;
-		//vector<Camera> cameras;
-		vector<PerspectiveCamera> perspectiveCameras;
-		vector<OrthogonalCamera> orthogonalCameras;
+		map<string, Camera*> *cameras;
+		// OLD STUFF //
+		// vector<Camera> cameras;
+		// vector<PerspectiveCamera> perspectiveCameras;
+		// vector<OrthogonalCamera> orthogonalCameras;
 
 		// Lighting Values //
 		string *doublesided;

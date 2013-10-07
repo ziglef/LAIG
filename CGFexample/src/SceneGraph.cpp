@@ -10,18 +10,25 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 	this->shading = new string( shading );
 	this->cullface = new string( cullface );
 	this->cullorder = new string( cullorder );
+
+	this->cameras = new map<string, Camera*>;
 }
 
 void SceneGraph::setInitialCamera( char *initCamera){
 	this->initialCamera = new string( initCamera );
 }
-
+/*
 void SceneGraph::addPerspectiveCameras( vector<PerspectiveCamera> &cameras ){
 	this->perspectiveCameras = cameras;
 }
 
 void SceneGraph::addOrthogonalCameras( vector<OrthogonalCamera> &cameras ){
 	this->orthogonalCameras = cameras;
+}
+*/
+
+void SceneGraph::addCamera( Camera *camera ){
+	this->cameras->insert( std::pair<string, Camera*>(camera->getID(), camera) );
 }
 
 void SceneGraph::addLightingValues( char *doublesided, char *local, char *lightingEnabled, char *lightingAmbient, float lightingAmbientX, float lightingAmbientY, float lightingAmbientZ, float lightingAmbientAlfa){

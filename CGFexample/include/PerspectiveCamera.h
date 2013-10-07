@@ -8,6 +8,7 @@ class PerspectiveCamera : public Camera{
 		PerspectiveCamera( char *id, float near, float far, float angle, char *pos, float posX, float posY, float posZ, char *target, float targetX, float targetY, float targetZ );
 		~PerspectiveCamera();
 		string getType();
+		string getID();
 
 	protected:
 		float angle;

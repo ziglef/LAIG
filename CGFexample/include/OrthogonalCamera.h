@@ -8,6 +8,7 @@ class OrthogonalCamera : public Camera{
 		OrthogonalCamera( char *id, float near, float far, float left, float right, float up, float bottom );
 		~OrthogonalCamera();
 		string getType();
+		string getID();
 
 	protected:
 		float left;

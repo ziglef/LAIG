@@ -1,7 +1,7 @@
 #include "../include/XMLScene.h"
 #include "../include/SceneGraph.h"
 
-*XMLScene::XMLScene(char *filename, bool debug) {
+XMLScene::XMLScene(char *filename, bool debug) {
 
 	// Read XML from file //
 	doc = new TiXmlDocument( filename );
@@ -111,11 +111,11 @@
 		float top;
 		float bottom;
 
+		// OLD STUFF //
 		// Pespective Cameras vector //
-		vector<PerspectiveCamera> perspectiveCamerasVector;
-
+		// vector<PerspectiveCamera> perspectiveCamerasVector;
 		// Orthogonal Cameras vector //
-		vector<OrthogonalCamera> orthogonalCamerasVector;
+		// vector<OrthogonalCamera> orthogonalCamerasVector;
 
 		// Inicial Camera Info //
 		initialCamera = (char*)cameras->Attribute( "initial" );
@@ -173,15 +173,18 @@
 				else
 					if( debug ) printf("\t!! Error parsing Target value !!\n");
 
+				this->sg->addCamera( new PerspectiveCamera( id, near, far,angle, pos, posX, posY, posZ, target, targetX, targetY, targetZ ) );
+
+				// OLD STUFF //
 				// Add perspective camera to the perspective cameras vector //
-				perspectiveCamerasVector.push_back( *( new PerspectiveCamera( id, near, far,angle, pos, posX, posY, posZ, target, targetX, targetY, targetZ ) ));
+				// perspectiveCamerasVector.push_back( *( new PerspectiveCamera( id, near, far,angle, pos, posX, posY, posZ, target, targetX, targetY, targetZ ) ));
 
 				// Parses the next perspective camera //
 				perspectiveCamera = perspectiveCamera->NextSiblingElement( "perspective" );
 				if( debug ) printf("\n");
 			}while( perspectiveCamera );
 			//Saves the perspective cameras vector in the scene graph //
-			this->sg->addPerspectiveCameras( perspectiveCamerasVector );
+			//this->sg->addPerspectiveCameras( perspectiveCamerasVector );
 		}
 
 		// Process Orthogonal Camera Values //
@@ -232,15 +235,18 @@
 				else
 					if( debug ) printf("\tError parsing bottom value !!\n");
 
+				// OLD STUFF
 				// Add orthogonal camera to the orthogonal cameras vector //
-				orthogonalCamerasVector.push_back( *( new OrthogonalCamera( id, near, far, left, right, top, bottom ) ));
+				// orthogonalCamerasVector.push_back( *( new OrthogonalCamera( id, near, far, left, right, top, bottom ) ));
+
+				this->sg->addCamera( new OrthogonalCamera( id, near, far, left, right, top, bottom ) );
 
 				// Parses the next orthogonal camera //
 				orthogonalCamera = orthogonalCamera->NextSiblingElement( "ortho" );
 				if( debug ) printf("\n");
 			}while( orthogonalCamera );
 			//Saves the orthogonal cameras vector in the scene graph //
-			this->sg->addOrthogonalCameras( orthogonalCamerasVector );
+			// this->sg->addOrthogonalCameras( orthogonalCamerasVector );
 		}
 	}
 
