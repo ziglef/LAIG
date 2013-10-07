@@ -1,0 +1,17 @@
+﻿Build started 06-10-2013 16:35:54.
+     1>Project "\\hvfs.feupsig.fe.up.pt\users\ei11010\Desktop\LAIG\CGFexample\CGFexample.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "..\buildtemp\CGFexample\CGFexample.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+         CGFexample.vcxproj -> \\hvfs.feupsig.fe.up.pt\users\ei11010\Desktop\LAIG\CGFexample\bin\CGFexample.exe
+       FinalizeBuildStatus:
+         Deleting file "..\buildtemp\CGFexample\CGFexample.unsuccessfulbuild".
+         Touching "..\buildtemp\CGFexample\CGFexample.lastbuildstate".
+     1>Done Building Project "\\hvfs.feupsig.fe.up.pt\users\ei11010\Desktop\LAIG\CGFexample\CGFexample.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.13
