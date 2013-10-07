@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "PerspectiveCamera.h"
 #include "OrthogonalCamera.h"
-#include "Lighting.h"
+#include "Lightning.h"
 #include "OmniLight.h"
 #include "SpotLight.h"
 #include "Texture.h"
@@ -27,15 +27,13 @@ class SceneGraph {
 		void setInitialCamera( char *initCamera );
 
 		// Sets lightning initial values //
-		void addLightingValues( char *doublesided, char *local, char *lightingEnabled, char *lightingAmbient, float lightingAmbientX, float lightingAmbientY, float lightingAmbientZ, float lightingAmbientAlfa);
+		void addLightningValues( char *doublesided, char *local, char *LightningEnabled, char *LightningAmbient, float LightningAmbientX, float LightningAmbientY, float LightningAmbientZ, float LightningAmbientAlfa);
 		
+		// Adds cameras to the map //
 		void addCamera( Camera *camera );
-		// OLD STUFF //
-		// void addPerspectiveCameras( vector<PerspectiveCamera> &cameras );
-		// void addOrthogonalCameras( vector<OrthogonalCamera> &cameras );
-		//void addLights( vector<Lighting> &lights );
-		void addOmniLights( vector<OmniLight> &lights );
-		void addSpotLights( vector<SpotLight> &lights );
+
+		void addLight( Lightning *light );
+
 		void addTextures( vector<Texture> &textures );
 		void addAppearences( vector<Appearence> &appearences );
 		//void addGraphNodes();
@@ -51,20 +49,14 @@ class SceneGraph {
 		// Camera Values //
 		string *initialCamera;
 		map<string, Camera*> *cameras;
-		// OLD STUFF //
-		// vector<Camera> cameras;
-		// vector<PerspectiveCamera> perspectiveCameras;
-		// vector<OrthogonalCamera> orthogonalCameras;
 
-		// Lighting Values //
+		// Lightning Values //
 		string *doublesided;
 		string *local;
-		string *lightingEnabled;
-		string *lightingAmbient;
-		float lightingAmbientX, lightingAmbientY, lightingAmbientZ, lightingAmbientAlfa;
-		//vector<Lighting> lights;
-		vector<OmniLight> omniLights;
-		vector<SpotLight> spotLights;
+		string *LightningEnabled;
+		string *LightningAmbient;
+		float LightningAmbientX, LightningAmbientY, LightningAmbientZ, LightningAmbientAlfa;
+		map<string, Lightning*> *lights;
 
 		// Texture Values //
 		vector<Texture> textures;

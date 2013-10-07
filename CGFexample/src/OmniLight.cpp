@@ -14,12 +14,12 @@ OmniLight::OmniLight( char *id, char *enabled, char *location, char *diffuse, fl
 	this->specularZ = specularZ;
 	this->specularAlfa = specularAlfa;
 
-	this->id = new string( id );
-	this->enabled = new string( enabled );
-	this->location = new string( location );
-	this->diffuse = new string( diffuse );
-	this->ambient = new string( ambient );
-	this->specular = new string( specular );
+	this->id = id ;
+	this->enabled = enabled;
+	this->location = location;
+	this->diffuse = diffuse;
+	this->ambient = ambient;
+	this->specular = specular;
 }
 
 OmniLight::~OmniLight(){
@@ -28,4 +28,8 @@ OmniLight::~OmniLight(){
 
 std::string OmniLight::getType(){
 	return "omnilight";
+}
+
+std::string OmniLight::getID(){
+	return this->id;
 }

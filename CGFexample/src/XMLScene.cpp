@@ -26,7 +26,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 	// Loads all the other major tags //
 	globals = yafElement->FirstChildElement( "globals" );
 	cameras = yafElement->FirstChildElement( "cameras" );
-	lightning =  yafElement->FirstChildElement( "lighting" );
+	lightning =  yafElement->FirstChildElement( "Lightning" );
 	textures =  yafElement->FirstChildElement( "textures" );
 	appearances =  yafElement->FirstChildElement( "appearances" );
 	sceneGraph =  yafElement->FirstChildElement( "graph" );
@@ -250,9 +250,9 @@ XMLScene::XMLScene(char *filename, bool debug) {
 		}
 	}
 
-		// Lighting Block //
+		// Lightning Block //
 		if( ( lightning == NULL ) && debug )
-			printf("Lighting block not found\n");
+			printf("Lightning block not found\n");
 		else{
 			if( debug ) printf("Processing Lights:\n");
 
@@ -267,12 +267,12 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			char *specular;
 			float specularX, specularY, specularZ, specularAlfa;
 
-			// Lighting values //
+			// Lightning values //
 			char *doublesided;
 			char *local;
-			char *lightingEnabled;
-			char *lightingAmbient;
-			float lightingAmbientX, lightingAmbientY, lightingAmbientZ, lightingAmbientAlfa;
+			char *LightningEnabled;
+			char *LightningAmbient;
+			float LightningAmbientX, LightningAmbientY, LightningAmbientZ, LightningAmbientAlfa;
 
 			// Spot Lights values //
 			float angle;
@@ -286,11 +286,11 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			// Spot Lights Vector //
 			vector<SpotLight> spotLightsVector;
 
-			// Process Lighting values //
+			// Process Lightning values //
 			doublesided = (char *)lightning->Attribute( "doublesided" );
 			local = (char *)lightning->Attribute( "local" );
-			lightingEnabled = (char *)lightning->Attribute( "enabled" );
-			lightingAmbient = (char *)lightning->Attribute( "ambient" );
+			LightningEnabled = (char *)lightning->Attribute( "enabled" );
+			LightningAmbient = (char *)lightning->Attribute( "ambient" );
 
 			// Doublesided //
 			if( doublesided && debug )
@@ -305,21 +305,21 @@ XMLScene::XMLScene(char *filename, bool debug) {
 				if( debug ) printf("\t!! Error parsing local value !!\n");
 
 			// Enabled //
-			if( lightingEnabled  && debug )
-				printf("\tEnabled: %s\n", lightingEnabled);
+			if( LightningEnabled  && debug )
+				printf("\tEnabled: %s\n", LightningEnabled);
 			else
 				if( debug ) printf("\t!! Error parsing enabled value !!\n");
 
 			// Ambient //
-			if( sscanf(lightingAmbient, "%f %f %f %f", &lightingAmbientX, &lightingAmbientY, &lightingAmbientZ, &lightingAmbientAlfa )==4 && debug )
-					printf("\tAmbient: %f %f %f %f\n\n", lightingAmbientX, lightingAmbientY, lightingAmbientZ, lightingAmbientAlfa );
+			if( sscanf(LightningAmbient, "%f %f %f %f", &LightningAmbientX, &LightningAmbientY, &LightningAmbientZ, &LightningAmbientAlfa )==4 && debug )
+					printf("\tAmbient: %f %f %f %f\n\n", LightningAmbientX, LightningAmbientY, LightningAmbientZ, LightningAmbientAlfa );
 				else
 					if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
-			// Save the lighting values in the sceneGraph //
-			sg->addLightingValues( doublesided, local, lightingEnabled, lightingAmbient, lightingAmbientX, lightingAmbientY, lightingAmbientZ, lightingAmbientAlfa );
+			// Save the Lightning values in the sceneGraph //
+			sg->addLightningValues( doublesided, local, LightningEnabled, LightningAmbient, LightningAmbientX, LightningAmbientY, LightningAmbientZ, LightningAmbientAlfa );
 
-			// Process Omni Lighting Values //
+			// Process Omni Lightning Values //
 			omniLightning = lightning->FirstChildElement( "omni" );
 			if( omniLightning ){
 				do{
@@ -374,10 +374,13 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					if( debug ) printf("\n");
 				}while( omniLightning );
 				//Saves the omni lights vector in the scene graph //
-				this->sg->addOmniLights( omniLightsVector );
+				
+				// HERE //
+				
+				//this->sg->addOmniLights( omniLightsVector );
 			}
 
-			// Process spot lighting values //
+			// Process spot Lightning values //
 			spotLightning = lightning->FirstChildElement( "spot" );
 			if( spotLightning ){
 				do{
@@ -451,7 +454,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					if( debug ) printf("\n");
 				}while( spotLightning );
 				//Saves the spot lights vector in the scene graph //
-				this->sg->addSpotLights( spotLightsVector );
+
+				// HERE //
+
+				//this->sg->addSpotLights( spotLightsVector );
 			  }
 			}
 

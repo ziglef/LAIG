@@ -17,38 +17,26 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 void SceneGraph::setInitialCamera( char *initCamera){
 	this->initialCamera = new string( initCamera );
 }
-/*
-void SceneGraph::addPerspectiveCameras( vector<PerspectiveCamera> &cameras ){
-	this->perspectiveCameras = cameras;
-}
 
-void SceneGraph::addOrthogonalCameras( vector<OrthogonalCamera> &cameras ){
-	this->orthogonalCameras = cameras;
-}
-*/
 
 void SceneGraph::addCamera( Camera *camera ){
 	this->cameras->insert( std::pair<string, Camera*>(camera->getID(), camera) );
 }
 
-void SceneGraph::addLightingValues( char *doublesided, char *local, char *lightingEnabled, char *lightingAmbient, float lightingAmbientX, float lightingAmbientY, float lightingAmbientZ, float lightingAmbientAlfa){
-	this->lightingAmbientX = lightingAmbientX;
-	this->lightingAmbientY = lightingAmbientY;
-	this->lightingAmbientZ = lightingAmbientZ;
-	this->lightingAmbientAlfa = lightingAmbientAlfa;
+void SceneGraph::addLight( Lightning *light ){
+	this->lights->insert( std::pair<string, Lightning*>(light->getID(), light) );
+}
+
+void SceneGraph::addLightningValues( char *doublesided, char *local, char *LightningEnabled, char *LightningAmbient, float LightningAmbientX, float LightningAmbientY, float LightningAmbientZ, float LightningAmbientAlfa){
+	this->LightningAmbientX = LightningAmbientX;
+	this->LightningAmbientY = LightningAmbientY;
+	this->LightningAmbientZ = LightningAmbientZ;
+	this->LightningAmbientAlfa = LightningAmbientAlfa;
 	
 	this->doublesided = new string( doublesided );
 	this->local = new string( local );
-	this->lightingEnabled = new string( lightingEnabled );
-	this->lightingAmbient = new string( lightingAmbient );
-}
-
-void SceneGraph::addOmniLights( vector<OmniLight> &lights ){
-	this->omniLights = lights;
-}
-
-void SceneGraph::addSpotLights( vector<SpotLight> &lights ){
-	this->spotLights = lights;
+	this->LightningEnabled = new string( LightningEnabled );
+	this->LightningAmbient = new string( LightningAmbient );
 }
 
 void SceneGraph::addTextures( vector<Texture> &textures ){

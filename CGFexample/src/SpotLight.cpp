@@ -19,13 +19,13 @@ SpotLight::SpotLight( char *id, char *enabled, char *location, char *diffuse, fl
 	this->directionY = directionY;
 	this->directionZ = directionZ;
 
-	this->id = new string( id );
-	this->enabled = new string( enabled );
-	this->location = new string( location );
-	this->diffuse = new string( diffuse );
-	this->ambient = new string( ambient );
-	this->specular = new string( specular );
-	this->direction = new string( direction );
+	this->id = id ;
+	this->enabled = enabled ;
+	this->location = location ;
+	this->diffuse = diffuse ;
+	this->ambient = ambient ;
+	this->specular = specular ;
+	this->direction = direction ;
 }
 
 SpotLight::~SpotLight(){
@@ -34,4 +34,8 @@ SpotLight::~SpotLight(){
 
 std::string SpotLight::getType(){
 	return "spotlight";
+}
+
+std::string SpotLight::getID(){
+	return this->id;
 }
