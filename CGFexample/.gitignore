@@ -5,6 +5,7 @@ bckp/
 data/
 ipch/
 lib/
+bin/
 obj/
 .cproject
 .project
