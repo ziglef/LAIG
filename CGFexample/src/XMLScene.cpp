@@ -600,8 +600,11 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  char *rotateAxis;
 			  float rotateAngle;
 			  float translateMatrix[4][4] = {0};
+			  float auxiliarTranslateMatrix[4][4] = {0};
 			  float scaleMatrix[4][4] = {0};
+			  float auxiliarScaleMatrix[4][4] = {0};
 			  float rotateMatrix[4][4] = {0};
+			  float auxiliarRotateMatrix[4][4] = {0};
 
 			  // Children Values //
 			  char *nodeRefId;
@@ -710,7 +713,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 								if( debug ) printf("\t!! Error parsing scale values !!\n");
 
 							  if( scaleMatrix[0][0] != 0 || scaleMatrix[1][1] != 0 || scaleMatrix[2][2] != 0 ){
-								//multiply ?
+								  //multiply ?
 							  }else{
 								 scaleMatrix[0][0] = scaleX;
 								 scaleMatrix[1][1] = scaleY;
@@ -736,6 +739,31 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							     printf("\tRotation Angle: %f\n",rotateAngle);
 						       else
 							     if( debug ) printf("\t!! Error parsing rotation angle !!\n");
+
+							   if(strcmp( rotateAxis, "x" )==0 ){
+								   rotateMatrix[0][0] = 1;
+								   rotateMatrix[1][1] = cos( DEG2RAD( rotateAngle ) );
+								   rotateMatrix[1][2] = -sin( DEG2RAD( rotateAngle ) );
+								   rotateMatrix[2][1] = sin( DEG2RAD( rotateAngle ) );
+								   rotateMatrix[2][2] = cos( DEG2RAD( rotateAngle ) );
+								   rotateMatrix[3][3] = 1;
+							   }else
+								   if(strcmp( rotateAxis, "y" )==0 ){
+									rotateMatrix[0][0] = cos( DEG2RAD( rotateAngle ) );
+								    rotateMatrix[0][2] = sin( DEG2RAD( rotateAngle ) );
+								    rotateMatrix[1][1] = 1;
+								    rotateMatrix[2][0] = -sin( DEG2RAD( rotateAngle ) );
+								    rotateMatrix[2][2] = cos( DEG2RAD( rotateAngle ) );
+								    rotateMatrix[3][3] = 1;
+							   }else
+								   if(strcmp( rotateAxis, "z" )==0 ){
+									rotateMatrix[0][0] = cos( DEG2RAD( rotateAngle ) );
+								    rotateMatrix[0][1] = -sin( DEG2RAD( rotateAngle ) );
+								    rotateMatrix[1][0] = sin( DEG2RAD( rotateAngle ) );
+								    rotateMatrix[1][1] = cos( DEG2RAD( rotateAngle ) );
+								    rotateMatrix[2][2] = 1;
+								    rotateMatrix[3][3] = 1;
+							   }
 
 							   rotateTransformsNodeGraph = rotateTransformsNodeGraph->NextSiblingElement( "rotate" );
 						  }while( rotateTransformsNodeGraph );
