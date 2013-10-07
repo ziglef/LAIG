@@ -794,19 +794,19 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						  do{
 							  xyz1 = (char *)triangleChildrenNodeGraph->Attribute( "xyz1" );
 							  if( sscanf(xyz1, "%f %f %f", &tx1, &ty1, &tz1 )==3 && debug )
-								printf("\Triangle xyz1: x1:%f y1:%f z1:%f\n" , tx1, ty1, tz1 );
+								printf("\tTriangle xyz1: x1:%f y1:%f z1:%f\n" , tx1, ty1, tz1 );
 							  else
 								if( debug ) printf("\t!! Error parsing xyz1 triangle values !!\n");
 
 							  xyz2 = (char *)triangleChildrenNodeGraph->Attribute( "xyz2" );
 							  if( sscanf(xyz2, "%f %f %f", &tx2, &ty2, &tz2 )==3 && debug )
-								printf("\Triangle xyz1: x1:%f y1:%f z1:%f\n" , tx2, ty2, tz2 );
+								printf("\tTriangle xyz1: x1:%f y1:%f z1:%f\n" , tx2, ty2, tz2 );
 							  else
 								if( debug ) printf("\t!! Error parsing xyz2 triangle values !!\n");
 
 							  xyz3 = (char *)triangleChildrenNodeGraph->Attribute( "xyz3" );
 							  if( sscanf(xyz3, "%f %f %f", &tx3, &ty3, &tz3 )==3 && debug )
-								printf("\Triangle xyz1: x1:%f y1:%f z1:%f\n" , tx3, ty3, tz3 );
+								printf("\tTriangle xyz1: x1:%f y1:%f z1:%f\n" , tx3, ty3, tz3 );
 							  else
 								if( debug ) printf("\t!! Error parsing xyz3 triangle values !!\n");
 

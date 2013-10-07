@@ -16,6 +16,7 @@ class GraphNode{
 		string id;
 		string appRefId;
 		vector<string> nodeRefIdVector;
+		vector<Primitive> primitives;
 		float translate[4][4];
 		float scale[4][4];
 	    float rotate[4][4];
