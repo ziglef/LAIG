@@ -564,7 +564,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing texlength_t value !!\n");
 
 					// Adds the appearence to the appearences vector //
-					appearencesVector.push_back( *( new Appearence( id, emissive, emissiveX, emissiveY, emissiveZ, emissiveAlfa, diffuse, diffuseX, diffuseY, diffuseZ, diffuseAlfa, ambient, ambientX, ambientY, ambientZ, ambientAlfa, specular, specularX, specularY, specularZ, specularAlfa, shininess, textureref, texlength_s, texlength_t ) ));
+					//appearencesVector.push_back( *( new Appearence( id, emissive, emissiveX, emissiveY, emissiveZ, emissiveAlfa, diffuse, diffuseX, diffuseY, diffuseZ, diffuseAlfa, ambient, ambientX, ambientY, ambientZ, ambientAlfa, specular, specularX, specularY, specularZ, specularAlfa, shininess, textureref, texlength_s, texlength_t ) ));
 
 					appearanceAppearances = appearanceAppearances->NextSiblingElement( "appearance" );
 					if( debug ) printf("\n");
@@ -583,7 +583,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  // Graph values //
 			  char *rootid;
 
-			  /* TODO create a vector of nodes */
+			  // Nodes Vector //
 			  vector<GraphNode> nodesVector;
 
 			  // Node values //
@@ -728,8 +728,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							   rotateTransformsNodeGraph = rotateTransformsNodeGraph->NextSiblingElement( "rotate" );
 						  }while( rotateTransformsNodeGraph );
 					  }
-					 
-					  //getFloatv( GL_MODELVIEW,  );
 
 					  // Appearance Reference //
 					  if( appearanceRefNodeGraph ){
@@ -889,7 +887,8 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						  }while( torusChildrenNodeGraph );
 					  }
 
-					  //nodesVector.push_back( *( new GraphNode( id, appRefId, nodeRefIdVector, translateMatrix, scaleMatrix, rotateMatrix ) ));
+					  nodesVector.push_back( *( new GraphNode( id, appRefId, nodeRefIdVector ) ));
+					  glGetFloatv( GL_MODELVIEW, nodesVector.back().getTransformationMatrix() );
 					  nodeGraph = nodeGraph->NextSiblingElement( "node" );
 					  if( debug ) printf("\n");
 				  }while( nodeGraph );
