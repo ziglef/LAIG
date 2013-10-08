@@ -599,12 +599,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  float scaleX, scaleY, scaleZ;
 			  char *rotateAxis;
 			  float rotateAngle;
-			  float translateMatrix[4][4] = {0};
-			  float auxiliarTranslateMatrix[4][4] = {0};
-			  float scaleMatrix[4][4] = {0};
-			  float auxiliarScaleMatrix[4][4] = {0};
-			  float rotateMatrix[4][4] = {0};
-			  float auxiliarRotateMatrix[4][4] = {0};
 
 			  // Children Values //
 			  char *nodeRefId;
@@ -677,10 +671,8 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  // Tranformations //
 
 					  // Initialize the translation matrix //
-					  translateMatrix[0][0] = 1;
-					  translateMatrix[1][1] = 1;
-					  translateMatrix[2][2] = 1;
-					  translateMatrix[3][3] = 1;
+					  glMatrixMode( GL_MODELVIEW );
+					  glLoadIdentity();
 
 					  // Translate //
 					  if( translateTransformsNodeGraph ){
@@ -690,15 +682,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 								 printf("\tTranslate: %f %f %f\n", translateX, translateY, translateZ);
 							  else
 								 if( debug ) printf("\t!! Error parsing Translate values !!\n");
-
-							  if( translateMatrix[0][3] != 0 || translateMatrix[1][3] != 0 || translateMatrix[2][3] != 0 ){
-								//multiply ?
-							  }else{
-								 translateMatrix[0][3] = translateX;
-								 translateMatrix[1][3] = translateY;
-								 translateMatrix[2][3] = translateZ;
-							  }
-
+							  glTranslatef( translateX, translateY, translateZ );
 							  translateTransformsNodeGraph = translateTransformsNodeGraph->NextSiblingElement( "translate" );
 						  }while( translateTransformsNodeGraph );
 					  }
@@ -711,15 +695,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 								printf("\tScale: %f %f %f\n", scaleX, scaleY, scaleZ);
 							  else
 								if( debug ) printf("\t!! Error parsing scale values !!\n");
-
-							  if( scaleMatrix[0][0] != 0 || scaleMatrix[1][1] != 0 || scaleMatrix[2][2] != 0 ){
-								  //multiply ?
-							  }else{
-								 scaleMatrix[0][0] = scaleX;
-								 scaleMatrix[1][1] = scaleY;
-								 scaleMatrix[2][2] = scaleZ;
-							  }
-
+							  glScalef( scaleX, scaleY, scaleZ );
 							  scaleTransformsNodeGraph = scaleTransformsNodeGraph->NextSiblingElement( "scale" );
 						  }while( scaleTransformsNodeGraph );
 					  }
@@ -740,34 +716,20 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						       else
 							     if( debug ) printf("\t!! Error parsing rotation angle !!\n");
 
-							   if(strcmp( rotateAxis, "x" )==0 ){
-								   rotateMatrix[0][0] = 1;
-								   rotateMatrix[1][1] = cos( DEG2RAD( rotateAngle ) );
-								   rotateMatrix[1][2] = -sin( DEG2RAD( rotateAngle ) );
-								   rotateMatrix[2][1] = sin( DEG2RAD( rotateAngle ) );
-								   rotateMatrix[2][2] = cos( DEG2RAD( rotateAngle ) );
-								   rotateMatrix[3][3] = 1;
-							   }else
-								   if(strcmp( rotateAxis, "y" )==0 ){
-									rotateMatrix[0][0] = cos( DEG2RAD( rotateAngle ) );
-								    rotateMatrix[0][2] = sin( DEG2RAD( rotateAngle ) );
-								    rotateMatrix[1][1] = 1;
-								    rotateMatrix[2][0] = -sin( DEG2RAD( rotateAngle ) );
-								    rotateMatrix[2][2] = cos( DEG2RAD( rotateAngle ) );
-								    rotateMatrix[3][3] = 1;
-							   }else
-								   if(strcmp( rotateAxis, "z" )==0 ){
-									rotateMatrix[0][0] = cos( DEG2RAD( rotateAngle ) );
-								    rotateMatrix[0][1] = -sin( DEG2RAD( rotateAngle ) );
-								    rotateMatrix[1][0] = sin( DEG2RAD( rotateAngle ) );
-								    rotateMatrix[1][1] = cos( DEG2RAD( rotateAngle ) );
-								    rotateMatrix[2][2] = 1;
-								    rotateMatrix[3][3] = 1;
-							   }
+							   if(strcmp( rotateAxis, "x" )==0 )
+								   glRotatef( rotateAngle, 1, 0, 0 );
+							   else
+								   if(strcmp( rotateAxis, "y" )==0 )
+										glRotatef( rotateAngle, 0, 1, 0 );
+									else
+										glRotatef( rotateAngle, 0, 0, 1 );
+							   
 
 							   rotateTransformsNodeGraph = rotateTransformsNodeGraph->NextSiblingElement( "rotate" );
 						  }while( rotateTransformsNodeGraph );
 					  }
+					 
+					  //getFloatv( GL_MODELVIEW,  );
 
 					  // Appearance Reference //
 					  if( appearanceRefNodeGraph ){

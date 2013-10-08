@@ -7,18 +7,18 @@
 using std::string;
 using std::vector;
 
+#include "Primitive.h"
+
 class GraphNode{
 	public:
-		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector, float translate[4][4], float scale[4][4], float rotate[4][4] );
+		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector );
 		~GraphNode();
 
 	protected:
 		string id;
 		string appRefId;
 		vector<string> nodeRefIdVector;
-		float translate[4][4];
-		float scale[4][4];
-	    float rotate[4][4];
+		float transformationMatrix[16];
 };
 
 #endif

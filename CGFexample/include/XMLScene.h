@@ -3,11 +3,8 @@
 
 #include "tinyxml.h"
 #include "SceneGraph.h"
+#include "CGF\CGFscene.h"
 #include <cmath>
-
-#define PI 3.14159265358979323846
-
-#define DEG2RAD(x) x*PI/180
 
 class XMLScene
 {
@@ -16,7 +13,6 @@ public:
 	~XMLScene();
 
 	static TiXmlElement *findChildByAttribute( TiXmlElement *parent,const char * attr, const char *val );
-	//float** MultiplyMatrix( float matrixA[4][4], float matrixB[4][4] );
 	
 protected:
 
