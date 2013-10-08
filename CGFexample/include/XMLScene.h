@@ -61,8 +61,6 @@ protected:
 				TiXmlElement* cylinderChildrenNodeGraph;		// Node Cylinder Primitive //
 				TiXmlElement* sphereChildrenNodeGraph;		    // Node Sphere Primitive //
 				TiXmlElement* torusChildrenNodeGraph;		    // Node Torus Primitive //
-
-	friend class SceneGraph;
 };
 
 #endif

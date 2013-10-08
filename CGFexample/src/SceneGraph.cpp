@@ -59,6 +59,10 @@ void SceneGraph::addGraphNode( GraphNode *graphNode ){
 	this->graphNodes->insert( std::pair<string, GraphNode*>(graphNode->getID(), graphNode) );
 }
 
+map<string, Texture*>* SceneGraph::getTextures(){
+	return this->textures;
+}
+
 SceneGraph::~SceneGraph(){
 
 };

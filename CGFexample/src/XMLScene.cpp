@@ -567,7 +567,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					sWrap = (int)texlength_s;
 					tWrap = (int)texlength_t;
 
-					CGFtexture *textureRef = this->sg->textures->at(textureref);
+					CGFtexture *textureRef = this->sg->getTextures()->at(textureref);
 
 					//Saves the appearance vector in the scene graph //
 					this->sg->addAppearence( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureRef, sWrap, tWrap ) );					

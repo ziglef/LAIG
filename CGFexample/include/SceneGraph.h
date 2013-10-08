@@ -39,6 +39,8 @@ class SceneGraph {
 		void setRootId( char *rootId );
 		void addGraphNode( GraphNode *graphNode );
 
+		map<string, Texture*> *getTextures();
+
 	protected:
 		// Global Values //
 		float bgX, bgY, bgZ, bgA;
@@ -68,8 +70,6 @@ class SceneGraph {
 		// Graph Nodes //
 		string *rootid;
 		map<string, GraphNode*> *graphNodes;
-
-	friend class XMLScene;
 };
 
 #endif

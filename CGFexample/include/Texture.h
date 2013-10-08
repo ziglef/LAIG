@@ -5,7 +5,7 @@
 #include <string>
 using std::string;
 
-class Texture : CGFtexture{
+class Texture : public CGFtexture{
 	public:
 		Texture( char *id, char *file ) : CGFtexture( file ){
 			this->id = id;
@@ -15,9 +15,6 @@ class Texture : CGFtexture{
 
 	protected:
 		string id;
-
-	friend class SceneGraph;
-	friend class XMLScene;
 };
 
 #endif
