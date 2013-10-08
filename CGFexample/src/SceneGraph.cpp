@@ -13,6 +13,9 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 
 	this->cameras = new map<string, Camera*>;
 	this->lights = new map<string, Lighting*>;
+	this->textures = new map<string, Texture*>;
+	this->appearences = new map<string, Appearence*>;
+	this->graphNodes = new map<string, GraphNode*>;
 }
 
 void SceneGraph::setInitialCamera( char *initCamera){
@@ -40,20 +43,20 @@ void SceneGraph::addLightingValues( char *doublesided, char *local, char *Lighti
 	this->LightingAmbient = new string( LightingAmbient );
 }
 
-void SceneGraph::addTextures( vector<Texture> &textures ){
-	this->textures = textures;
+void SceneGraph::addTexture( Texture *texture ){
+	this->textures->insert( std::pair<string, Texture *>(texture->getID(), texture) );
 }
 
-void SceneGraph::addAppearences( vector<Appearence> &appearences ){
-	this->appearences = appearences;
+void SceneGraph::addAppearence( Appearence *appearence ){
+	this->appearences->insert( std::pair<string, Appearence*>(appearence->getID(), appearence) );
 }
 
 void SceneGraph::setRootId( char *rootId ){
 	this->rootid = rootid;
 }
 
-void SceneGraph::addGraphNodes( vector<GraphNode> &graphNodes ){
-	this->graphNodes = graphNodes;
+void SceneGraph::addGraphNode( GraphNode *graphNode ){
+	this->graphNodes->insert( std::pair<string, GraphNode*>(graphNode->getID(), graphNode) );
 }
 
 SceneGraph::~SceneGraph(){

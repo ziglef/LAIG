@@ -11,6 +11,7 @@ class Texture : CGFtexture{
 			this->id = id;
 		}
 		~Texture();
+		string getID();
 
 	protected:
 		string id;

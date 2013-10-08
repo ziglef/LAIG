@@ -462,15 +462,13 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					else
 						if( debug ) printf("\t!! Error parsing texture file location !!\n");
 
-					// Adds the texture to the textures vector //
-					texturesVector.push_back( *( new Texture( id, file ) ));
+					//Saves the textures vector in the scene graph //
+					this->sg->addTexture( new Texture( id, file ) );
 
 					// Parses the next texture //
 					textureTextures = textureTextures->NextSiblingElement( "texture" );
 					if( debug ) printf("\n");
 				}while( textureTextures );
-				//Saves the textures vector in the scene graph //
-				this->sg->addTextures( texturesVector );
 			}
 		}
 
@@ -569,21 +567,14 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					sWrap = (int)texlength_s;
 					tWrap = (int)texlength_t;
 
-					CGFtexture *textureRef;
+					CGFtexture *textureRef = this->sg->textures->at(textureref);
 
-					for(int i=0; i<this->sg->textures.size(); i++){
-						if(this->sg->textures[i].id == textureref)
-							textureRef = &this->sg->textures[i];
-					}
-
-					appearencesVector.push_back( *( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureRef, sWrap, tWrap ) ));
-					
+					//Saves the appearance vector in the scene graph //
+					this->sg->addAppearence( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureRef, sWrap, tWrap ) );					
 
 					appearanceAppearances = appearanceAppearances->NextSiblingElement( "appearance" );
 					if( debug ) printf("\n");
 				}while( appearanceAppearances );
-				//Saves the appearance vector in the scene graph //
-				this->sg->addAppearences( appearencesVector );
 			}
 		}
 

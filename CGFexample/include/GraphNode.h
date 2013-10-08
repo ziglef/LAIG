@@ -16,6 +16,7 @@ class GraphNode{
 		GraphNode( char *id, vector<string> &nodeRefIdVector );
 		float *getTransformationMatrix();
 		~GraphNode();
+		string getID();
 
 	protected:
 		string id;

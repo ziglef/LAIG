@@ -19,3 +19,7 @@ float *GraphNode::getTransformationMatrix(){
 GraphNode::~GraphNode(){
 
 }
+
+string GraphNode::getID(){
+	return this->id;
+}

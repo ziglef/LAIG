@@ -3,3 +3,7 @@
 Appearence::~Appearence(){
 
 }
+
+string Appearence::getID(){
+	return this->id;
+}

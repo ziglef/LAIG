@@ -34,10 +34,10 @@ class SceneGraph {
 
 		void addLight( Lighting *light );
 
-		void addTextures( vector<Texture> &textures );
-		void addAppearences( vector<Appearence> &appearences );
+		void addTexture( Texture *texture );
+		void addAppearence( Appearence *appearence );
 		void setRootId( char *rootId );
-		void addGraphNodes( vector<GraphNode> &graphNode );
+		void addGraphNode( GraphNode *graphNode );
 
 	protected:
 		// Global Values //
@@ -60,14 +60,14 @@ class SceneGraph {
 		map<string, Lighting*> *lights;
 
 		// Texture Values //
-		vector<Texture> textures;
+		map<string, Texture*> *textures;
 
 		// Appearence Values //
-		vector<Appearence> appearences;
+		map<string, Appearence*> *appearences;
 
 		// Graph Nodes //
 		string *rootid;
-		vector<GraphNode> graphNodes;
+		map<string, GraphNode*> *graphNodes;
 
 	friend class XMLScene;
 };
