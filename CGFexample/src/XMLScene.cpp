@@ -723,8 +723,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 										glRotatef( rotateAngle, 0, 1, 0 );
 									else
 										glRotatef( rotateAngle, 0, 0, 1 );
-							   
-
 							   rotateTransformsNodeGraph = rotateTransformsNodeGraph->NextSiblingElement( "rotate" );
 						  }while( rotateTransformsNodeGraph );
 					  }

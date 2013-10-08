@@ -48,6 +48,14 @@ void SceneGraph::addAppearences( vector<Appearence> &appearences ){
 	this->appearences = appearences;
 }
 
+void SceneGraph::setRootId( char *rootId ){
+	this->rootid = rootid;
+}
+
+void SceneGraph::addGraphNodes( vector<GraphNode> &graphNodes ){
+	this->graphNodes = graphNodes;
+}
+
 SceneGraph::~SceneGraph(){
 
 };

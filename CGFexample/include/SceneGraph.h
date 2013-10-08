@@ -36,7 +36,8 @@ class SceneGraph {
 
 		void addTextures( vector<Texture> &textures );
 		void addAppearences( vector<Appearence> &appearences );
-		//void addGraphNodes();
+		void setRootId( char *rootId );
+		void addGraphNodes( vector<GraphNode> &graphNode );
 
 	protected:
 		// Global Values //
@@ -64,7 +65,9 @@ class SceneGraph {
 		// Appearence Values //
 		vector<Appearence> appearences;
 
-		// Graph and Node Values //
-};		//string *rootid;
+		// Graph Nodes //
+		string *rootid;
+		vector<GraphNode> graphNodes;
+};
 
 #endif
