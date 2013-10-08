@@ -19,7 +19,7 @@ class GraphNode{
 		string id;
 		string appRefId;
 		vector<string> nodeRefIdVector;
-		float transformationMatrix[16]
+		float transformationMatrix[16];
 };
 
 #endif
