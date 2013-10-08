@@ -493,7 +493,9 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			float shininess;
 			char *textureref;
 			float texlength_s;
+			int sWrap;
 			float texlength_t;
+			int tWrap;
 
 			// Appearences vector //
 			vector<Appearence> appearencesVector;
@@ -564,7 +566,11 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing texlength_t value !!\n");
 
 					// Adds the appearence to the appearences vector //
-					appearencesVector.push_back( *( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureref, texlength_s, texlength_t ) ));
+					sWrap = (int)texlength_s;
+					tWrap = (int)texlength_t;
+
+					appearencesVector.push_back( *( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureref, sWrap, tWrap ) ));
+					
 
 					appearanceAppearances = appearanceAppearances->NextSiblingElement( "appearance" );
 					if( debug ) printf("\n");
