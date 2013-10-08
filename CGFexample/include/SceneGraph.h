@@ -27,7 +27,7 @@ class SceneGraph {
 		void setInitialCamera( char *initCamera );
 
 		// Sets lightning initial values //
-		void addLightingValues( char *doublesided, char *local, char *LightingEnabled, char *LightingAmbient, float LightingAmbientX, float LightingAmbientY, float LightingAmbientZ, float LightingAmbientAlfa);
+		void addLightingValues( char *doublesided, char *local, char *LightingEnabled, char *LightingAmbient, float *LightingAmbientV );
 		
 		// Adds cameras to the map //
 		void addCamera( Camera *camera );
@@ -44,21 +44,21 @@ class SceneGraph {
 	protected:
 		// Global Values //
 		float bgX, bgY, bgZ, bgA;
-		string *drawmode;
-		string *shading;
-		string *cullface;
-		string *cullorder;
+		string drawmode;
+		string shading;
+		string cullface;
+		string cullorder;
 		
 		// Camera Values //
-		string *initialCamera;
+		string initialCamera;
 		map<string, Camera*> *cameras;
 
 		// Lighting Values //
-		string *doublesided;
-		string *local;
-		string *LightingEnabled;
-		string *LightingAmbient;
-		float LightingAmbientX, LightingAmbientY, LightingAmbientZ, LightingAmbientAlfa;
+		string doublesided;
+		string local;
+		string LightingEnabled;
+		string LightingAmbient;
+		float LightingAmbientV[4];
 		map<string, Lighting*> *lights;
 
 		// Texture Values //
@@ -68,7 +68,7 @@ class SceneGraph {
 		map<string, Appearence*> *appearences;
 
 		// Graph Nodes //
-		string *rootid;
+		string rootid;
 		map<string, GraphNode*> *graphNodes;
 };
 

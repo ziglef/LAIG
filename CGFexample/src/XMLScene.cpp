@@ -244,25 +244,26 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			char *id;
 			char *enabled;
 			char *location;
+			float locationV[4];
 			char *diffuse;
-			float diffuseX, diffuseY, diffuseZ, diffuseAlfa;
+			float diffuseV[4];
 			char *ambient;
-			float ambientX, ambientY, ambientZ, ambientAlfa;
+			float ambientV[4];
 			char *specular;
-			float specularX, specularY, specularZ, specularAlfa;
+			float specularV[4];
 
 			// Lighting values //
 			char *doublesided;
 			char *local;
 			char *LightingEnabled;
 			char *LightingAmbient;
-			float LightingAmbientX, LightingAmbientY, LightingAmbientZ, LightingAmbientAlfa;
+			float LightingAmbientV[4];
 
 			// Spot Lights values //
 			float angle;
 			float exponent;
 			char *direction;
-			float directionX, directionY, directionZ;
+			float directionV[4];
 
 			// Process Lighting values //
 			doublesided = (char *)lighting->Attribute( "doublesided" );
@@ -289,13 +290,13 @@ XMLScene::XMLScene(char *filename, bool debug) {
 				if( debug ) printf("\t!! Error parsing enabled value !!\n");
 
 			// Ambient //
-			if( sscanf(LightingAmbient, "%f %f %f %f", &LightingAmbientX, &LightingAmbientY, &LightingAmbientZ, &LightingAmbientAlfa )==4 && debug )
-					printf("\tAmbient: %f %f %f %f\n\n", LightingAmbientX, LightingAmbientY, LightingAmbientZ, LightingAmbientAlfa );
+			if( sscanf(LightingAmbient, "%f %f %f %f", &LightingAmbientV[0], &LightingAmbientV[1], &LightingAmbientV[2], &LightingAmbientV[3] )==4 && debug )
+					printf("\tAmbient: %f %f %f %f\n\n", LightingAmbientV[0], LightingAmbientV[1], LightingAmbientV[2], LightingAmbientV[3] );
 				else
 					if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
 			// Save the Lighting values in the sceneGraph //
-			sg->addLightingValues( doublesided, local, LightingEnabled, LightingAmbient, LightingAmbientX, LightingAmbientY, LightingAmbientZ, LightingAmbientAlfa );
+			sg->addLightingValues( doublesided, local, LightingEnabled, LightingAmbient, LightingAmbientV );
 
 			// Process Omni Lighting Values //
 			omniLighting = lighting->FirstChildElement( "omni" );
@@ -321,31 +322,31 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing enabled value !!\n");
 
 					// Location //
-					if( location && debug )
-						printf("\tLocal: %s\n",location);
+					if( sscanf(location, "%f %f %f %f", &locationV[0], &locationV[1], &locationV[2], &locationV[3] )==4 && debug )
+						printf("\tAmbient: %f %f %f %f\n", locationV[0], locationV[1], locationV[2], locationV[3]);
 					else
-						if( debug ) printf("\t!! Error parsing location value !!\n");
+						if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
 					// Ambient //
-					if( sscanf(ambient, "%f %f %f %f", &ambientX, &ambientY, &ambientZ, &ambientAlfa )==4 && debug )
-						printf("\tAmbient: %f %f %f %f\n", ambientX, ambientY, ambientZ, ambientAlfa);
+					if( sscanf(ambient, "%f %f %f %f", &ambientV[0], &ambientV[1], &ambientV[2], &ambientV[3] )==4 && debug )
+						printf("\tAmbient: %f %f %f %f\n", ambientV[0], ambientV[1], ambientV[2], ambientV[3]);
 					else
 						if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
 					// Diffuse //
-					if( sscanf(diffuse, "%f %f %f %f", &diffuseX, &diffuseY, &diffuseZ, &diffuseAlfa )==4 && debug )
-						printf("\tDiffuse: %f %f %f %f\n", diffuseX, diffuseY, diffuseZ, diffuseAlfa);
+					if( sscanf(diffuse, "%f %f %f %f", &diffuseV[0], &diffuseV[1], &diffuseV[2], &diffuseV[3] )==4 && debug )
+						printf("\tDiffuse: %f %f %f %f\n", diffuseV[0], diffuseV[1], diffuseV[2], diffuseV[3]);
 					else
 						if( debug ) printf("\t!! Error parsing diffuse values !!\n");
 
 					// Specular //
-					if( sscanf(specular,"%f %f %f %f", &specularX, &specularY, &specularZ, &specularAlfa )==4 && debug )
-						printf("\tSpecular: %f %f %f %f\n\n", specularX, specularY, specularZ, specularAlfa);
+					if( sscanf(specular,"%f %f %f %f", &specularV[0], &specularV[1], &specularV[2], &specularV[3] )==4 && debug )
+						printf("\tSpecular: %f %f %f %f\n\n", specularV[1], specularV[1], specularV[2], specularV[3]);
 					else
 						if( debug ) printf("\t!! Error parsing specular values !!\n");
 
 					// Adds the omni light to the omni lights map //
-					this->sg->addLight( new OmniLight( id, enabled, location, diffuse, diffuseX, diffuseY, diffuseZ, diffuseAlfa,  ambient, ambientX, ambientY, ambientZ, ambientAlfa, specular, specularX, specularY, specularZ, specularAlfa ) );
+					this->sg->addLight( new OmniLight( id, enabled, locationV, diffuseV,  ambientV, specularV ) );
 
 					// Parses the next omni light //
 					omniLighting = omniLighting->NextSiblingElement( "omni" );
@@ -378,26 +379,26 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing enabled value !!\n");
 
 					// Location //
-					if( location && debug )
-						printf("\tLocal: %s\n", location);
+					if( sscanf(location, "%f %f %f %f", &locationV[0], &locationV[1], &locationV[2], &locationV[3] )==4 && debug )
+						printf("\tAmbient: %f %f %f %f\n", locationV[0], locationV[1], locationV[2], locationV[3]);
 					else
-						if( debug ) printf("\t!! Error parsing location value !!\n");
+						if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
 					// Ambient //
-					if( sscanf(ambient, "%f %f %f %f", &ambientX, &ambientY, &ambientZ, &ambientAlfa )==4 && debug )
-						printf("\tAmbient: %f %f %f %f\n", ambientX, ambientY, ambientZ, ambientAlfa);
+					if( sscanf(ambient, "%f %f %f %f", &ambientV[0], &ambientV[1], &ambientV[2], &ambientV[3] )==4 && debug )
+						printf("\tAmbient: %f %f %f %f\n", ambientV[0], ambientV[1], ambientV[2], ambientV[3]);
 					else
 						if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
 					// Diffuse //
-					if( sscanf(diffuse, "%f %f %f %f", &diffuseX, &diffuseY, &diffuseZ, &diffuseAlfa )==4 && debug )
-						printf("\tDiffuse: %f %f %f %f\n", diffuseX, diffuseY, diffuseZ, diffuseAlfa);
+					if( sscanf(diffuse, "%f %f %f %f", &diffuseV[0], &diffuseV[1], &diffuseV[2], &diffuseV[3] )==4 && debug )
+						printf("\tDiffuse: %f %f %f %f\n", diffuseV[0], diffuseV[1], diffuseV[2], diffuseV[3]);
 					else
 						if( debug ) printf("\t!! Error parsing diffuse values !!\n");
 
 					// Specular //
-					if( sscanf(specular, "%f %f %f %f", &specularX, &specularY, &specularZ, &specularAlfa )==4 && debug )
-						printf("\tSpecular: %f %f %f %f\n",specularX,specularY,specularZ,specularAlfa);
+					if( sscanf(specular,"%f %f %f %f", &specularV[0], &specularV[1], &specularV[2], &specularV[3] )==4 && debug )
+						printf("\tSpecular: %f %f %f %f\n\n", specularV[1], specularV[1], specularV[2], specularV[3]);
 					else
 						if( debug ) printf("\t!! Error parsing specular values !!\n");
 
@@ -414,13 +415,13 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing exponent value !!\n");
 
 					// Direction //
-					if( sscanf(direction, "%f %f %f %f", &directionX, &directionY, &directionZ )==3 && debug )
-						printf("\tDirection: %f %f %f\n", directionX, directionY, directionZ);
+					if( sscanf(direction, "%f %f %f %f", &directionV[0], &directionV[1], &directionV[2] )==3 && debug )
+						printf("\tDirection: %f %f %f\n", directionV[0], directionV[1], directionV[2]);
 					else
 						if( debug ) printf("\t!! Error parsing direction values !!\n");
 
 					// Adds the spot light to the spot lights map //
-					this->sg->addLight( new SpotLight( id, enabled, location, diffuse, diffuseX, diffuseY, diffuseZ, diffuseAlfa,  ambient, ambientX, ambientY, ambientZ, ambientAlfa, specular, specularX, specularY, specularZ, specularAlfa, angle, exponent, direction, directionX, directionY, directionZ ) );
+					this->sg->addLight( new SpotLight( id, enabled, locationV, diffuseV, ambientV, specularV, angle, exponent, directionV) );
 
 					// Parses the next spot light //
 					spotLighting = spotLighting->NextSiblingElement( "spot" );

@@ -1,26 +1,53 @@
 #ifndef _LIGHTING_H
 #define _LIGHTING_H
 
+#include "CGF\CGFlight.h"
 #include <string>
 using std::string;
 
-class Lighting{
+class Lighting : public CGFlight{
+	private:
+		static size_t count;
+
 	public:
-		Lighting();
+		Lighting(	string ref,
+					bool enabled,
+					float *locationValues,
+					float *diffuseValues,
+					float *ambientValues,
+					float *specularValues
+				) : CGFlight( GL_LIGHT0 + count,  locationValues, NULL){
+					this->ref = ref;
+					this->enabled = enabled;
+					
+					this->setAmbient( ambientValues );
+					this->setDiffuse( diffuseValues );
+					this->setSpecular( specularValues );
+					++count;			
+		};
+
+		Lighting(	string ref,
+					bool enabled,
+					float *locationValues,
+					float *diffuseValues,
+					float *ambientValues,
+					float *specularValues,
+					float *direction
+				) : CGFlight( GL_LIGHT0 + count,  locationValues, direction){
+					this->ref = ref;
+					this->enabled = enabled;
+					
+					this->setAmbient( ambientValues );
+					this->setDiffuse( diffuseValues );
+					this->setSpecular( specularValues );
+					++count;
+		};
 		~Lighting();
 		virtual string getType();
 		virtual string getID();
 
 	protected:
-		string id;
-		string enabled;
-		string location;
-		string diffuse;
-		float diffuseX, diffuseY, diffuseZ, diffuseAlfa;
-		string ambient;
-		float ambientX, ambientY, ambientZ, ambientAlfa;
-		string specular;
-		float specularX, specularY, specularZ, specularAlfa;
+		string ref;
 };
 
 #endif

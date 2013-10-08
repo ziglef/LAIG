@@ -6,10 +6,10 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 	this->bgZ = bgZ;
 	this->bgA = bgA;
 
-	this->drawmode = new string( drawmode );
-	this->shading = new string( shading );
-	this->cullface = new string( cullface );
-	this->cullorder = new string( cullorder );
+	this->drawmode = drawmode;
+	this->shading = shading;
+	this->cullface = cullface;
+	this->cullorder = cullorder;
 
 	this->cameras = new map<string, Camera*>;
 	this->lights = new map<string, Lighting*>;
@@ -19,7 +19,7 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 }
 
 void SceneGraph::setInitialCamera( char *initCamera){
-	this->initialCamera = new string( initCamera );
+	this->initialCamera = initCamera;
 }
 
 
@@ -31,16 +31,13 @@ void SceneGraph::addLight( Lighting *light ){
 	this->lights->insert( std::pair<string, Lighting*>(light->getID(), light) );
 }
 
-void SceneGraph::addLightingValues( char *doublesided, char *local, char *LightingEnabled, char *LightingAmbient, float LightingAmbientX, float LightingAmbientY, float LightingAmbientZ, float LightingAmbientAlfa){
-	this->LightingAmbientX = LightingAmbientX;
-	this->LightingAmbientY = LightingAmbientY;
-	this->LightingAmbientZ = LightingAmbientZ;
-	this->LightingAmbientAlfa = LightingAmbientAlfa;
+void SceneGraph::addLightingValues( char *doublesided, char *local, char *LightingEnabled, char *LightingAmbient, float *LightingAmbientV ){
+	for(int i=0; i<4; i++) this->LightingAmbientV[i] = LightingAmbientV[4];
 	
-	this->doublesided = new string( doublesided );
-	this->local = new string( local );
-	this->LightingEnabled = new string( LightingEnabled );
-	this->LightingAmbient = new string( LightingAmbient );
+	this->doublesided = doublesided;
+	this->local = local;
+	this->LightingEnabled = LightingEnabled;
+	this->LightingAmbient = LightingAmbient;
 }
 
 void SceneGraph::addTexture( Texture *texture ){

@@ -1,9 +1,5 @@
 #include "../include/Lighting.h"
 
-Lighting::Lighting(){
-
-}
-
 Lighting::~Lighting(){
 
 }
@@ -15,3 +11,5 @@ std::string Lighting::getID(){
 std::string Lighting::getType(){
 	return "";
 }
+
+size_t Lighting::count = GL_LIGHT0;

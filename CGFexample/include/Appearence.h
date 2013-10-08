@@ -20,7 +20,7 @@ class Appearence : CGFappearance{
 		  CGFappearance( ambient, diffuse, specular, shininess ){
 			  this->id = id;
 			  
-			  for(int i=0; i<0; i++)
+			  for(int i=0; i<4; i++)
 		  		  this->emissive[i] = emissive[i];
 
 				this->setTexture(texture);
