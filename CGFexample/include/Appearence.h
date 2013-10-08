@@ -14,7 +14,7 @@ class Appearence : CGFappearance{
 			float *diffuse,
 			float *specular,
 			float shininess,
-			string texture,
+			CGFtexture *texture,
 			int sWrap,
 			int tWrap) :
 		  CGFappearance( ambient, diffuse, specular, shininess ){

@@ -569,7 +569,14 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					sWrap = (int)texlength_s;
 					tWrap = (int)texlength_t;
 
-					appearencesVector.push_back( *( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureref, sWrap, tWrap ) ));
+					CGFtexture *textureRef;
+
+					for(int i=0; i<this->sg->textures.size(); i++){
+						if(this->sg->textures[i].id == textureref)
+							textureRef = &this->sg->textures[i];
+					}
+
+					appearencesVector.push_back( *( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureRef, sWrap, tWrap ) ));
 					
 
 					appearanceAppearances = appearanceAppearances->NextSiblingElement( "appearance" );
@@ -596,7 +603,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  char *id;
 
 			  // AppearanceRef Values //
-			  char *appRefId;
+			  char *appRefId = NULL;
 
 			  // Tranformation Values //
 			  char *translate;
@@ -738,8 +745,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						appRefId = (char *)appearanceRefNodeGraph->Attribute( "id" );
 						if( appRefId && debug )
 							printf("\tAppearance Reference: %s\n", appRefId);
-						else
+						else {
 							if( debug ) printf("\t!! Error parsing appearance reference !!\n");
+							appRefId = NULL;
+						}
 					  }
 
 					  // Children //
@@ -890,8 +899,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							   printf("\n");
 						  }while( torusChildrenNodeGraph );
 					  }
-
-					  nodesVector.push_back( *( new GraphNode( id, appRefId, nodeRefIdVector ) ));
+					  if( appRefId == NULL )
+						nodesVector.push_back( *( new GraphNode( id, nodeRefIdVector ) ));
+					  else
+						nodesVector.push_back( *( new GraphNode( id, appRefId, nodeRefIdVector ) ));
 					  glGetFloatv( GL_MODELVIEW, nodesVector.back().getTransformationMatrix() );
 					  nodeGraph = nodeGraph->NextSiblingElement( "node" );
 					  if( debug ) printf("\n");

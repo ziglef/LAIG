@@ -6,6 +6,12 @@ GraphNode::GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector 
 	this->nodeRefIdVector = nodeRefIdVector;
 }
 
+GraphNode::GraphNode( char *id, vector<string> &nodeRefIdVector ){
+	this->id = id;
+	this->appRefId = "";
+	this->nodeRefIdVector = nodeRefIdVector;
+}
+
 float *GraphNode::getTransformationMatrix(){
 	return &transformationMatrix[0];
 }

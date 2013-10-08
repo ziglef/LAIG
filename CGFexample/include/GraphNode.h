@@ -13,6 +13,7 @@ using std::vector;
 class GraphNode{
 	public:
 		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector );
+		GraphNode( char *id, vector<string> &nodeRefIdVector );
 		float *getTransformationMatrix();
 		~GraphNode();
 

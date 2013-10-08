@@ -14,6 +14,9 @@ class Texture : CGFtexture{
 
 	protected:
 		string id;
+
+	friend class SceneGraph;
+	friend class XMLScene;
 };
 
 #endif
