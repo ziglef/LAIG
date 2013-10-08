@@ -6,11 +6,9 @@ using std::string;
 
 class Rectangle{
 	public:
-		Rectangle();
+		Rectangle( float x1, float y1, float x2, float y2 );
 		~Rectangle();
 	private:
-		string xy1;
-		string xy2;
 		float x1, x2, y1, y2;
 };
 

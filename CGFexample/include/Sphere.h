@@ -3,7 +3,7 @@
 
 class Sphere{
 	public:
-		Sphere();
+		Sphere( float radius, int slices, int stacks );
 		~Sphere();
 	private:
 		float radius;

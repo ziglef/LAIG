@@ -3,7 +3,7 @@
 
 class Torus{
 	public:
-		Torus();
+		Torus( float inner, float outer, int slices, int loops );
 		~Torus();
 	private:
 		float inner;

@@ -1,7 +1,9 @@
 #include "../include/Sphere.h"
 
-Sphere::Sphere(){
-
+Sphere::Sphere( float radius, int slices, int stacks ){
+	this->radius = radius;
+	this->slices = slices;
+	this->stacks = stacks;
 }
 
 Sphere::~Sphere(){

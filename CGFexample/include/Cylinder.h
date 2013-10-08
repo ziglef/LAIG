@@ -3,7 +3,7 @@
 
 class Cylinder{
 	public:
-		Cylinder();
+		Cylinder( float base, float top, float height, int slices, int stacks );
 		~Cylinder();
 	private:
 		float base;
