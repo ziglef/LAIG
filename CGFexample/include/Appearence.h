@@ -1,28 +1,39 @@
 #ifndef _APPEARENCE_H_
 #define _APPEARENCE_H_
 
+#include "CGF\CGFappearance.h"
 #include <string>
 using std::string;
 
-class Appearence{
+class Appearence : CGFappearance{
 	public:
-		Appearence( char *id, char *emissive, float emissiveX, float emissiveY, float emissiveZ, float emissiveAlfa, char *diffuse, float diffuseX, float diffuseY, float diffuseZ, float diffuseAlfa, char *ambient, float ambientX, float ambientY, float ambientZ, float ambientAlfa, char *specular, float specularX, float specularY, float specularZ, float specularAlfa, float shininess, char *textureref, float texlength_s, float texlength_t );
+		Appearence( 
+			char *id,
+			float *emissive,
+			float *ambient,
+			float *diffuse,
+			float *specular,
+			float shininess,
+			string texture,
+			int sWrap,
+			int tWrap) :
+		  CGFappearance( ambient, diffuse, specular, shininess ){
+			  this->id = id;
+			  
+			  for(int i=0; i<0; i++)
+		  		  this->emissive[i] = emissive[i];
+
+				this->setTexture(texture);
+				this->setTextureWrap(sWrap, tWrap);
+
+		  }
 		~Appearence();
 
+		string getID();
+
 	protected:
-		string *id;
-		string *emissive;
-		float emissiveX, emissiveY, emissiveZ, emissiveAlfa;
-		string *diffuse;
-		float diffuseX, diffuseY, diffuseZ, diffuseAlfa;
-		string *ambient;
-		float ambientX, ambientY, ambientZ, ambientAlfa;
-		string *specular;
-		float specularX, specularY, specularZ, specularAlfa;
-		float shininess;
-		string *textureref;
-		float texlength_s;
-		float texlength_t;
+		string id;
+		float emissive[4];
 };
 
 #endif

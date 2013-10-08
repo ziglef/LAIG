@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Primitive.h"
 
 using std::string;
 using std::vector;
