@@ -8,5 +8,9 @@ Torus::Torus( float inner, float outer, int slices, int loops ){
 }
 
 Torus::~Torus(){
+}
 
+void Torus::draw(){
+	glutSolidTorus( this->inner, this->outer, this->slices, this->loops );
+	//glutWireTorus( this->inner, this->outer, this->slices, this->loops );
 }

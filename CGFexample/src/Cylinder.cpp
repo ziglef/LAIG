@@ -9,5 +9,9 @@ Cylinder::Cylinder( float base, float top, float height, int slices, int stacks 
 }
 
 Cylinder::~Cylinder(){
+}
 
+void Cylinder::draw(){
+	this->quadric = gluNewQuadric();
+	gluCylinder( this->quadric, this->base, this->top, this->height, this->slices, this->stacks );
 }

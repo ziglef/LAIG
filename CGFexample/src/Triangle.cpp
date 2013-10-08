@@ -13,5 +13,12 @@ Triangle::Triangle( float x1, float y1, float z1, float x2, float y2, float z2, 
 }
 
 Triangle::~Triangle(){
+}
 
+void Triangle::draw(){
+	glBegin( GL_TRIANGLES );
+		glVertex3f( x1, y1, z1 );
+		glVertex3f( x2, y2, z2 );
+		glVertex3f( x3, y3, z3 );
+	glEnd();
 }

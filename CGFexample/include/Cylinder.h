@@ -1,16 +1,21 @@
 #ifndef _CYLINDER_H_
 #define _CYLINDER_H_
 
-class Cylinder{
+#include "CGF\CGFobject.h"
+#include "GL\glut.h"
+
+class Cylinder : CGFobject{
 	public:
 		Cylinder( float base, float top, float height, int slices, int stacks );
 		~Cylinder();
+		void draw();
 	private:
 		float base;
 		float top;
 		float height;
 		int slices;
 		int stacks;
+		GLUquadricObj *quadric;
 };
 
 #endif

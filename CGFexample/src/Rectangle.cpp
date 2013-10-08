@@ -8,5 +8,8 @@ Rectangle::Rectangle( float x1, float y1, float x2, float y2 ){
 }
 
 Rectangle::~Rectangle(){
+}
 
+void Rectangle::draw(){
+	glRectf( this->x1, this->y1, this->x2, this->y2 );
 }
