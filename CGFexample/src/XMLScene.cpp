@@ -483,13 +483,13 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			// Appearences Values //
 			char *id;
 			char *emissive;
-			float emissiveX, emissiveY, emissiveZ, emissiveAlfa;
+			float emissiveValues[4];
 			char *diffuse;
-			float diffuseX, diffuseY, diffuseZ, diffuseAlfa;
+			float diffuseValues[4];
 			char *ambient;
-			float ambientX, ambientY, ambientZ, ambientAlfa;
+			float ambientValues[4];
 			char *specular;
-			float specularX, specularY, specularZ, specularAlfa;
+			float specularValues[4];
 			float shininess;
 			char *textureref;
 			float texlength_s;
@@ -516,26 +516,26 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing appearance id !!\n");
 
 					// Emissive //
-					if( sscanf(emissive, "%f %f %f %f", &emissiveX, &emissiveY, &emissiveZ, &emissiveAlfa )==4 && debug )
-						printf("\tEmissive: %f %f %f %f\n", emissiveX, emissiveY, emissiveZ, emissiveAlfa);
+					if( sscanf(emissive, "%f %f %f %f", &emissiveValues[0], &emissiveValues[1], &emissiveValues[2], &emissiveValues[3] )==4 && debug )
+						printf("\tEmissive: %f %f %f %f\n", emissiveValues[0], emissiveValues[1], emissiveValues[2], emissiveValues[3]);
 					else
 						if( debug ) printf("\t!! Error parsing Emissive values !!\n");
 
 					// Ambient //
-					if( sscanf(ambient, "%f %f %f %f", &ambientX, &ambientY, &ambientZ, &ambientAlfa )==4 && debug )
-						printf("\tAmbient: %f %f %f %f\n", ambientX, ambientY, ambientZ, ambientAlfa);
+					if( sscanf(ambient, "%f %f %f %f", &ambientValues[0], &ambientValues[1], &ambientValues[2], &ambientValues[3] )==4 && debug )
+						printf("\tAmbient: %f %f %f %f\n", ambientValues[0], ambientValues[1], ambientValues[2], ambientValues[3]);
 					else
 						if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
 					// Diffuse //
-					if( sscanf(diffuse, "%f %f %f %f", &diffuseX, &diffuseY, &diffuseZ, &diffuseAlfa )==4 && debug )
-						printf("\tDiffuse: %f %f %f %f\n", diffuseX, diffuseY, diffuseZ, diffuseAlfa);
+					if( sscanf(diffuse, "%f %f %f %f", &diffuseValues[0], &diffuseValues[1], &diffuseValues[2], &diffuseValues[3] )==4 && debug )
+						printf("\tDiffuse: %f %f %f %f\n", diffuseValues[0], diffuseValues[1], diffuseValues[2], diffuseValues[3]);
 					else
 						if( debug ) printf("\t!! Error parsing diffuse values !!\n");
 
 					// Specular //
-					if( sscanf(specular, "%f %f %f %f", &specularX, &specularY, &specularZ, &specularAlfa )==4 && debug )
-						printf("\tSpecular: %f %f %f %f\n", specularX, specularY, specularZ, specularAlfa);
+					if( sscanf(specular, "%f %f %f %f", &specularValues[0], &specularValues[1], &specularValues[2], &specularValues[3] )==4 && debug )
+						printf("\tSpecular: %f %f %f %f\n", specularValues[0], specularValues[1], specularValues[2], specularValues[3]);
 					else
 						if( debug ) printf("\t!! Error parsing specular values !!\n");
 
@@ -564,7 +564,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing texlength_t value !!\n");
 
 					// Adds the appearence to the appearences vector //
-					appearencesVector.push_back( *( new Appearence( id, emissive, emissiveX, emissiveY, emissiveZ, emissiveAlfa, diffuse, diffuseX, diffuseY, diffuseZ, diffuseAlfa, ambient, ambientX, ambientY, ambientZ, ambientAlfa, specular, specularX, specularY, specularZ, specularAlfa, shininess, textureref, texlength_s, texlength_t ) ));
+					appearencesVector.push_back( *( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureref, texlength_s, texlength_t ) ));
 
 					appearanceAppearances = appearanceAppearances->NextSiblingElement( "appearance" );
 					if( debug ) printf("\n");
