@@ -245,7 +245,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			char *enabled;
 			bool enabledBool;
 			char *location;
-			float locationV[4];
+			float locationV[3];
 			char *diffuse;
 			float diffuseV[4];
 			char *ambient;
@@ -323,10 +323,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing enabled value !!\n");
 
 					// Location //
-					if( sscanf(location, "%f %f %f %f", &locationV[0], &locationV[1], &locationV[2], &locationV[3] )==4 && debug )
-						printf("\tAmbient: %f %f %f %f\n", locationV[0], locationV[1], locationV[2], locationV[3]);
+					if( sscanf(location, "%f %f %f", &locationV[0], &locationV[1], &locationV[2] )==3 && debug )
+						printf("\Location: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
 					else
-						if( debug ) printf("\t!! Error parsing ambient values !!\n");
+						if( debug ) printf("\t!! Error parsing location values !!\n");
 
 					// Ambient //
 					if( sscanf(ambient, "%f %f %f %f", &ambientV[0], &ambientV[1], &ambientV[2], &ambientV[3] )==4 && debug )
@@ -385,10 +385,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing enabled value !!\n");
 
 					// Location //
-					if( sscanf(location, "%f %f %f %f", &locationV[0], &locationV[1], &locationV[2], &locationV[3] )==4 && debug )
-						printf("\tAmbient: %f %f %f %f\n", locationV[0], locationV[1], locationV[2], locationV[3]);
+					if( sscanf(location, "%f %f %f", &locationV[0], &locationV[1], &locationV[2] )==3 && debug )
+						printf("\Location: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
 					else
-						if( debug ) printf("\t!! Error parsing ambient values !!\n");
+						if( debug ) printf("\t!! Error parsing location values !!\n");
 
 					// Ambient //
 					if( sscanf(ambient, "%f %f %f %f", &ambientV[0], &ambientV[1], &ambientV[2], &ambientV[3] )==4 && debug )
