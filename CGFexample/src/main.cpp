@@ -3,6 +3,7 @@
 
 #include "../include/XMLscene.h"
 #include "../include/SceneGraph.h"
+#include "../include/CGF/CGFapplication.h"
 #include "../include/YafScene.h"
 
 using std::cout;
@@ -30,7 +31,21 @@ int main(int argc, char* argv[]) {
 	fflush( stdin );
 	getchar();
 
-	//initiateScene( , argc, argv );
+	try {
+		CGFapplication app = CGFapplication();
+		app.init(&argc, argv);
+		app.setScene( new YafScene() );
+		app.setInterface(new CGFinterface());
+		app.run();
+	}
+	catch(GLexception& ex) {
+		cout << "Error: " << ex.what();
+		return -1;
+	}
+	catch(exception& ex) {
+		cout << "Unexpected error: " << ex.what();
+		return -1;
+	}
 
 	return 0;
 }
