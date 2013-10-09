@@ -946,3 +946,7 @@ TiXmlElement *XMLScene::findChildByAttribute( TiXmlElement *parent,const char * 
 
 	return child;
 }
+
+SceneGraph *XMLScene::getSG(){
+	return this->sg;
+}

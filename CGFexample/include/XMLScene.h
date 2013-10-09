@@ -18,6 +18,7 @@ public:
 	~XMLScene();
 
 	static TiXmlElement *findChildByAttribute( TiXmlElement *parent,const char * attr, const char *val );
+	SceneGraph *getSG();
 	
 protected:
 
