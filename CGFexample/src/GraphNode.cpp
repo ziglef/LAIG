@@ -16,6 +16,10 @@ float *GraphNode::getTransformationMatrix(){
 	return &transformationMatrix[0];
 }
 
+void GraphNode::setPrimitives( vector<CGFobject*> primitives ){
+	this->primitives = primitives;
+}
+
 GraphNode::~GraphNode(){
 
 }

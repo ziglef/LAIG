@@ -3,6 +3,7 @@
 
 #include "../include/XMLscene.h"
 #include "../include/SceneGraph.h"
+//#include "../src/YafScene.cpp"
 
 using std::cout;
 using std::exception;
@@ -28,6 +29,8 @@ int main(int argc, char* argv[]) {
 
 	fflush( stdin );
 	getchar();
+
+	//initiateScene( GraphScene->sg, argc, argv );
 
 	return 0;
 }

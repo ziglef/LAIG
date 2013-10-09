@@ -3,6 +3,11 @@
 
 #include "tinyxml.h"
 #include "SceneGraph.h"
+#include "Cylinder.h"
+#include "Torus.h"
+#include "Sphere.h"
+#include "Triangle.h"
+#include "Rectangle.h"
 #include "CGF\CGFscene.h"
 #include <cmath>
 

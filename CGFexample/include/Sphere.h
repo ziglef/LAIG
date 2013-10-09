@@ -4,7 +4,7 @@
 #include "CGF\CGFobject.h"
 #include "GL\glut.h"
 
-class Sphere : CGFobject{
+class Sphere : public CGFobject{
 	public:
 		Sphere( float radius, int slices, int stacks );
 		~Sphere();

@@ -600,7 +600,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  char *rootid;
 
 			  // Nodes Vector //
-			  vector<GraphNode> nodesVector;
+			  GraphNode *node;
+
+			  // Primitives Vector //
+			  vector<CGFobject*> primitives;
 
 			  // Node values //
 			  char *id;
@@ -788,6 +791,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  else
 								if( debug ) printf("\t!! Error parsing xy2 rectangle values !!\n");
 
+							  primitives.push_back( new Rectangle( rx1, ry1, rx2, ry2 ) );
 							  rectangleChildrenNodeGraph = rectangleChildrenNodeGraph->NextSiblingElement( "rectangle" );
 							  printf("\n");
 						  }while( rectangleChildrenNodeGraph );
@@ -814,6 +818,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  else
 								if( debug ) printf("\t!! Error parsing xyz3 triangle values !!\n");
 
+							  primitives.push_back( new Triangle( tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3 ) );
 							  triangleChildrenNodeGraph = triangleChildrenNodeGraph->NextSiblingElement( "triangle" );
 							  printf("\n");
 						  }while( triangleChildrenNodeGraph );
@@ -847,6 +852,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  else
 								if( debug ) printf("\t!! Error parsing stacks value !!\n");
 
+							  primitives.push_back( new Cylinder( cbase, ctop, cheight, cslices, cstacks ) );
 							  cylinderChildrenNodeGraph = cylinderChildrenNodeGraph->NextSiblingElement( "cylinder" );
 							  printf("\n");
 						  }while( cylinderChildrenNodeGraph );
@@ -870,6 +876,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  else
 								if( debug ) printf("\t!! Error parsing stacks value !!\n");
 
+							   primitives.push_back( new Sphere( sradius, sslices, sstacks ) );
 							  sphereChildrenNodeGraph = sphereChildrenNodeGraph->NextSiblingElement( "sphere" );
 							  printf("\n");
 						  }while( sphereChildrenNodeGraph );
@@ -898,15 +905,18 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  else
 								if( debug ) printf("\t!! Error parsing loops value !!\n");
 
+							  primitives.push_back( new Torus( tinner, touter, tslices, tloops ) );
 							  torusChildrenNodeGraph = torusChildrenNodeGraph->NextSiblingElement( "torus" );
 							   printf("\n");
 						  }while( torusChildrenNodeGraph );
 					  }
 					  if( appRefId == NULL )
-						nodesVector.push_back( *( new GraphNode( id, nodeRefIdVector ) ));
+							node = new GraphNode( id, nodeRefIdVector );
 					  else
-						nodesVector.push_back( *( new GraphNode( id, appRefId, nodeRefIdVector ) ));
-					  glGetFloatv( GL_MODELVIEW, nodesVector.back().getTransformationMatrix() );
+						  node = new GraphNode( id, appRefId, nodeRefIdVector );
+					  glGetFloatv( GL_MODELVIEW, node->getTransformationMatrix() );
+					  node->setPrimitives( primitives );
+					  sg->addGraphNode( node );
 					  nodeGraph = nodeGraph->NextSiblingElement( "node" );
 					  if( debug ) printf("\n");
 				  }while( nodeGraph );

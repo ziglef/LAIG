@@ -4,7 +4,7 @@
 #include "CGF\CGFobject.h"
 #include "GL\glut.h"
 
-class Torus : CGFobject{
+class Torus : public CGFobject{
 	public:
 		Torus( float inner, float outer, int slices, int loops );
 		~Torus();

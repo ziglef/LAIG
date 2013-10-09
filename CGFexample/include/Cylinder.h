@@ -4,7 +4,7 @@
 #include "CGF\CGFobject.h"
 #include "GL\glut.h"
 
-class Cylinder : CGFobject{
+class Cylinder : public CGFobject{
 	public:
 		Cylinder( float base, float top, float height, int slices, int stacks );
 		~Cylinder();

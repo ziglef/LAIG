@@ -3,17 +3,16 @@
 
 #include <string>
 #include <vector>
-#include "Primitive.h"
+#include "CGF\CGFobject.h"
 
 using std::string;
 using std::vector;
-
-#include "Primitive.h"
 
 class GraphNode{
 	public:
 		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector );
 		GraphNode( char *id, vector<string> &nodeRefIdVector );
+		void setPrimitives( vector<CGFobject*> primitives );
 		float *getTransformationMatrix();
 		~GraphNode();
 		string getID();
@@ -22,6 +21,7 @@ class GraphNode{
 		string id;
 		string appRefId;
 		vector<string> nodeRefIdVector;
+		vector<CGFobject*> primitives;
 		float transformationMatrix[16];
 };
 
