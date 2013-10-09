@@ -101,9 +101,9 @@ XMLScene::XMLScene(char *filename, bool debug) {
 		// Perspective Camera Values //
 		float angle;
 		char *pos;
-		float posX,posY,posZ;
+		float posV[3];
 		char *target;
-		float targetX,targetY,targetZ;
+		float targetV[3];
 
 		// Orthogonal Camera Values //
 		float left;
@@ -154,21 +154,21 @@ XMLScene::XMLScene(char *filename, bool debug) {
 				// Position //
 				pos = (char *)perspectiveCamera->Attribute( "pos" );
 
-				if( pos && sscanf(pos, "%f %f %f", &posX, &posY, &posZ )==3 && debug )
-					printf("\tPos: %f %f %f\n", posX, posY, posZ);
+				if( pos && sscanf(pos, "%f %f %f", &posV[0], &posV[1], &posV[2] )==3 && debug )
+					printf("\tPos: %f %f %f\n", posV[0], posV[1], posV[2]);
 				else
 					if( debug ) printf("\t!! Error parsing Pos values !!\n");
 
 				// Target //
 				target = (char *)perspectiveCamera->Attribute( "target" );
 
-				if( pos && sscanf(target, "%f %f %f", &targetX, &targetY, &targetZ )==3 && debug )
-					printf("\tTarget: %f %f %f\n", targetX, targetY, targetZ);
+				if( pos && sscanf(target, "%f %f %f", &targetV[0], &targetV[1], &targetV[2] )==3 && debug )
+					printf("\tTarget: %f %f %f\n", targetV[0], targetV[1], targetV[2]);
 				else
 					if( debug ) printf("\t!! Error parsing Target value !!\n");
 
 				// Adds new perspective camera
-				this->sg->addCamera( new PerspectiveCamera( id, near, far,angle, pos, posX, posY, posZ, target, targetX, targetY, targetZ ) );
+				this->sg->addCamera( new PerspectiveCamera( id, near, far, angle, posV, targetV ) );
 
 				// Parses the next perspective camera //
 				perspectiveCamera = perspectiveCamera->NextSiblingElement( "perspective" );
@@ -243,6 +243,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			// Omni and Spot Lights Shared Fields //
 			char *id;
 			char *enabled;
+			bool enabledBool;
 			char *location;
 			float locationV[4];
 			char *diffuse;
@@ -345,8 +346,13 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					else
 						if( debug ) printf("\t!! Error parsing specular values !!\n");
 
+					if(strcmp(enabled, "true") == 0)
+						enabledBool = true;
+					else
+						enabledBool = false;
+
 					// Adds the omni light to the omni lights map //
-					this->sg->addLight( new OmniLight( id, enabled, locationV, diffuseV,  ambientV, specularV ) );
+					this->sg->addLight( new OmniLight( id, enabledBool, locationV, diffuseV,  ambientV, specularV ) );
 
 					// Parses the next omni light //
 					omniLighting = omniLighting->NextSiblingElement( "omni" );
@@ -420,8 +426,13 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					else
 						if( debug ) printf("\t!! Error parsing direction values !!\n");
 
+					if(strcmp(enabled, "true") == 0)
+						enabledBool = true;
+					else
+						enabledBool = false;
+
 					// Adds the spot light to the spot lights map //
-					this->sg->addLight( new SpotLight( id, enabled, locationV, diffuseV, ambientV, specularV, angle, exponent, directionV) );
+					this->sg->addLight( new SpotLight( id, enabledBool, locationV, diffuseV, ambientV, specularV, angle, exponent, directionV) );
 
 					// Parses the next spot light //
 					spotLighting = spotLighting->NextSiblingElement( "spot" );

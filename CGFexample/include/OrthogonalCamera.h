@@ -5,7 +5,20 @@
 
 class OrthogonalCamera : public Camera{
 	public:
-		OrthogonalCamera( char *id, float near, float far, float left, float right, float up, float bottom );
+		OrthogonalCamera(
+							char *id,
+							float near,
+							float far,
+							float left,
+							float right,
+							float top,
+							float bottom 
+							) : Camera( id, near, far ){
+			this->left = left;
+			this->right = right;
+			this->top = top;
+			this->bottom = bottom;
+		};
 		~OrthogonalCamera();
 		string getType();
 		string getID();
