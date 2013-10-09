@@ -324,7 +324,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 					// Location //
 					if( sscanf(location, "%f %f %f", &locationV[0], &locationV[1], &locationV[2] )==3 && debug )
-						printf("\Location: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
+						printf("\tLocation: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
 					else
 						if( debug ) printf("\t!! Error parsing location values !!\n");
 
@@ -386,7 +386,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 					// Location //
 					if( sscanf(location, "%f %f %f", &locationV[0], &locationV[1], &locationV[2] )==3 && debug )
-						printf("\Location: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
+						printf("\tLocation: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
 					else
 						if( debug ) printf("\t!! Error parsing location values !!\n");
 
