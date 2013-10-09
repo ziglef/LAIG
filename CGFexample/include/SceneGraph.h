@@ -39,7 +39,27 @@ class SceneGraph {
 		void setRootId( char *rootId );
 		void addGraphNode( GraphNode *graphNode );
 
+		// Getters for the protected values //
+		string getDrawmode();
+		string getShading();
+		string getCullface();
+		string getCullorder();
+
+		string getInitialCamera();
+		map<string, Camera*> *getCameras();
+
+		string getDoublesided();
+		string getLocal();
+		string getLightingEnabled();
+		float* getLightingAmbientValues();
+		map<string, Lighting*> *getLights();
+
 		map<string, Texture*> *getTextures();
+
+		map<string, Appearence*> *getAppearences();
+
+		string getRootid();
+		map<string, GraphNode*> *getGraphnodes();
 
 	protected:
 		// Global Values //

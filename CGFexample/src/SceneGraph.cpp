@@ -56,8 +56,64 @@ void SceneGraph::addGraphNode( GraphNode *graphNode ){
 	this->graphNodes->insert( std::pair<string, GraphNode*>(graphNode->getID(), graphNode) );
 }
 
+string SceneGraph::getDrawmode(){
+	return this->drawmode;
+}
+
+string SceneGraph::getShading(){
+	return this->shading;
+}
+
+string SceneGraph::getCullface(){
+	return this->cullface;
+}
+
+string SceneGraph::getCullorder(){
+	return this->cullorder;
+}
+
+string SceneGraph::getInitialCamera(){
+	return this->initialCamera;
+}
+
+map<string, Camera*>* SceneGraph::getCameras(){
+	return this->cameras;
+}
+
+string SceneGraph::getDoublesided(){
+	return this->doublesided;
+}
+
+string SceneGraph::getLocal(){
+	return this->local;
+}
+
+string SceneGraph::getLightingEnabled(){
+	return this->LightingEnabled;
+}
+
+float* SceneGraph::getLightingAmbientValues(){
+	return this->LightingAmbientV;
+}
+
+map<string, Lighting*>* SceneGraph::getLights(){
+	return this->lights;
+}
+
 map<string, Texture*>* SceneGraph::getTextures(){
 	return this->textures;
+}
+
+map<string, Appearence*>* SceneGraph::getAppearences(){
+	return this->appearences;
+}
+
+string SceneGraph::getRootid(){
+	return this->rootid;
+}
+
+map<string, GraphNode*>* SceneGraph::getGraphnodes(){
+	return this->graphNodes;
 }
 
 SceneGraph::~SceneGraph(){

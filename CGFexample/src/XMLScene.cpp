@@ -793,7 +793,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 							  primitives.push_back( new Rectangle( rx1, ry1, rx2, ry2 ) );
 							  rectangleChildrenNodeGraph = rectangleChildrenNodeGraph->NextSiblingElement( "rectangle" );
-							  printf("\n");
+							  if( debug ) printf("\n");
 						  }while( rectangleChildrenNodeGraph );
 					  }
 
@@ -820,7 +820,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 							  primitives.push_back( new Triangle( tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3 ) );
 							  triangleChildrenNodeGraph = triangleChildrenNodeGraph->NextSiblingElement( "triangle" );
-							  printf("\n");
+							  if( debug ) printf("\n");
 						  }while( triangleChildrenNodeGraph );
 					  }
 
@@ -854,7 +854,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 							  primitives.push_back( new Cylinder( cbase, ctop, cheight, cslices, cstacks ) );
 							  cylinderChildrenNodeGraph = cylinderChildrenNodeGraph->NextSiblingElement( "cylinder" );
-							  printf("\n");
+							  if( debug ) printf("\n");
 						  }while( cylinderChildrenNodeGraph );
 					  }
 
@@ -878,7 +878,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 							   primitives.push_back( new Sphere( sradius, sslices, sstacks ) );
 							  sphereChildrenNodeGraph = sphereChildrenNodeGraph->NextSiblingElement( "sphere" );
-							  printf("\n");
+							  if( debug ) printf("\n");
 						  }while( sphereChildrenNodeGraph );
 					  }
 
@@ -907,7 +907,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 							  primitives.push_back( new Torus( tinner, touter, tslices, tloops ) );
 							  torusChildrenNodeGraph = torusChildrenNodeGraph->NextSiblingElement( "torus" );
-							   printf("\n");
+							  if( debug )printf("\n");
 						  }while( torusChildrenNodeGraph );
 					  }
 					  if( appRefId == NULL )
