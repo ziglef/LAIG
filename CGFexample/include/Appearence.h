@@ -5,7 +5,7 @@
 #include <string>
 using std::string;
 
-class Appearence : CGFappearance{
+class Appearence : public CGFappearance{
 	public:
 		Appearence( 
 			char *id,

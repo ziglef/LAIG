@@ -668,7 +668,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 			  sg->setRootId( rootid );
 
-			 // glMatrixMode( GL_MODELVIEW );
+			  glMatrixMode( GL_MODELVIEW_MATRIX );
 
 			  // Process Nodes of the Graph //
 			  nodeGraph = sceneGraph->FirstChildElement( "node" );
@@ -679,7 +679,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  vector<CGFobject*> primitives;
 					  id = (char *)nodeGraph->Attribute( "id" );
 					  transformsNodeGraph = nodeGraph->FirstChildElement( "transforms" );
-					  transformsChildNodeGraph = transformsNodeGraph->FirstChildElement( );
+					  transformsChildNodeGraph = transformsNodeGraph->FirstChildElement();
 					  appearanceRefNodeGraph = nodeGraph->FirstChildElement( "appearanceref" );
 					  childrenNodeGraph = nodeGraph->FirstChildElement( "children" );
 					  noderefChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "noderef" );
@@ -698,124 +698,55 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  // Tranformations //
 
 					  // Initialize the translation matrix //
-					    glLoadIdentity();
+					  glLoadIdentity();
 
-					 // Translate //
-					  if( transformsChildNodeGraph ){
-						  do{
-							  translate = (char *)translateTransformsNodeGraph->Attribute( "to" );
-							  if( sscanf(translate, "%f %f %f %f", &translateX, &translateY, &translateZ )==3 && debug )
-								 printf("\tTranslate: %f %f %f\n", translateX, translateY, translateZ);
-							  else
-								 if( debug ) printf("\t!! Error parsing Translate values !!\n");
-							  glTranslatef( translateX, translateY, translateZ );
-							  translateTransformsNodeGraph = translateTransformsNodeGraph->NextSiblingElement( "translate" );
-						  }while( translateTransformsNodeGraph );
-					  }
+					while( transformsChildNodeGraph ){
+						// Translate //
+						if( strcmp(transformsChildNodeGraph->Value(), "translate") == 0 ){
+							translate = (char *)transformsChildNodeGraph->Attribute( "to" );
+							if( sscanf(translate, "%f %f %f %f", &translateX, &translateY, &translateZ )==3 && debug )
+								printf("\tTranslate: %f %f %f\n", translateX, translateY, translateZ);
+							else
+								if( debug ) printf("\t!! Error parsing Translate values !!\n");
+							glTranslatef( translateX, translateY, translateZ );
+						}
 
 					   // Scale //
-					  if( scaleTransformsNodeGraph ){
-						  do{
-							  scale = (char *)scaleTransformsNodeGraph->Attribute( "factor" );
-							  if( sscanf(scale, "%f %f %f %f", &scaleX, &scaleY, &scaleZ )==3 && debug )
-								printf("\tScale: %f %f %f\n", scaleX, scaleY, scaleZ);
-							  else
-								if( debug ) printf("\t!! Error parsing scale values !!\n");
-							  glScalef( scaleX, scaleY, scaleZ );
-							  scaleTransformsNodeGraph = scaleTransformsNodeGraph->NextSiblingElement( "scale" );
-						  }while( scaleTransformsNodeGraph );
-					  }
+						if( strcmp(transformsChildNodeGraph->Value(), "scale") == 0 ){
+							scale = (char *)transformsChildNodeGraph->Attribute( "factor" );
+							if( sscanf(scale, "%f %f %f %f", &scaleX, &scaleY, &scaleZ )==3 && debug )
+							printf("\tScale: %f %f %f\n", scaleX, scaleY, scaleZ);
+							else
+							if( debug ) printf("\t!! Error parsing scale values !!\n");
+							glScalef( scaleX, scaleY, scaleZ );
+						}
 
-					  // Rotate //
-					  if( rotateTransformsNodeGraph ){
-						  do{
-							   // Axis //
-							   rotateAxis = (char *)rotateTransformsNodeGraph->Attribute( "axis" );
-						       if( rotateAxis && debug )
-							     printf("\tRotation Axis: %s ", rotateAxis);
-						       else
-							     if( debug ) printf("\t!! Error parsing rotation angle !!\n");
+						// Rotate //
+						if( strcmp(transformsChildNodeGraph->Value(), "rotate") == 0 ){
+							// Axis //
+							rotateAxis = (char *)transformsChildNodeGraph->Attribute( "axis" );
+							if( rotateAxis && debug )
+								printf("\tRotation Axis: %s ", rotateAxis);
+							else
+								if( debug ) printf("\t!! Error parsing rotation angle !!\n");
 
-						       // Angle //
-						       if( rotateTransformsNodeGraph->QueryFloatAttribute( "angle", &rotateAngle )==TIXML_SUCCESS && debug )
-							     printf("\tRotation Angle: %f\n",rotateAngle);
-						       else
-							     if( debug ) printf("\t!! Error parsing rotation angle !!\n");
+							// Angle //
+							if( transformsChildNodeGraph->QueryFloatAttribute( "angle", &rotateAngle )==TIXML_SUCCESS && debug )
+								printf("\tRotation Angle: %f\n",rotateAngle);
+							else
+								if( debug ) printf("\t!! Error parsing rotation angle !!\n");
 
-							   if(strcmp( rotateAxis, "x" )==0 )
-								   glRotatef( rotateAngle, 1, 0, 0 );
-							   else
-								   if(strcmp( rotateAxis, "y" )==0 )
-										glRotatef( rotateAngle, 0, 1, 0 );
-									else
-										glRotatef( rotateAngle, 0, 0, 1 );
-							   rotateTransformsNodeGraph = rotateTransformsNodeGraph->NextSiblingElement( "rotate" );
-						  }while( rotateTransformsNodeGraph );
-					  }
-
-					  /*//Transformations
-					  glMatrixMode(GL_MODELVIEW_MATRIX);
-					  glLoadIdentity();
-					  float x,y,z,angle;
-					  string orientation;
-
-					  while( translateTransformsNodeGraph ){
-						string transformationType ( translateTransformsNodeGraph->Value());
-						if(transformationType == "translate"){
-						translate=(char *)  translateTransformsNodeGraph->Attribute("to");
-					if(translate && sscanf(translate,"%f %f %f", &x,&y,&z)==3)
-					{
-						glTranslatef(x, y, z);
+							// Axis Parsing //
+							if(strcmp( rotateAxis, "x" )==0 )
+								glRotatef( rotateAngle, 1, 0, 0 );
+							else
+								if(strcmp( rotateAxis, "y" )==0 )
+									glRotatef( rotateAngle, 0, 1, 0 );
+								else
+									glRotatef( rotateAngle, 0, 0, 1 );
+						}
+						transformsChildNodeGraph = transformsChildNodeGraph->NextSiblingElement();
 					}
-					else
-					{
-						printf("Error sscanf translate transformation\n");
-						exit(-1);
-					}
-				}
-				else if (transformationType == "rotate")
-				{
-					orientation = (std::string)  translateTransformsNodeGraph->Attribute("axis");
-					transformsNodeGraph->QueryFloatAttribute("angle", &angle);
-					if(orientation=="x")
-					{
-						glRotatef(angle, 1, 0, 0);
-					}
-					else if(orientation=="y")
-					{
-						glRotatef(angle,0, 1, 0);
-					}
-					else if(orientation=="z")
-					{
-						glRotated(angle, 0, 0, 1);
-					}
-					else
-					{
-						printf("Invalid axis\n");
-						exit(-1);
-					}
-				}
-				else if (transformationType == "scale")
-				{
-					translate=(char *)  translateTransformsNodeGraph->Attribute("factor");
-					if(translate && sscanf(translate,"%f %f %f", &x,&y,&z)==3)
-					{
-						glScalef(x,y,z);
-					}
-					else
-					{
-						printf("Error sscanf scale transformation\n");
-						exit(-1);
-					}
-				}
-				else
-				{
-					printf("invalid transformation type: %s\n", transformationType.c_str());
-					exit(-1);
-				}
-
-				 translateTransformsNodeGraph =  translateTransformsNodeGraph->NextSiblingElement();
-			}*/
 
 					  // Appearance Reference //
 					  if( appearanceRefNodeGraph ){

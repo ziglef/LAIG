@@ -71,10 +71,7 @@ void YafScene::init(){
 	glLightModelfv( GL_LIGHT_MODEL_AMBIENT, sg->getLightingAmbientValues() );
 
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++){
-		if( it->second->getType() == "spotlight" )
 			it->second->enable();
-		else
-			it->second->disable();
 		/*// Spot //
 		if( it->getType() == "spotlight" ){
 		
@@ -143,13 +140,11 @@ void YafScene::processGraph( string rootid ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
-	/*if( n0->getAppRefId() )
-		sg->getAppearences()->at( n0->getAppRefId() )->apply();*/
-
 	glMultMatrixf( n0->getTransformationMatrix() );
 
 	if( n0->primitives.size() > 0){
 		for(unsigned int i=0; i<n0->primitives.size(); i++){
+			if( n0->getAppRefId() != "" ) sg->appearences->at( n0->appRefId )->apply();
 			n0->primitives[i]->draw();
 		}
 	}
