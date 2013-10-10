@@ -127,10 +127,10 @@ void YafScene::processGraph( string rootid ){
 	glMultMatrixf( n0->getTransformationMatrix() );
 
 	if( n0->getPrimitives().size() > 0){
-		for( int i=0; i<n0->getPrimitives().size(); i++)
+		for(unsigned int i=0; i<n0->getPrimitives().size(); i++)
 			n0->getPrimitives()[i]->draw();
 	}
-
+	
 	for(vector<string>::iterator it = n0->getNodeRefIdVector().begin(); it != n0->getNodeRefIdVector().end(); it++)
 	{
 		glPushMatrix();

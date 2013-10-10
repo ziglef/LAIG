@@ -49,7 +49,7 @@ void SceneGraph::addAppearence( Appearence *appearence ){
 }
 
 void SceneGraph::setRootId( char *rootId ){
-	this->rootid = rootid;
+	this->rootid = rootId;
 }
 
 void SceneGraph::addGraphNode( GraphNode *graphNode ){

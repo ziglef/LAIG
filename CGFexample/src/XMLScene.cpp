@@ -1,6 +1,8 @@
 #include "../include/XMLScene.h"
 #include "../include/SceneGraph.h"
 
+#include <iostream>
+
 XMLScene::XMLScene(char *filename, bool debug) {
 
 	// Read XML from file //
@@ -662,6 +664,8 @@ XMLScene::XMLScene(char *filename, bool debug) {
 				  printf("\tGraph root ID: %s\n\n", rootid);
 			  else
 				  if( debug ) printf("\t!! Error parsing Graph root ID !!\n");
+
+			  sg->setRootId( rootid );
 
 			  // Process Nodes of the Graph //
 			  nodeGraph = sceneGraph->FirstChildElement( "node" );
