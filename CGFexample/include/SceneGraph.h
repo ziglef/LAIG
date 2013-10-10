@@ -94,6 +94,8 @@ class SceneGraph {
 		// Graph Nodes //
 		string rootid;
 		map<string, GraphNode*> *graphNodes;
+
+	friend class YafScene;
 };
 
 #endif

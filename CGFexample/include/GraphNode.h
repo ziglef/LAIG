@@ -25,6 +25,8 @@ class GraphNode{
 		vector<string> nodeRefIdVector;
 		vector<CGFobject*> primitives;
 		float transformationMatrix[16];
+
+	friend class YafScene;
 };
 
 #endif

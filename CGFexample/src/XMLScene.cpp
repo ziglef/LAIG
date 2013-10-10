@@ -406,7 +406,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 					// Specular //
 					if( sscanf(specular,"%f %f %f %f", &specularV[0], &specularV[1], &specularV[2], &specularV[3] )==4 && debug )
-						printf("\tSpecular: %f %f %f %f\n\n", specularV[1], specularV[1], specularV[2], specularV[3]);
+						printf("\tSpecular: %f %f %f %f\n", specularV[1], specularV[1], specularV[2], specularV[3]);
 					else
 						if( debug ) printf("\t!! Error parsing specular values !!\n");
 
@@ -604,9 +604,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  // Nodes Vector //
 			  GraphNode *node;
 
-			  // Primitives Vector //
-			  vector<CGFobject*> primitives;
-
 			  // Node values //
 			  char *id;
 
@@ -623,7 +620,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 			  // Children Values //
 			  char *nodeRefId;
-			  vector<string> nodeRefIdVector;	
 
 			  // Primitive Values //
 
@@ -671,6 +667,9 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  nodeGraph = sceneGraph->FirstChildElement( "node" );
 			  if( nodeGraph ){
 				  do{
+					  vector<string> nodeRefIdVector;	
+					  // Primitives Vector //
+					  vector<CGFobject*> primitives;
 					  id = (char *)nodeGraph->Attribute( "id" );
 					  transformsNodeGraph = nodeGraph->FirstChildElement( "transforms" );
 					  translateTransformsNodeGraph = transformsNodeGraph->FirstChildElement( "translate" );

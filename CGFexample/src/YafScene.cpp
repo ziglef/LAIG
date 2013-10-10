@@ -1,5 +1,8 @@
 #include "../include/YafScene.h"
 
+#include "../include/Rectangle.h"
+#include "../include/CGF/CGFappearance.h"
+
 void YafScene::init(){
 
 	// Globals //
@@ -55,7 +58,7 @@ void YafScene::init(){
 
 	// Enabled //
 	if( sg->getLightingEnabled() == "true" )
-		glEnable(GL_LIGHTING);
+		//glEnable(GL_LIGHTING);
 
 	// Ambient //
 	glLightModelfv( GL_LIGHT_MODEL_AMBIENT, sg->getLightingAmbientValues() );
@@ -80,7 +83,7 @@ void YafScene::init(){
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, CGFlight::background_ambient);  // Define ambient light
 
 	// Declares and enables a light
-	float light0_pos[4] = {4.0, 6.0, 5.0, 1.0};
+	float light0_pos[4] = {1.0, 1.0, 1.0, 1.0};
 
 	// Defines a default normal
 	glNormal3f(0,0,1);
@@ -97,13 +100,11 @@ void YafScene::display(){
 	// Initialize Model-View matrix as identity (no transformation
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	processGraph( this->sg->getRootid() );
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	CGFscene::activeCamera->applyView();
 
 	// Draw (and update) light
-	
 
 	// Draw axis
 	axis.draw();
@@ -114,6 +115,15 @@ void YafScene::display(){
 
 	// ---- END feature demos
 
+	//processGraph( this->sg->getRootid() );
+
+	glPushMatrix();
+		Rectangle *rec = new Rectangle(0.0, 0.0, 10.0, 10.0);
+		CGFappearance *app = new CGFappearance("img/wood.png", 1, 1);
+		app->apply();
+		processGraph( this->sg->getRootid() );
+	glPopMatrix();
+
 	// We have been drawing in a memory area that is not visible - the back buffer, 
 	// while the graphics card is showing the contents of another buffer - the front buffer
 	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
@@ -122,19 +132,21 @@ void YafScene::display(){
 }
 
 void YafScene::processGraph( string rootid ){
-	GraphNode *n0 = sg->getGraphnodes()->at( rootid );
+	GraphNode *n0 = sg->graphNodes->at( rootid );
+	unsigned int maxSize = n0->nodeRefIdVector.size();
 
 	glMultMatrixf( n0->getTransformationMatrix() );
 
-	if( n0->getPrimitives().size() > 0){
-		for(unsigned int i=0; i<n0->getPrimitives().size(); i++)
-			n0->getPrimitives()[i]->draw();
+	if( n0->primitives.size() > 0){
+		for(unsigned int i=0; i<n0->primitives.size(); i++){
+			n0->primitives[i]->draw();
+		}
 	}
 	
-	for(vector<string>::iterator it = n0->getNodeRefIdVector().begin(); it != n0->getNodeRefIdVector().end(); it++)
+	for(unsigned int i = 0; i<maxSize; i++)
 	{
 		glPushMatrix();
-		processGraph( *it );
+		processGraph( n0->nodeRefIdVector[i] );
 		glPopMatrix();
 	}
 	//or draw primitives here

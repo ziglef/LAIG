@@ -11,5 +11,17 @@ Rectangle::~Rectangle(){
 }
 
 void Rectangle::draw(){
-	glRectf( this->x1, this->y1, this->x2, this->y2 );
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glNormal3f(0.0, 0.0, 1.0);
+			glTexCoord2d(0,0);
+			glVertex3f(x1, y1, 0.0);
+			glTexCoord2d(0,1);
+			glVertex3f(x2, y1, 0.0);
+			glTexCoord2d(1,1);
+			glVertex3f(x2,y2, 0.0);
+			glTexCoord2d(1,0);
+			glVertex3f(x1,y2, 0.0);
+		glEnd();
+	glPopMatrix();
 }
