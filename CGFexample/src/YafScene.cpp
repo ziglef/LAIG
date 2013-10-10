@@ -140,11 +140,11 @@ void YafScene::processGraph( string rootid ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
+	if( n0->appRefId != "" ) sg->appearences->at( n0->appRefId )->apply();
 	glMultMatrixf( n0->getTransformationMatrix() );
 
 	if( n0->primitives.size() > 0){
 		for(unsigned int i=0; i<n0->primitives.size(); i++){
-			if( n0->appRefId != "" ) sg->appearences->at( n0->appRefId )->apply();
 			n0->primitives[i]->draw();
 		}
 	}

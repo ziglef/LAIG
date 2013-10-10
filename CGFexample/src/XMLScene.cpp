@@ -707,7 +707,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						// Translate //
 						if( strcmp(transformsChildNodeGraph->Value(), "translate") == 0 ){
 							translate = (char *)transformsChildNodeGraph->Attribute( "to" );
-							if( sscanf(translate, "%f %f %f %f", &translateX, &translateY, &translateZ )==3 && debug )
+							if( sscanf(translate, "%f %f %f", &translateX, &translateY, &translateZ )==3 && debug )
 								printf("\tTranslate: %f %f %f\n", translateX, translateY, translateZ);
 							else
 								if( debug ) printf("\t!! Error parsing Translate values !!\n");
@@ -717,7 +717,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					   // Scale //
 						if( strcmp(transformsChildNodeGraph->Value(), "scale") == 0 ){
 							scale = (char *)transformsChildNodeGraph->Attribute( "factor" );
-							if( sscanf(scale, "%f %f %f %f", &scaleX, &scaleY, &scaleZ )==3 && debug )
+							if( sscanf(scale, "%f %f %f", &scaleX, &scaleY, &scaleZ )==3 && debug )
 							printf("\tScale: %f %f %f\n", scaleX, scaleY, scaleZ);
 							else
 							if( debug ) printf("\t!! Error parsing scale values !!\n");
@@ -758,8 +758,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							printf("\tAppearance Reference: %s\n", appRefId);
 						else {
 							if( debug ) printf("\t!! Error parsing appearance reference !!\n");
-							appRefId = NULL;
 						}
+
+						if( !appRefId )
+							appRefId = NULL;
 					  }
 
 					  // Children //
@@ -915,10 +917,12 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  if( debug )printf("\n");
 						  }while( torusChildrenNodeGraph );
 					  }
-					  if( appRefId == NULL )
+					  if( appRefId == NULL ){
 							node = new GraphNode( id, nodeRefIdVector );
-					  else
+					  } else {
 						  node = new GraphNode( id, appRefId, nodeRefIdVector );
+						  appRefId = NULL;
+					  }
 
 					  glGetFloatv( GL_MODELVIEW_MATRIX, node->getTransformationMatrix() );
 					  node->setPrimitives( primitives );
