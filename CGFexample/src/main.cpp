@@ -26,8 +26,6 @@ int main(int argc, char* argv[]) {
 	else
 		debug = false;
 
-
-
 	try {
 		CGFapplication app = CGFapplication();
 		app.init(&argc, argv);
@@ -38,12 +36,13 @@ int main(int argc, char* argv[]) {
 	}
 	catch(GLexception& ex) {
 		cout << "Error: " << ex.what();
+		getchar();getchar();
 		return -1;
 	}
 	catch(exception& ex) {
 		cout << "Unexpected error: " << ex.what();
+		getchar();getchar();
 		return -1;
 	}
-
 	return 0;
 }

@@ -31,13 +31,12 @@ void SceneGraph::addLight( Lighting *light ){
 	this->lights->insert( std::pair<string, Lighting*>(light->getID(), light) );
 }
 
-void SceneGraph::addLightingValues( char *doublesided, char *local, char *LightingEnabled, char *LightingAmbient, float *LightingAmbientV ){
+void SceneGraph::addLightingValues( char *doublesided, char *local, char *LightingEnabled, float *LightingAmbientV ){
 	for(int i=0; i<4; i++) this->LightingAmbientV[i] = LightingAmbientV[4];
 	
 	this->doublesided = doublesided;
 	this->local = local;
 	this->LightingEnabled = LightingEnabled;
-	this->LightingAmbient = LightingAmbient;
 }
 
 void SceneGraph::addTexture( Texture *texture ){

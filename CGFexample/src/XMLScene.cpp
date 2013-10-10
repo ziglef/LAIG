@@ -299,7 +299,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
 			// Save the Lighting values in the sceneGraph //
-			sg->addLightingValues( doublesided, local, LightingEnabled, LightingAmbient, LightingAmbientV );
+			sg->addLightingValues( doublesided, local, LightingEnabled, LightingAmbientV );
 
 			// Process Omni Lighting Values //
 			omniLighting = lighting->FirstChildElement( "omni" );
@@ -582,6 +582,9 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					tWrap = (int)texlength_t;
 
 					CGFtexture *textureRef;
+
+					if( !textureref )
+						strcpy(textureref, "");
 
 					if( strcmp(textureref, "") != 0)
 						textureRef = this->sg->getTextures()->at(textureref);

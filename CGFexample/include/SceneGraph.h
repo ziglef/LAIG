@@ -27,7 +27,7 @@ class SceneGraph {
 		void setInitialCamera( char *initCamera );
 
 		// Sets lightning initial values //
-		void addLightingValues( char *doublesided, char *local, char *LightingEnabled, char *LightingAmbient, float *LightingAmbientV );
+		void addLightingValues( char *doublesided, char *local, char *LightingEnabled, float *LightingAmbientV );
 		
 		// Adds cameras to the map //
 		void addCamera( Camera *camera );
@@ -81,7 +81,6 @@ class SceneGraph {
 		string doublesided;
 		string local;
 		string LightingEnabled;
-		string LightingAmbient;
 		float LightingAmbientV[4];
 		map<string, Lighting*> *lights;
 

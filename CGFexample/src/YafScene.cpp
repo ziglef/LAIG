@@ -144,7 +144,7 @@ void YafScene::processGraph( string rootid ){
 
 	if( n0->primitives.size() > 0){
 		for(unsigned int i=0; i<n0->primitives.size(); i++){
-			if( n0->getAppRefId() != "" ) sg->appearences->at( n0->appRefId )->apply();
+			if( n0->appRefId != "" ) sg->appearences->at( n0->appRefId )->apply();
 			n0->primitives[i]->draw();
 		}
 	}
