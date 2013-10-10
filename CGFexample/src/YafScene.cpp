@@ -115,15 +115,10 @@ void YafScene::display(){
 
 	// ---- END feature demos
 
-	//processGraph( this->sg->getRootid() );
-
 	glPushMatrix();
-		Rectangle *rec = new Rectangle(0.0, 0.0, 10.0, 10.0);
-		CGFappearance *app = new CGFappearance("img/wood.png", 1, 1);
-		app->apply();
 		processGraph( this->sg->getRootid() );
 	glPopMatrix();
-
+	
 	// We have been drawing in a memory area that is not visible - the back buffer, 
 	// while the graphics card is showing the contents of another buffer - the front buffer
 	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa

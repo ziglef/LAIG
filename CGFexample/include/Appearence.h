@@ -23,8 +23,10 @@ class Appearence : CGFappearance{
 			  for(int i=0; i<4; i++)
 		  		  this->emissive[i] = emissive[i];
 
-				this->setTexture(texture);
-				this->setTextureWrap(sWrap, tWrap);
+				if(texture != NULL){
+					this->setTexture(texture);
+					this->setTextureWrap(sWrap, tWrap);
+				}
 
 		  }
 		~Appearence();
