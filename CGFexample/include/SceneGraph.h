@@ -40,6 +40,10 @@ class SceneGraph {
 		void addGraphNode( GraphNode *graphNode );
 
 		// Getters for the protected values //
+		float getbgx();
+		float getbgy();
+		float getbgz();
+		float getbga();
 		string getDrawmode();
 		string getShading();
 		string getCullface();

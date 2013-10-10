@@ -56,6 +56,22 @@ void SceneGraph::addGraphNode( GraphNode *graphNode ){
 	this->graphNodes->insert( std::pair<string, GraphNode*>(graphNode->getID(), graphNode) );
 }
 
+float SceneGraph::getbgx(){
+	return this->bgX;
+}
+
+float SceneGraph::getbgy(){
+	return this->bgY;
+}
+
+float SceneGraph::getbgz(){
+	return this->bgZ;
+}
+
+float SceneGraph::getbga(){
+	return this->bgA;
+}
+
 string SceneGraph::getDrawmode(){
 	return this->drawmode;
 }

@@ -2,8 +2,78 @@
 
 void YafScene::init(){
 
-	// Enables lighting computations
-	glEnable(GL_LIGHTING);
+	// Globals //
+
+	// Background color //
+	glClearColor( sg->getbgx(), sg->getbgy(), sg->getbgz(), sg->getbga() );
+
+	// Drawmode //
+	if( sg->getDrawmode() == "fill" )
+		glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	else
+		if( sg->getDrawmode() == "line" )
+			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+		else
+			glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
+
+	// Shading //
+	if( sg->getShading() == "flat" )
+		glShadeModel( GL_FLAT );
+	else
+		glShadeModel( GL_SMOOTH );
+
+	// Cullface //
+	if( sg->getCullface() == "front" )
+		glCullFace( GL_FRONT );
+	else
+		glCullFace( GL_BACK );
+
+	// Cullorder //
+	if( sg->getCullorder() == "CW" )
+		glFrontFace( GL_CW );
+	else
+		glFrontFace( GL_CCW );
+
+	// Cameras //
+	/*for( map<string, Camera*>::iterator it = sg->getCameras().begin(); it != sg->getCameras().end(); it++){
+		// Perspective //
+		// Orthogonal //
+	}*/
+
+	// Lighting //
+	// Doublesided //
+	if( sg->getDoublesided() == "true" )
+		glLightModelf( GL_LIGHT_MODEL_TWO_SIDE, 1 );
+	else
+		glLightModelf( GL_LIGHT_MODEL_TWO_SIDE, 0 );
+
+	// Local //
+	if( sg->getLocal() == "true" )
+		glLightModelf( GL_LIGHT_MODEL_LOCAL_VIEWER, 1 );
+	else
+		glLightModelf( GL_LIGHT_MODEL_LOCAL_VIEWER, 0 );
+
+	// Enabled //
+	if( sg->getLightingEnabled() == "true" )
+		glEnable(GL_LIGHTING);
+
+	// Ambient //
+	glLightModelfv( GL_LIGHT_MODEL_AMBIENT, sg->getLightingAmbientValues() );
+
+	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++){
+		// Spot //
+		// Omni //
+	}
+
+	// Textures //
+	for( map<string, Texture*>::iterator it = sg->getTextures()->begin(); it != sg->getTextures()->end(); it++ ){
+	
+	}
+
+	// Appearences //
+	for( map<string, Appearence*>::iterator it = sg->getAppearences()->begin(); it != sg->getAppearences()->end(); it++){
+	
+	}
 
 	// Sets up some lighting parameters
 	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
@@ -27,6 +97,7 @@ void YafScene::display(){
 	// Initialize Model-View matrix as identity (no transformation
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	processGraph( this->sg->getRootid() );
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	CGFscene::activeCamera->applyView();
@@ -48,6 +119,25 @@ void YafScene::display(){
 	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
 	glutSwapBuffers();
 
+}
+
+void YafScene::processGraph( string rootid ){
+	GraphNode *n0 = sg->getGraphnodes()->at( rootid );
+
+	glMultMatrixf( n0->getTransformationMatrix() );
+
+	if( n0->getPrimitives().size() > 0){
+		for( int i=0; i<n0->getPrimitives().size(); i++)
+			n0->getPrimitives()[i]->draw();
+	}
+
+	for(vector<string>::iterator it = n0->getNodeRefIdVector().begin(); it != n0->getNodeRefIdVector().end(); it++)
+	{
+		glPushMatrix();
+		processGraph( *it );
+		glPopMatrix();
+	}
+	//or draw primitives here
 }
 
 YafScene::~YafScene(){

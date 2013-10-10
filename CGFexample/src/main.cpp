@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 	try {
 		CGFapplication app = CGFapplication();
 		app.init(&argc, argv);
-		app.setScene( new YafScene(GraphScene->getSG()) );
+		app.setScene( new YafScene( GraphScene->getSG()) );
 		app.setInterface(new CGFinterface());
 		app.run();
 	}

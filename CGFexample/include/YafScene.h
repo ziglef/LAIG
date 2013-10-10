@@ -11,6 +11,7 @@ class YafScene : public CGFscene{
 		};
 		void init();
 		void display();
+		void processGraph( string rootId );
 		~YafScene();
 
 	protected:

@@ -20,6 +20,14 @@ void GraphNode::setPrimitives( vector<CGFobject*> primitives ){
 	this->primitives = primitives;
 }
 
+vector<CGFobject*> GraphNode::getPrimitives(){
+	return this->primitives;
+}
+
+vector<string> GraphNode::getNodeRefIdVector(){
+	return this->nodeRefIdVector;
+}
+
 GraphNode::~GraphNode(){
 
 }
