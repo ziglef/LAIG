@@ -28,6 +28,10 @@ vector<string> GraphNode::getNodeRefIdVector(){
 	return this->nodeRefIdVector;
 }
 
+string GraphNode::getAppRefId(){
+	return this->appRefId;
+}
+
 GraphNode::~GraphNode(){
 
 }

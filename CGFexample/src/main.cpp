@@ -26,14 +26,12 @@ int main(int argc, char* argv[]) {
 	else
 		debug = false;
 
-	XMLScene *GraphScene = new XMLScene(f, debug);
 
-	fflush( stdin );
-	getchar();
 
 	try {
 		CGFapplication app = CGFapplication();
 		app.init(&argc, argv);
+		XMLScene *GraphScene = new XMLScene(f, debug);
 		app.setScene( new YafScene( GraphScene->getSG()) );
 		app.setInterface(new CGFinterface());
 		app.run();

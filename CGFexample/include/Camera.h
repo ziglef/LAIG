@@ -17,6 +17,7 @@ class Camera : public CGFcamera{
 		virtual string getType();
 		virtual string getID();
 
+
 	protected:
 		string id;
 		float near;

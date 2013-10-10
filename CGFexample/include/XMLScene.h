@@ -56,9 +56,7 @@ protected:
 	TiXmlElement* sceneGraph;
 		TiXmlElement* nodeGraph;								// Graph Node //
 			TiXmlElement* transformsNodeGraph;					// Node Transformation //
-				TiXmlElement* translateTransformsNodeGraph;		// Node Transformation Translation //
-				TiXmlElement* scaleTransformsNodeGraph;			// Node Transformation Scale //
-				TiXmlElement* rotateTransformsNodeGraph;		// Node Transformation Rotate //
+				TiXmlElement* transformsChildNodeGraph;         // Tranformations //
 				TiXmlElement* appearanceRefNodeGraph;			// Appearance Referecene //
 			TiXmlElement* childrenNodeGraph;					// Node Children //
 				TiXmlElement* noderefChildrenNodeGraph;			// Node Children Refernce //

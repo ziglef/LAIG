@@ -15,6 +15,7 @@ class GraphNode{
 		void setPrimitives( vector<CGFobject*> primitives );
 		vector<CGFobject*> getPrimitives();
 		float *getTransformationMatrix();
+		string getAppRefId();
 		vector<string> getNodeRefIdVector();
 		~GraphNode();
 		string getID();

@@ -37,11 +37,18 @@ void YafScene::init(){
 	else
 		glFrontFace( GL_CCW );
 
+
 	// Cameras //
-	/*for( map<string, Camera*>::iterator it = sg->getCameras().begin(); it != sg->getCameras().end(); it++){
-		// Perspective //
-		// Orthogonal //
-	}*/
+	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++){
+		/*// Perspective //
+		if( it->getType() == "perspectivecamera" ){
+			
+		}else
+			// Orthogonal //
+			if( it->getType() == "orthogonalcamera" ){
+				
+			}*/
+	}
 
 	// Lighting //
 	// Doublesided //
@@ -58,14 +65,24 @@ void YafScene::init(){
 
 	// Enabled //
 	if( sg->getLightingEnabled() == "true" )
-		//glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHTING);
 
 	// Ambient //
 	glLightModelfv( GL_LIGHT_MODEL_AMBIENT, sg->getLightingAmbientValues() );
 
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++){
-		// Spot //
-		// Omni //
+		if( it->second->getType() == "spotlight" )
+			it->second->enable();
+		else
+			it->second->disable();
+		/*// Spot //
+		if( it->getType() == "spotlight" ){
+		
+		}else
+			// Omni //
+			if( it->getType() == "omnilight" ){
+			
+			}*/
 	}
 
 	// Textures //
@@ -79,15 +96,10 @@ void YafScene::init(){
 	}
 
 	// Sets up some lighting parameters
-	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, CGFlight::background_ambient);  // Define ambient light
-
-	// Declares and enables a light
-	float light0_pos[4] = {1.0, 1.0, 1.0, 1.0};
 
 	// Defines a default normal
 	glNormal3f(0,0,1);
-
 }
 
 void YafScene::display(){
@@ -102,9 +114,13 @@ void YafScene::display(){
 	glLoadIdentity();
 
 	// Apply transformations corresponding to the camera position relative to the origin
+	//sg->getCameras()->at( sg->getInitialCamera() )->applyView();
 	CGFscene::activeCamera->applyView();
 
 	// Draw (and update) light
+	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){	
+		it->second->draw();
+	}
 
 	// Draw axis
 	axis.draw();
@@ -114,10 +130,7 @@ void YafScene::display(){
 
 
 	// ---- END feature demos
-
-	glPushMatrix();
-		processGraph( this->sg->getRootid() );
-	glPopMatrix();
+	processGraph( this->sg->getRootid() );
 	
 	// We have been drawing in a memory area that is not visible - the back buffer, 
 	// while the graphics card is showing the contents of another buffer - the front buffer
@@ -130,6 +143,9 @@ void YafScene::processGraph( string rootid ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
+	/*if( n0->getAppRefId() )
+		sg->getAppearences()->at( n0->getAppRefId() )->apply();*/
+
 	glMultMatrixf( n0->getTransformationMatrix() );
 
 	if( n0->primitives.size() > 0){
@@ -137,7 +153,7 @@ void YafScene::processGraph( string rootid ){
 			n0->primitives[i]->draw();
 		}
 	}
-	
+
 	for(unsigned int i = 0; i<maxSize; i++)
 	{
 		glPushMatrix();

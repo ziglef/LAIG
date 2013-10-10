@@ -16,7 +16,7 @@ class Lighting : public CGFlight{
 					float *diffuseValues,
 					float *ambientValues,
 					float *specularValues
-				) : CGFlight( GL_LIGHT0 + count,  locationValues, NULL){
+				) : CGFlight( count,  locationValues, NULL){
 					this->ref = ref;
 					this->enabled = enabled;
 					
@@ -33,7 +33,7 @@ class Lighting : public CGFlight{
 					float *ambientValues,
 					float *specularValues,
 					float *direction
-				) : CGFlight( GL_LIGHT0 + count,  locationValues, direction){
+				) : CGFlight( count,  locationValues, direction){
 					this->ref = ref;
 					this->enabled = enabled;
 					

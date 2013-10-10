@@ -254,7 +254,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			float ambientV[4];
 			char *specular;
 			float specularV[4];
-
+			
 			// Lighting values //
 			char *doublesided;
 			char *local;
@@ -668,6 +668,8 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 			  sg->setRootId( rootid );
 
+			 // glMatrixMode( GL_MODELVIEW );
+
 			  // Process Nodes of the Graph //
 			  nodeGraph = sceneGraph->FirstChildElement( "node" );
 			  if( nodeGraph ){
@@ -677,9 +679,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  vector<CGFobject*> primitives;
 					  id = (char *)nodeGraph->Attribute( "id" );
 					  transformsNodeGraph = nodeGraph->FirstChildElement( "transforms" );
-					  translateTransformsNodeGraph = transformsNodeGraph->FirstChildElement( "translate" );
-					  scaleTransformsNodeGraph = transformsNodeGraph->FirstChildElement( "scale" );
-					  rotateTransformsNodeGraph = transformsNodeGraph->FirstChildElement( "rotate" );
+					  transformsChildNodeGraph = transformsNodeGraph->FirstChildElement( );
 					  appearanceRefNodeGraph = nodeGraph->FirstChildElement( "appearanceref" );
 					  childrenNodeGraph = nodeGraph->FirstChildElement( "children" );
 					  noderefChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "noderef" );
@@ -698,11 +698,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  // Tranformations //
 
 					  // Initialize the translation matrix //
-					  glMatrixMode( GL_MODELVIEW );
-					  glLoadIdentity();
+					    glLoadIdentity();
 
-					  // Translate //
-					  if( translateTransformsNodeGraph ){
+					 // Translate //
+					  if( transformsChildNodeGraph ){
 						  do{
 							  translate = (char *)translateTransformsNodeGraph->Attribute( "to" );
 							  if( sscanf(translate, "%f %f %f %f", &translateX, &translateY, &translateZ )==3 && debug )
@@ -753,6 +752,70 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							   rotateTransformsNodeGraph = rotateTransformsNodeGraph->NextSiblingElement( "rotate" );
 						  }while( rotateTransformsNodeGraph );
 					  }
+
+					  /*//Transformations
+					  glMatrixMode(GL_MODELVIEW_MATRIX);
+					  glLoadIdentity();
+					  float x,y,z,angle;
+					  string orientation;
+
+					  while( translateTransformsNodeGraph ){
+						string transformationType ( translateTransformsNodeGraph->Value());
+						if(transformationType == "translate"){
+						translate=(char *)  translateTransformsNodeGraph->Attribute("to");
+					if(translate && sscanf(translate,"%f %f %f", &x,&y,&z)==3)
+					{
+						glTranslatef(x, y, z);
+					}
+					else
+					{
+						printf("Error sscanf translate transformation\n");
+						exit(-1);
+					}
+				}
+				else if (transformationType == "rotate")
+				{
+					orientation = (std::string)  translateTransformsNodeGraph->Attribute("axis");
+					transformsNodeGraph->QueryFloatAttribute("angle", &angle);
+					if(orientation=="x")
+					{
+						glRotatef(angle, 1, 0, 0);
+					}
+					else if(orientation=="y")
+					{
+						glRotatef(angle,0, 1, 0);
+					}
+					else if(orientation=="z")
+					{
+						glRotated(angle, 0, 0, 1);
+					}
+					else
+					{
+						printf("Invalid axis\n");
+						exit(-1);
+					}
+				}
+				else if (transformationType == "scale")
+				{
+					translate=(char *)  translateTransformsNodeGraph->Attribute("factor");
+					if(translate && sscanf(translate,"%f %f %f", &x,&y,&z)==3)
+					{
+						glScalef(x,y,z);
+					}
+					else
+					{
+						printf("Error sscanf scale transformation\n");
+						exit(-1);
+					}
+				}
+				else
+				{
+					printf("invalid transformation type: %s\n", transformationType.c_str());
+					exit(-1);
+				}
+
+				 translateTransformsNodeGraph =  translateTransformsNodeGraph->NextSiblingElement();
+			}*/
 
 					  // Appearance Reference //
 					  if( appearanceRefNodeGraph ){
@@ -922,7 +985,8 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							node = new GraphNode( id, nodeRefIdVector );
 					  else
 						  node = new GraphNode( id, appRefId, nodeRefIdVector );
-					  glGetFloatv( GL_MODELVIEW, node->getTransformationMatrix() );
+
+					  glGetFloatv( GL_MODELVIEW_MATRIX, node->getTransformationMatrix() );
 					  node->setPrimitives( primitives );
 					  sg->addGraphNode( node );
 					  nodeGraph = nodeGraph->NextSiblingElement( "node" );
