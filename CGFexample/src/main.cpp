@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 		app.init(&argc, argv);
 		XMLScene *GraphScene = new XMLScene(f, debug);
 		app.setScene( new YafScene( GraphScene->getSG()) );
-		app.setInterface( new TPinterface() );
+		app.setInterface( new TPinterface( GraphScene->getSG()) );
 		app.run();
 	}
 	catch(GLexception& ex) {

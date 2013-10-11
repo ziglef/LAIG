@@ -131,6 +131,18 @@ map<string, GraphNode*>* SceneGraph::getGraphnodes(){
 	return this->graphNodes;
 }
 
+int *SceneGraph::getDrawModeChoice(){
+	return &drawModeChoice;
+}
+
+int *SceneGraph::getActualCamera(){
+	return &actualCamera;
+}
+
+void SceneGraph::setActualCamera( int num ){
+	this->actualCamera = num;
+}
+
 SceneGraph::~SceneGraph(){
 
 };

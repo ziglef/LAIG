@@ -1,42 +1,41 @@
 #include "../include/TPinterface.h"
 #include "../include/YafScene.h"
 
-TPinterface::TPinterface()
-{
-	testVar=0;
-}
-
 void TPinterface::processKeyboard(unsigned char key, int x, int y){
 
 }
 
 void TPinterface::initGUI()
 {
+
+	count = 0;
+	
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
-	GLUI_Panel *varPanel= addPanel("Lights", 1);
-	
-	// You could also pass a reference to a variable from the scene class, if public
-	addSpinnerToPanel(varPanel, "Val 2(scene)", 2, &testVar, 2);
-
-	GLUI_Panel *luzes = addPanel("Luzes",1);
-	addCheckboxToPanel(luzes,"Luz 1", &testVar,0);
-	
+	GLUI_Panel *lightsPanel= addPanel( "Lights", 1 );
+	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++){
+		if( count == 0 )
+			it->second->setToogled(1);
+		else
+			it->second->setToogled(0);
+		addCheckboxToPanel(lightsPanel, (char*)it->second->getID().c_str() ,it->second->getToogled(), count );	
+		count++;
+	}
 	
 	addColumn();
-	GLUI_Panel *relogio = addPanel("Relogio",1);
-	addButtonToPanel(relogio,"Pausar/Reniciar",5);
+	GLUI_Panel *camerasPanel = addPanel( "Cameras", 1 );
+	cameras = addRadioGroupToPanel( camerasPanel, sg->getActualCamera(), 11 );
+	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++){
+		addRadioButtonToGroup( cameras, (char*)it->second->getID().c_str() );	
+		count++;
+	}
 
 	addColumn();
-	GLUI_Panel *texturas = addPanel("Texturas", 1);
-	listbox = addListboxToPanel(texturas, "",  &testVar, 6);
-	listbox->add_item(7, "Textura 1");
-	listbox->add_item(8, "Textura 2");
-
-	
-	addSeparatorToPanel(texturas);
-	radiobutons = addRadioGroupToPanel(texturas,  &testVar, 9);
-	addRadioButtonToGroup(radiobutons, "Texturas");
-	addRadioButtonToGroup(radiobutons, "Wireframe");
+	GLUI_Panel *drawmodePanels = addPanel("Draw Mode",1);
+	drawmode = addRadioGroupToPanel( drawmodePanels, sg->getDrawModeChoice(), 20 );
+	addRadioButtonToGroup( drawmode, "Fill" );
+	addRadioButtonToGroup( drawmode, "Line" );
+	addRadioButtonToGroup( drawmode, "Point" );
+	*(sg->getDrawModeChoice()) = 0;
 	
 }
 

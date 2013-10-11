@@ -17,7 +17,7 @@ void YafScene::init(){
 		if( sg->getDrawmode() == "line" )
 			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 		else
-			if( sg->getDrawmode() == "both" )
+			if( sg->getDrawmode() == "point" )
 				glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
 
 	// Shading //
@@ -30,7 +30,11 @@ void YafScene::init(){
 	if( sg->getCullface() == "front" )
 		glCullFace( GL_FRONT );
 	else
-		glCullFace( GL_BACK );
+		if( sg->getCullface() == "back" )
+			glCullFace( GL_BACK );
+		else
+			if( sg->getCullface() == "both" )
+				glCullFace( GL_FRONT_AND_BACK );
 
 	// Cullorder //
 	if( sg->getCullorder() == "CW" )
@@ -57,11 +61,10 @@ void YafScene::init(){
 		glEnable(GL_LIGHTING);
 
 	// Ambient //
-	glLightModelfv( GL_LIGHT_MODEL_AMBIENT, sg->getLightingAmbientValues() );
+	glLightModelfv( GL_LIGHT_MODEL_AMBIENT, sg->getLightingAmbientValues() );	
 
-	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++){
-			it->second->enable();
-	}	
+	//sg->getLights()->at( sg->getInitialCamera() )->setToogled(1);
+	sg->setActualCamera(0);
 
 	// Defines a default normal
 	glNormal3f(0,0,1);
@@ -78,13 +81,31 @@ void YafScene::display(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	// Drawmode //
+	if( *(sg->getDrawModeChoice()) == 0 )
+		glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	else
+		if( *(sg->getDrawModeChoice()) == 1 )
+			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+		else
+			if( *(sg->getDrawModeChoice()) == 2 )
+				glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
+
+
 	// Apply transformations corresponding to the camera position relative to the origin
-	sg->getCameras()->at( sg->getInitialCamera() )->applyView();
+	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){	
+		if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
+			it->second->applyView();
+	}
+	//sg->getCameras()->at( sg->getInitialCamera() )->applyView();
 	//CGFscene::activeCamera->applyView();
 
 	// Draw (and update) light
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){	
-		it->second->draw();
+		if( it->second->getToogled() )
+			it->second->enable();
+		else
+			it->second->disable();
 	}
 
 	// Draw axis

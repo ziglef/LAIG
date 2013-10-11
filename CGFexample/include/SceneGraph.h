@@ -65,6 +65,11 @@ class SceneGraph {
 		string getRootid();
 		map<string, GraphNode*> *getGraphnodes();
 
+		int *getDrawModeChoice();
+		void setDrawModeChoice( int drawmode );
+		int *getActualCamera();
+		void setActualCamera( int num );
+
 	protected:
 		// Global Values //
 		float bgX, bgY, bgZ, bgA;
@@ -93,6 +98,9 @@ class SceneGraph {
 		// Graph Nodes //
 		string rootid;
 		map<string, GraphNode*> *graphNodes;
+
+		int drawModeChoice;
+		int actualCamera;
 
 	friend class YafScene;
 };

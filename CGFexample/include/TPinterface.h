@@ -2,20 +2,27 @@
 #define TPinterface_H
 
 #include "CGFinterface.h"
+#include "SceneGraph.h"
 
 class TPinterface: public CGFinterface {
 
-	GLUI_Listbox *listbox;
-	GLUI_RadioGroup *radiobutons;
+	GLUI_RadioGroup *lights;
+	GLUI_RadioGroup *cameras;
+	GLUI_RadioGroup *drawmode;
 	public:
-		TPinterface();
+		TPinterface( SceneGraph *sg) : CGFinterface(){
+			this->sg = sg;
+		};
 
 		virtual void initGUI();
 		virtual void processGUI(GLUI_Control *ctrl);
 
 		virtual void processKeyboard(unsigned char key, int x, int y);
 
-		int testVar;
+		int count;
+
+	protected:
+		SceneGraph *sg;
 };
 
 
