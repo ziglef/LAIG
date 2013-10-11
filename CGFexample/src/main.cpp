@@ -5,6 +5,7 @@
 #include "../include/SceneGraph.h"
 #include "../include/CGF/CGFapplication.h"
 #include "../include/YafScene.h"
+#include "../include/TPinterface.h"
 
 using std::cout;
 using std::exception;
@@ -31,7 +32,7 @@ int main(int argc, char* argv[]) {
 		app.init(&argc, argv);
 		XMLScene *GraphScene = new XMLScene(f, debug);
 		app.setScene( new YafScene( GraphScene->getSG()) );
-		app.setInterface(new CGFinterface());
+		app.setInterface( new TPinterface() );
 		app.run();
 	}
 	catch(GLexception& ex) {

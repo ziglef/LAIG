@@ -2,6 +2,7 @@
 #define _ORTHOGONALCAMERA_H
 
 #include "Camera.h"
+#include "CGFscene.h"
 
 class OrthogonalCamera : public Camera{
 	public:
@@ -20,6 +21,8 @@ class OrthogonalCamera : public Camera{
 			this->bottom = bottom;
 		};
 		~OrthogonalCamera();
+		void applyView();
+		void updateProjectMatrix( int width, int height );
 		string getType();
 		string getID();
 

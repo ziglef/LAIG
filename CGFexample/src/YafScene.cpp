@@ -17,7 +17,8 @@ void YafScene::init(){
 		if( sg->getDrawmode() == "line" )
 			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 		else
-			glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
+			if( sg->getDrawmode() == "both" )
+				glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
 
 	// Shading //
 	if( sg->getShading() == "flat" )
@@ -37,20 +38,8 @@ void YafScene::init(){
 	else
 		glFrontFace( GL_CCW );
 
-
-	// Cameras //
-	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++){
-		/*// Perspective //
-		if( it->getType() == "perspectivecamera" ){
-			
-		}else
-			// Orthogonal //
-			if( it->getType() == "orthogonalcamera" ){
-				
-			}*/
-	}
-
 	// Lighting //
+
 	// Doublesided //
 	if( sg->getDoublesided() == "true" )
 		glLightModelf( GL_LIGHT_MODEL_TWO_SIDE, 1 );
@@ -72,28 +61,7 @@ void YafScene::init(){
 
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++){
 			it->second->enable();
-		/*// Spot //
-		if( it->getType() == "spotlight" ){
-		
-		}else
-			// Omni //
-			if( it->getType() == "omnilight" ){
-			
-			}*/
-	}
-
-	// Textures //
-	for( map<string, Texture*>::iterator it = sg->getTextures()->begin(); it != sg->getTextures()->end(); it++ ){
-	
-	}
-
-	// Appearences //
-	for( map<string, Appearence*>::iterator it = sg->getAppearences()->begin(); it != sg->getAppearences()->end(); it++){
-	
-	}
-
-	// Sets up some lighting parameters
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, CGFlight::background_ambient);  // Define ambient light
+	}	
 
 	// Defines a default normal
 	glNormal3f(0,0,1);
@@ -111,8 +79,8 @@ void YafScene::display(){
 	glLoadIdentity();
 
 	// Apply transformations corresponding to the camera position relative to the origin
-	//sg->getCameras()->at( sg->getInitialCamera() )->applyView();
-	CGFscene::activeCamera->applyView();
+	sg->getCameras()->at( sg->getInitialCamera() )->applyView();
+	//CGFscene::activeCamera->applyView();
 
 	// Draw (and update) light
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){	
@@ -149,13 +117,12 @@ void YafScene::processGraph( string rootid ){
 		}
 	}
 
-	for(unsigned int i = 0; i<maxSize; i++)
-	{
+	for(unsigned int i = 0; i<maxSize; i++){
 		glPushMatrix();
 		processGraph( n0->nodeRefIdVector[i] );
 		glPopMatrix();
 	}
-	//or draw primitives here
+
 }
 
 YafScene::~YafScene(){

@@ -32,7 +32,7 @@ void SceneGraph::addLight( Lighting *light ){
 }
 
 void SceneGraph::addLightingValues( char *doublesided, char *local, char *LightingEnabled, float *LightingAmbientV ){
-	for(int i=0; i<4; i++) this->LightingAmbientV[i] = LightingAmbientV[4];
+	for(int i=0; i<4; i++) this->LightingAmbientV[i] = LightingAmbientV[i];
 	
 	this->doublesided = doublesided;
 	this->local = local;
