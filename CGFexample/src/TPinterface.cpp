@@ -39,61 +39,7 @@ void TPinterface::initGUI()
 	
 }
 
-void TPinterface::processGUI(GLUI_Control *ctrl)
-{
-	/*printf ("GUI control id: %d\n  ",ctrl->user_id);
-	switch (ctrl->user_id)
-	{
-		case 0:
-		{
-			printf ("Light 0 Flag: %d\n",(((LightingScene*) scene)->light0Flag));
-		};
+void TPinterface::processGUI(GLUI_Control *ctrl){
 
-		case 1:
-		{
-			printf ("Light 1 Flag: %d\n",(((LightingScene*) scene)->light1Flag));
-			break;
-		};
-
-		case 2:
-		{
-			printf ("Light 2 Flag: %d\n",(((LightingScene*) scene)->light2Flag));
-			break;
-		};
-
-		case 3:
-		{
-			printf ("Light 3 Flag: %d\n",(((LightingScene*) scene)->light3Flag));
-			break;
-		};
-
-		case 4:
-		{
-			printf ("Wlight Flag: %d\n",(((LightingScene*) scene)->wLightFlag));
-			break;
-		};
-
-		case 5:
-		{
-			if(((LightingScene*) scene)->clockPausedFlag == 0){
-				((LightingScene*) scene)->clockPausedFlag = 1;
-			}
-			else{
-				((LightingScene*) scene)->clockPausedFlag = 0;
-			}
-			break;
-		};
-
-		case 6:
-		{
-			printf ("Robot Texture Flag: %d\n", (((LightingScene*)scene)->robotTexFlag));
-
-			};
-		break;
-
-		case 9:
-			printf("Wire Frame Flag: %d\n", (((LightingScene*)scene)->wireFrameFlag));
-			break;
-	};*/
 }
 

@@ -124,117 +124,110 @@ XMLScene::XMLScene(char *filename, bool debug) {
 		this->sg->setInitialCamera( initialCamera );
 		
 		// Process Perspective Camera Values //
-		perspectiveCamera = cameras->FirstChildElement( "perspective" );
+		cameraChilds = cameras->FirstChildElement(  );
 
-		if( perspectiveCamera ){
-			do{
-				// ID //
-				id = (char *)perspectiveCamera->Attribute( "id" );
-				if( id && debug )
-					printf("\tPerspective Camera id: %s\n", id);
-				else
-					if( debug ) printf("\t!! Error parsing perspective camera id !!\n");
+		while( cameraChilds ){
+				if( strcmp( cameraChilds->Value(), "perspective" )==0 ){
+					// ID //
+					id = (char *)cameraChilds->Attribute( "id" );
+					if( id && debug )
+						printf("\tPerspective Camera id: %s\n", id);
+					else
+						if( debug ) printf("\t!! Error parsing perspective camera id !!\n");
 			
-				// Near //
-				if( perspectiveCamera->QueryFloatAttribute( "near", &near )==TIXML_SUCCESS && debug )
-					printf("\tNear: %f\n", near);
-				else
-					if( debug ) printf("\t!! Error parsing Near value !!\n");
+					// Near //
+					if( cameraChilds->QueryFloatAttribute( "near", &near )==TIXML_SUCCESS && debug )
+						printf("\tNear: %f\n", near);
+					else
+						if( debug ) printf("\t!! Error parsing Near value !!\n");
 
-				// Far //
-				if( perspectiveCamera->QueryFloatAttribute( "far", &far )==TIXML_SUCCESS && debug )
-					printf("\tFar: %f\n", far);
-				else
-					if( debug ) printf("\t!! Error parsing Far value !!\n");
+					// Far //
+					if( cameraChilds->QueryFloatAttribute( "far", &far )==TIXML_SUCCESS && debug )
+						printf("\tFar: %f\n", far);
+					else
+						if( debug ) printf("\t!! Error parsing Far value !!\n");
 
-				// Angle //
-				if( perspectiveCamera->QueryFloatAttribute( "angle", &angle )==TIXML_SUCCESS && debug )
-					printf("\tAngle: %f\n", angle);
-				else
-					if( debug ) printf("\t!! Error parsing Angle value !!\n");
+					// Angle //
+					if( cameraChilds->QueryFloatAttribute( "angle", &angle )==TIXML_SUCCESS && debug )
+						printf("\tAngle: %f\n", angle);
+					else
+						if( debug ) printf("\t!! Error parsing Angle value !!\n");
 
-				// Position //
-				pos = (char *)perspectiveCamera->Attribute( "pos" );
+					// Position //
+					pos = (char *)cameraChilds->Attribute( "pos" );
 
-				if( pos && sscanf(pos, "%f %f %f", &posV[0], &posV[1], &posV[2] )==3 && debug )
-					printf("\tPos: %f %f %f\n", posV[0], posV[1], posV[2]);
-				else
-					if( debug ) printf("\t!! Error parsing Pos values !!\n");
+					if( pos && sscanf(pos, "%f %f %f", &posV[0], &posV[1], &posV[2] )==3 && debug )
+						printf("\tPos: %f %f %f\n", posV[0], posV[1], posV[2]);
+					else
+						if( debug ) printf("\t!! Error parsing Pos values !!\n");
 
-				// Target //
-				target = (char *)perspectiveCamera->Attribute( "target" );
+					// Target //
+					target = (char *)cameraChilds->Attribute( "target" );
 
-				if( pos && sscanf(target, "%f %f %f", &targetV[0], &targetV[1], &targetV[2] )==3 && debug )
-					printf("\tTarget: %f %f %f\n", targetV[0], targetV[1], targetV[2]);
-				else
-					if( debug ) printf("\t!! Error parsing Target value !!\n");
+					if( pos && sscanf(target, "%f %f %f", &targetV[0], &targetV[1], &targetV[2] )==3 && debug )
+						printf("\tTarget: %f %f %f\n", targetV[0], targetV[1], targetV[2]);
+					else
+						if( debug ) printf("\t!! Error parsing Target value !!\n");
 
-				// Adds new perspective camera
-				this->sg->addCamera( new PerspectiveCamera( id, near, far, angle, posV, targetV ) );
+					// Adds new perspective camera
+					this->sg->addCamera( new PerspectiveCamera( id, near, far, angle, posV, targetV ) );
+					if( debug ) printf("\n");
+				}
+		
 
-				// Parses the next perspective camera //
-				perspectiveCamera = perspectiveCamera->NextSiblingElement( "perspective" );
-				if( debug ) printf("\n");
-			}while( perspectiveCamera );
+			// Process Orthogonal Camera Values //
+				if( strcmp( cameraChilds->Value(), "ortho")==0 ){
+			
+					// ID //
+					id = (char *)cameraChilds->Attribute( "id" );
+					if( id && debug )
+						printf("\tOrthogonal camera id: %s\n", id);
+					else
+						if( debug ) printf("\t!! Error parsing orthogonal camera id !!\n");
+
+					// Near //
+					if( cameraChilds->QueryFloatAttribute( "near", &near )==TIXML_SUCCESS && debug )
+						printf("\tNear: %f\n", near);
+					else
+						if( debug ) printf("\tError parsing near value !!\n");
+
+					// Far //
+					if( cameraChilds->QueryFloatAttribute( "far", &far )==TIXML_SUCCESS && debug )
+						printf("\tFar: %f\n", far);
+					else
+						if( debug ) printf("\tError parsing far value !!\n");
+
+					// Left //
+					if( cameraChilds->QueryFloatAttribute( "left", &left )==TIXML_SUCCESS && debug )
+						printf("\tLeft: %f\n", left);
+					else
+						if( debug ) printf("\tError parsing left value !!\n");
+
+					// Right //
+					if( cameraChilds->QueryFloatAttribute( "right", &right )==TIXML_SUCCESS && debug )
+						printf("\tRight: %f\n", right);
+					else
+						if( debug ) printf("\tError parsing right value !!\n");
+
+					// Top //
+					if( cameraChilds->QueryFloatAttribute( "top", &top )==TIXML_SUCCESS && debug )
+						printf("\tTop: %f\n", top);
+					else
+						if( debug ) printf("\tError parsing top value !!\n");
+
+					// Bottom //
+					if( cameraChilds->QueryFloatAttribute( "bottom", &bottom )==TIXML_SUCCESS && debug )
+						printf("\tBottom: %f\n", bottom);
+					else
+						if( debug ) printf("\tError parsing bottom value !!\n");
+
+					// Adds a new orthogonal camera
+					this->sg->addCamera( new OrthogonalCamera( id, near, far, left, right, top, bottom ) );
+					if( debug ) printf("\n");
+				}
+				cameraChilds = cameraChilds->NextSiblingElement( );
+			}
 		}
-
-		// Process Orthogonal Camera Values //
-		orthogonalCamera = cameras->FirstChildElement( "ortho" );
-
-		if( orthogonalCamera ){
-			do{
-				// ID //
-				id = (char *)orthogonalCamera->Attribute( "id" );
-				if( id && debug )
-					printf("\tOrthogonal camera id: %s\n", id);
-				else
-					if( debug ) printf("\t!! Error parsing orthogonal camera id !!\n");
-
-				// Near //
-				if( orthogonalCamera->QueryFloatAttribute( "near", &near )==TIXML_SUCCESS && debug )
-					printf("\tNear: %f\n", near);
-				else
-					if( debug ) printf("\tError parsing near value !!\n");
-
-				// Far //
-				if( orthogonalCamera->QueryFloatAttribute( "far", &far )==TIXML_SUCCESS && debug )
-					printf("\tFar: %f\n", far);
-				else
-					if( debug ) printf("\tError parsing far value !!\n");
-
-				// Left //
-				if( orthogonalCamera->QueryFloatAttribute( "left", &left )==TIXML_SUCCESS && debug )
-					printf("\tLeft: %f\n", left);
-				else
-					if( debug ) printf("\tError parsing left value !!\n");
-
-				// Right //
-				if( orthogonalCamera->QueryFloatAttribute( "right", &right )==TIXML_SUCCESS && debug )
-					printf("\tRight: %f\n", right);
-				else
-					if( debug ) printf("\tError parsing right value !!\n");
-
-				// Top //
-				if( orthogonalCamera->QueryFloatAttribute( "top", &top )==TIXML_SUCCESS && debug )
-					printf("\tTop: %f\n", top);
-				else
-					if( debug ) printf("\tError parsing top value !!\n");
-
-				// Bottom //
-				if( orthogonalCamera->QueryFloatAttribute( "bottom", &bottom )==TIXML_SUCCESS && debug )
-					printf("\tBottom: %f\n", bottom);
-				else
-					if( debug ) printf("\tError parsing bottom value !!\n");
-
-				// Adds a new orthogonal camera
-				this->sg->addCamera( new OrthogonalCamera( id, near, far, left, right, top, bottom ) );
-
-				// Parses the next orthogonal camera //
-				orthogonalCamera = orthogonalCamera->NextSiblingElement( "ortho" );
-				if( debug ) printf("\n");
-			}while( orthogonalCamera );
-		}
-	}
 
 		// Lighting Block //
 		if( ( lighting == NULL ) && debug )
@@ -302,145 +295,138 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			sg->addLightingValues( doublesided, local, LightingEnabled, LightingAmbientV );
 
 			// Process Omni Lighting Values //
-			omniLighting = lighting->FirstChildElement( "omni" );
-			if( omniLighting ){
-				do{
-					id = (char *)omniLighting->Attribute( "id" );
-					enabled = (char *)omniLighting->Attribute( "enabled" );
-					location = (char *)omniLighting->Attribute( "location" );
-					ambient = (char *)omniLighting->Attribute( "ambient" );
-					diffuse = (char *)omniLighting->Attribute( "diffuse" );
-					specular = (char *)omniLighting->Attribute( "specular" );
+			lights = lighting->FirstChildElement();
+			while( lights ){
+					if( strcmp( lights->Value(), "omni") == 0 ){
+						id = (char *)lights->Attribute( "id" );
+						enabled = (char *)lights->Attribute( "enabled" );
+						location = (char *)lights->Attribute( "location" );
+						ambient = (char *)lights->Attribute( "ambient" );
+						diffuse = (char *)lights->Attribute( "diffuse" );
+						specular = (char *)lights->Attribute( "specular" );
 
-					// ID //
-					if( id && debug )
-						printf("\tOmni Light id: %s\n", id);
-					else
-						if( debug ) printf("\t!! Error parsing omni light id !!\n");
+						// ID //
+						if( id && debug )
+							printf("\tOmni Light id: %s\n", id);
+						else
+							if( debug ) printf("\t!! Error parsing omni light id !!\n");
 
-					// Enabled //
-					if( enabled && debug )
-						printf("\tEnabled: %s\n", enabled);
-					else
-						if( debug ) printf("\t!! Error parsing enabled value !!\n");
+						// Enabled //
+						if( enabled && debug )
+							printf("\tEnabled: %s\n", enabled);
+						else
+							if( debug ) printf("\t!! Error parsing enabled value !!\n");
 
-					// Location //
-					if( sscanf(location, "%f %f %f", &locationV[0], &locationV[1], &locationV[2] )==3 && debug )
-						printf("\tLocation: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
-					else
-						if( debug ) printf("\t!! Error parsing location values !!\n");
+						// Location //
+						if( sscanf(location, "%f %f %f", &locationV[0], &locationV[1], &locationV[2] )==3 && debug )
+							printf("\tLocation: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
+						else
+							if( debug ) printf("\t!! Error parsing location values !!\n");
 
-					// Ambient //
-					if( sscanf(ambient, "%f %f %f %f", &ambientV[0], &ambientV[1], &ambientV[2], &ambientV[3] )==4 && debug )
-						printf("\tAmbient: %f %f %f %f\n", ambientV[0], ambientV[1], ambientV[2], ambientV[3]);
-					else
-						if( debug ) printf("\t!! Error parsing ambient values !!\n");
+						// Ambient //
+						if( sscanf(ambient, "%f %f %f %f", &ambientV[0], &ambientV[1], &ambientV[2], &ambientV[3] )==4 && debug )
+							printf("\tAmbient: %f %f %f %f\n", ambientV[0], ambientV[1], ambientV[2], ambientV[3]);
+						else
+							if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
-					// Diffuse //
-					if( sscanf(diffuse, "%f %f %f %f", &diffuseV[0], &diffuseV[1], &diffuseV[2], &diffuseV[3] )==4 && debug )
-						printf("\tDiffuse: %f %f %f %f\n", diffuseV[0], diffuseV[1], diffuseV[2], diffuseV[3]);
-					else
-						if( debug ) printf("\t!! Error parsing diffuse values !!\n");
+						// Diffuse //
+						if( sscanf(diffuse, "%f %f %f %f", &diffuseV[0], &diffuseV[1], &diffuseV[2], &diffuseV[3] )==4 && debug )
+							printf("\tDiffuse: %f %f %f %f\n", diffuseV[0], diffuseV[1], diffuseV[2], diffuseV[3]);
+						else
+							if( debug ) printf("\t!! Error parsing diffuse values !!\n");
 
-					// Specular //
-					if( sscanf(specular,"%f %f %f %f", &specularV[0], &specularV[1], &specularV[2], &specularV[3] )==4 && debug )
-						printf("\tSpecular: %f %f %f %f\n\n", specularV[1], specularV[1], specularV[2], specularV[3]);
-					else
-						if( debug ) printf("\t!! Error parsing specular values !!\n");
+						// Specular //
+						if( sscanf(specular,"%f %f %f %f", &specularV[0], &specularV[1], &specularV[2], &specularV[3] )==4 && debug )
+							printf("\tSpecular: %f %f %f %f\n\n", specularV[1], specularV[1], specularV[2], specularV[3]);
+						else
+							if( debug ) printf("\t!! Error parsing specular values !!\n");
 
-					if(strcmp(enabled, "true") == 0)
-						enabledBool = true;
-					else
-						enabledBool = false;
+						if(strcmp(enabled, "true") == 0)
+							enabledBool = true;
+						else
+							enabledBool = false;
 
-					// Adds the omni light to the omni lights map //
-					this->sg->addLight( new OmniLight( id, enabledBool, locationV, diffuseV,  ambientV, specularV ) );
+						// Adds the omni light to the omni lights map //
+						this->sg->addLight( new OmniLight( id, enabledBool, locationV, diffuseV,  ambientV, specularV ) );
+						if( debug ) printf("\n");
+					}
 
-					// Parses the next omni light //
-					omniLighting = omniLighting->NextSiblingElement( "omni" );
-					if( debug ) printf("\n");
-				}while( omniLighting );
-			}
+				// Process spot Lighting values //
+					if( strcmp( lights->Value(), "spot" ) == 0 ){
+				
+						id = (char *)lights->Attribute( "id" );
+						enabled = (char *)lights->Attribute( "enabled" );
+						location = (char *)lights->Attribute( "location" );
+						ambient = (char *)lights->Attribute( "ambient" );
+						diffuse = (char *)lights->Attribute( "diffuse" );
+						specular = (char *)lights->Attribute( "specular" );
+						direction = (char *)lights->Attribute( "direction" );
 
-			// Process spot Lighting values //
-			spotLighting = lighting->FirstChildElement( "spot" );
-			if( spotLighting ){
-				do{
-					id = (char *)spotLighting->Attribute( "id" );
-					enabled = (char *)spotLighting->Attribute( "enabled" );
-					location = (char *)spotLighting->Attribute( "location" );
-					ambient = (char *)spotLighting->Attribute( "ambient" );
-					diffuse = (char *)spotLighting->Attribute( "diffuse" );
-					specular = (char *)spotLighting->Attribute( "specular" );
-					direction = (char *)spotLighting->Attribute( "direction" );
+						// ID //
+						if( id && debug )
+							printf("\tSpot Light id: %s\n", id);
+						else
+							if( debug ) printf("\t!! Error parsing spot light id !!\n");
 
-					// ID //
-					if( id && debug )
-						printf("\tSpot Light id: %s\n", id);
-					else
-						if( debug ) printf("\t!! Error parsing spot light id !!\n");
+						// Enabled //
+						if( enabled && debug )
+							printf("\tEnabled: %s\n", enabled);
+						else
+							if( debug ) printf("\t!! Error parsing enabled value !!\n");
 
-					// Enabled //
-					if( enabled && debug )
-						printf("\tEnabled: %s\n", enabled);
-					else
-						if( debug ) printf("\t!! Error parsing enabled value !!\n");
+						// Location //
+						if( sscanf(location, "%f %f %f", &locationV[0], &locationV[1], &locationV[2] )==3 && debug )
+							printf("\tLocation: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
+						else
+							if( debug ) printf("\t!! Error parsing location values !!\n");
 
-					// Location //
-					if( sscanf(location, "%f %f %f", &locationV[0], &locationV[1], &locationV[2] )==3 && debug )
-						printf("\tLocation: %f %f %f\n", locationV[0], locationV[1], locationV[2] );
-					else
-						if( debug ) printf("\t!! Error parsing location values !!\n");
+						// Ambient //
+						if( sscanf(ambient, "%f %f %f %f", &ambientV[0], &ambientV[1], &ambientV[2], &ambientV[3] )==4 && debug )
+							printf("\tAmbient: %f %f %f %f\n", ambientV[0], ambientV[1], ambientV[2], ambientV[3]);
+						else
+							if( debug ) printf("\t!! Error parsing ambient values !!\n");
 
-					// Ambient //
-					if( sscanf(ambient, "%f %f %f %f", &ambientV[0], &ambientV[1], &ambientV[2], &ambientV[3] )==4 && debug )
-						printf("\tAmbient: %f %f %f %f\n", ambientV[0], ambientV[1], ambientV[2], ambientV[3]);
-					else
-						if( debug ) printf("\t!! Error parsing ambient values !!\n");
+						// Diffuse //
+						if( sscanf(diffuse, "%f %f %f %f", &diffuseV[0], &diffuseV[1], &diffuseV[2], &diffuseV[3] )==4 && debug )
+							printf("\tDiffuse: %f %f %f %f\n", diffuseV[0], diffuseV[1], diffuseV[2], diffuseV[3]);
+						else
+							if( debug ) printf("\t!! Error parsing diffuse values !!\n");
 
-					// Diffuse //
-					if( sscanf(diffuse, "%f %f %f %f", &diffuseV[0], &diffuseV[1], &diffuseV[2], &diffuseV[3] )==4 && debug )
-						printf("\tDiffuse: %f %f %f %f\n", diffuseV[0], diffuseV[1], diffuseV[2], diffuseV[3]);
-					else
-						if( debug ) printf("\t!! Error parsing diffuse values !!\n");
+						// Specular //
+						if( sscanf(specular,"%f %f %f %f", &specularV[0], &specularV[1], &specularV[2], &specularV[3] )==4 && debug )
+							printf("\tSpecular: %f %f %f %f\n", specularV[1], specularV[1], specularV[2], specularV[3]);
+						else
+							if( debug ) printf("\t!! Error parsing specular values !!\n");
 
-					// Specular //
-					if( sscanf(specular,"%f %f %f %f", &specularV[0], &specularV[1], &specularV[2], &specularV[3] )==4 && debug )
-						printf("\tSpecular: %f %f %f %f\n", specularV[1], specularV[1], specularV[2], specularV[3]);
-					else
-						if( debug ) printf("\t!! Error parsing specular values !!\n");
+						// Angle //
+						if( lights->QueryFloatAttribute( "angle", &angle )==TIXML_SUCCESS && debug )
+							printf("\tAngle: %f\n", angle);
+						else
+							if( debug ) printf("\t!! Error parsing angle value !!\n");
 
-					// Angle //
-					if( spotLighting->QueryFloatAttribute( "angle", &angle )==TIXML_SUCCESS && debug )
-						printf("\tAngle: %f\n", angle);
-					else
-						if( debug ) printf("\t!! Error parsing angle value !!\n");
+						// Exponent //
+						if( lights->QueryFloatAttribute( "exponent", &exponent )==TIXML_SUCCESS && debug )
+							printf("\tExponent: %f\n", exponent);
+						else
+							if( debug ) printf("\t!! Error parsing exponent value !!\n");
 
-					// Exponent //
-					if( spotLighting->QueryFloatAttribute( "exponent", &exponent )==TIXML_SUCCESS && debug )
-						printf("\tExponent: %f\n", exponent);
-					else
-						if( debug ) printf("\t!! Error parsing exponent value !!\n");
+						// Direction //
+						if( sscanf(direction, "%f %f %f %f", &directionV[0], &directionV[1], &directionV[2] )==3 && debug )
+							printf("\tDirection: %f %f %f\n", directionV[0], directionV[1], directionV[2]);
+						else
+							if( debug ) printf("\t!! Error parsing direction values !!\n");
 
-					// Direction //
-					if( sscanf(direction, "%f %f %f %f", &directionV[0], &directionV[1], &directionV[2] )==3 && debug )
-						printf("\tDirection: %f %f %f\n", directionV[0], directionV[1], directionV[2]);
-					else
-						if( debug ) printf("\t!! Error parsing direction values !!\n");
+						if(strcmp(enabled, "true") == 0)
+							enabledBool = true;
+						else
+							enabledBool = false;
 
-					if(strcmp(enabled, "true") == 0)
-						enabledBool = true;
-					else
-						enabledBool = false;
-
-					// Adds the spot light to the spot lights map //
-					this->sg->addLight( new SpotLight( id, enabledBool, locationV, diffuseV, ambientV, specularV, angle, exponent, directionV) );
-
-					// Parses the next spot light //
-					spotLighting = spotLighting->NextSiblingElement( "spot" );
-					if( debug ) printf("\n");
-				}while( spotLighting );
-			  }
+						// Adds the spot light to the spot lights map //
+						this->sg->addLight( new SpotLight( id, enabledBool, locationV, diffuseV, ambientV, specularV, angle, exponent, directionV) );
+						if( debug ) printf("\n");
+					}
+					lights = lights->NextSiblingElement();
+				  }
 			}
 
 		// Textures block //

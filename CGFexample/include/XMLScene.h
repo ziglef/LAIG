@@ -36,13 +36,11 @@ protected:
 
 	// Scene Cameras //
 	TiXmlElement* cameras;
-		TiXmlElement* orthogonalCamera;		// Orthogonal Cameras //
-		TiXmlElement* perspectiveCamera;	// Perspective Cameras //
+		TiXmlElement* cameraChilds;  // Cameras //
 
 	// Scene Lightning //
 	TiXmlElement* lighting;
-		TiXmlElement* omniLighting;	// Omnidirection Lightning //
-		TiXmlElement* spotLighting;	// Spot Lightning //
+		TiXmlElement* lights;	// Lights //
 
 	// Scene Textures //
 	TiXmlElement* textures;

@@ -91,14 +91,12 @@ void YafScene::display(){
 			if( *(sg->getDrawModeChoice()) == 2 )
 				glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
 
-
+	//activeCamera->applyView();
 	// Apply transformations corresponding to the camera position relative to the origin
 	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){	
 		if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
 			it->second->applyView();
 	}
-	//sg->getCameras()->at( sg->getInitialCamera() )->applyView();
-	//CGFscene::activeCamera->applyView();
 
 	// Draw (and update) light
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){	
