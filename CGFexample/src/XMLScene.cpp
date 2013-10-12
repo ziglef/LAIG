@@ -565,8 +565,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						if( debug ) printf("\t!! Error parsing texlength_t value !!\n");
 
 					// Adds the appearence to the appearences vector //
-					sWrap = (int)texlength_s;
-					tWrap = (int)texlength_t;
+					if( texlength_s != NULL ){
+						sWrap = (int)texlength_s;
+						tWrap = (int)texlength_t;
+					}
 
 					CGFtexture *textureRef;
 
@@ -578,8 +580,13 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					else
 						textureRef = NULL;
 
-					//Saves the appearance vector in the scene graph //
-					this->sg->addAppearence( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureRef, sWrap, tWrap ) );					
+
+					if( textureref == NULL ){
+							 this->sg->addAppearence( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess ) );
+					  } else {
+						  this->sg->addAppearence( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureRef, sWrap, tWrap ) );
+						 textureref = NULL;
+					  }					
 
 					appearanceAppearances = appearanceAppearances->NextSiblingElement( "appearance" );
 					if( debug ) printf("\n");

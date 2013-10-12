@@ -47,6 +47,7 @@ class Lighting : public CGFlight{
 		virtual string getID();
 		int *getToogled();
 		void setToogled( int toogled );
+		bool getEnabled();
 
 	protected:
 		string ref;

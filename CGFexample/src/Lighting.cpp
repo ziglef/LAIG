@@ -20,4 +20,8 @@ void Lighting::setToogled( int toogled ){
 	this->toogled = toogled;
 }
 
+bool Lighting::getEnabled(){
+	return this->enabled;
+}
+
 size_t Lighting::count = GL_LIGHT0;

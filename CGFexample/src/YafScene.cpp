@@ -65,7 +65,6 @@ void YafScene::init(){
 
 
 	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){	
-		printf("%d",scene_cameras.size());
 		this->scene_cameras.push_back( it->second );
 	}
 
@@ -109,12 +108,18 @@ void YafScene::display(){
 
 	// Draw (and update) light
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){	
-		if( it->second->getToogled() )
+		if( *(it->second->getToogled()) ){
 			it->second->enable();
+		}
 		else
 			it->second->disable();
+	it->second->update();
+	it->second->draw();
 	}
 
+	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){
+		printf("LIGHT %s value %d\n\n\n", it->first.c_str(), it->second->getEnabled());
+	}
 	// Draw axis
 	axis.draw();
 

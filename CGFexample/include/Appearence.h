@@ -29,6 +29,23 @@ class Appearence : public CGFappearance{
 				}
 
 		  }
+
+
+		Appearence( 
+			char *id,
+			float *emissive,
+			float *ambient,
+			float *diffuse,
+			float *specular,
+			float shininess) :
+		  CGFappearance( ambient, diffuse, specular, shininess ){
+			  this->id = id;
+			  
+			  for(int i=0; i<4; i++)
+		  		  this->emissive[i] = emissive[i];
+
+		  }
+
 		~Appearence();
 
 		string getID();
