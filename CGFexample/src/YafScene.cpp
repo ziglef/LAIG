@@ -102,7 +102,7 @@ void YafScene::display(){
 
 	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){      
              if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
-                     this->activateCamera( *(sg->getActualCamera()));
+                     this->activateCamera( *(sg->getActualCamera()) + 3);
        }
 
 	activeCamera->applyView();
