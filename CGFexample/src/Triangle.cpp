@@ -17,8 +17,11 @@ Triangle::~Triangle(){
 
 void Triangle::draw(){
 	glBegin( GL_TRIANGLES );
+		glTexCoord2f(0, 0);
 		glVertex3f( x1, y1, z1 );
+		 glTexCoord2f(1, 0);
 		glVertex3f( x2, y2, z2 );
+		 glTexCoord2f(0, 1);
 		glVertex3f( x3, y3, z3 );
 	glEnd();
 }

@@ -2,7 +2,7 @@
 #define TPinterface_H
 
 #include "CGFinterface.h"
-#include "SceneGraph.h"
+#include "YafScene.h"
 
 class TPinterface: public CGFinterface {
 

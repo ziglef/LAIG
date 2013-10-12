@@ -2,6 +2,8 @@
 #define YAFSCENE_H
 
 #include "CGF\CGFscene.h"
+#include "CGF\CGFcamera.h"
+#include "CGF\CGFapplication.h"
 #include "SceneGraph.h"
 
 class YafScene : public CGFscene{
@@ -12,6 +14,8 @@ class YafScene : public CGFscene{
 		void init();
 		void display();
 		void processGraph( string rootId );
+		vector<CGFcamera*> *getSceneCameras();
+		void activateCamera( int i );
 		~YafScene();
 
 	protected:

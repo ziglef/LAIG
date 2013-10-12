@@ -13,5 +13,7 @@ Cylinder::~Cylinder(){
 
 void Cylinder::draw(){
 	this->quadric = gluNewQuadric();
+	gluQuadricNormals( quadric, GLU_SMOOTH );
+	gluQuadricTexture( quadric, GL_TRUE );
 	gluCylinder( this->quadric, this->base, this->top, this->height, this->slices, this->stacks );
 }

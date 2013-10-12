@@ -63,6 +63,12 @@ void YafScene::init(){
 	// Ambient //
 	glLightModelfv( GL_LIGHT_MODEL_AMBIENT, sg->getLightingAmbientValues() );	
 
+
+	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){	
+		printf("%d",scene_cameras.size());
+		this->scene_cameras.push_back( it->second );
+	}
+
 	//sg->getLights()->at( sg->getInitialCamera() )->setToogled(1);
 	sg->setActualCamera(0);
 
@@ -91,12 +97,15 @@ void YafScene::display(){
 			if( *(sg->getDrawModeChoice()) == 2 )
 				glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
 
-	//activeCamera->applyView();
 	// Apply transformations corresponding to the camera position relative to the origin
-	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){	
-		if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
-			it->second->applyView();
-	}
+	//activeCamera->applyView();
+
+	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){      
+             if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
+                     this->activateCamera( *(sg->getActualCamera()));
+       }
+
+	activeCamera->applyView();
 
 	// Draw (and update) light
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){	
@@ -127,7 +136,10 @@ void YafScene::processGraph( string rootid ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
-	if( n0->appRefId != "" ) sg->appearences->at( n0->appRefId )->apply();
+	if( n0->appRefId != "" ){
+		glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
+		sg->appearences->at( n0->appRefId )->apply();
+	}
 	glMultMatrixf( n0->getTransformationMatrix() );
 
 	if( n0->primitives.size() > 0){
@@ -142,6 +154,19 @@ void YafScene::processGraph( string rootid ){
 		glPopMatrix();
 	}
 
+}
+
+vector<CGFcamera*>  *YafScene::getSceneCameras(){
+	return &scene_cameras;
+}
+
+void YafScene::activateCamera( int i )
+{
+	if( i < scene_cameras.size() )
+	{
+		activeCamera = scene_cameras.at( i );
+		CGFapplication::activeApp->forceRefresh();
+	}
 }
 
 YafScene::~YafScene(){

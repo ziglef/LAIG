@@ -32,6 +32,7 @@ class Appearence : public CGFappearance{
 		~Appearence();
 
 		string getID();
+		float *getEmissive();
 
 	protected:
 		string id;

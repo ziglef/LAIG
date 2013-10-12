@@ -17,7 +17,8 @@ void TPinterface::initGUI()
 			it->second->setToogled(1);
 		else
 			it->second->setToogled(0);
-		addCheckboxToPanel(lightsPanel, (char*)it->second->getID().c_str() ,it->second->getToogled(), count );	
+		addCheckboxToPanel(lightsPanel, (char*)it->second->getID().c_str() ,it->second->getToogled(), count );
+		printf("%s\n\n\n",it->second->getID().c_str());
 		count++;
 	}
 	

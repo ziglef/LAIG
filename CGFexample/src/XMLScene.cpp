@@ -298,6 +298,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			lights = lighting->FirstChildElement();
 			while( lights ){
 					if( strcmp( lights->Value(), "omni") == 0 ){
+
 						id = (char *)lights->Attribute( "id" );
 						enabled = (char *)lights->Attribute( "enabled" );
 						location = (char *)lights->Attribute( "location" );
