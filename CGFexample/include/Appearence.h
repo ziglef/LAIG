@@ -43,13 +43,13 @@ class Appearence : public CGFappearance{
 			  
 			  for(int i=0; i<4; i++)
 		  		  this->emissive[i] = emissive[i];
-
 		  }
 
 		~Appearence();
 
 		string getID();
 		float *getEmissive();
+		string getTexture();
 
 	protected:
 		string id;

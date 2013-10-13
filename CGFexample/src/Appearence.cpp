@@ -11,3 +11,7 @@ string Appearence::getID(){
 float * Appearence::getEmissive(){
 	return this->emissive;
 }
+
+string Appearence::getTexture(){
+	return this->texName;
+}
