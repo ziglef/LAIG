@@ -572,10 +572,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 					CGFtexture *textureRef;
 
-					if( !textureref )
-						strcpy(textureref, "");
-
-					if( strcmp(textureref, "") != 0)
+					if( textureref != NULL && strcmp(textureref, "") != 0)
 						textureRef = this->sg->getTextures()->at(textureref);
 					else
 						textureRef = NULL;
