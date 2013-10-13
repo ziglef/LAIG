@@ -21,4 +21,4 @@ void Cylinder::draw(){
 		glTranslatef(0,0,this->height);
 		gluDisk( this->quadric, 0, this->base,this->slices, 1 );
 	glPopMatrix();
-} 
+}  

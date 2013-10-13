@@ -18,5 +18,5 @@ class Cylinder : public CGFobject{
 		int stacks;
 		GLUquadricObj *quadric;
 };
- 
+  
 #endif
