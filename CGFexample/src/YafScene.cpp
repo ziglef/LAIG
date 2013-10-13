@@ -117,9 +117,6 @@ void YafScene::display(){
 	it->second->draw();
 	}
 
-	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){
-		printf("LIGHT %s value %d\n\n\n", it->first.c_str(), it->second->getEnabled());
-	}
 	// Draw axis
 	axis.draw();
 

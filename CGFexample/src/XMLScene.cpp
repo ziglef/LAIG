@@ -581,7 +581,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						textureRef = NULL;
 
 
-					if( textureref == NULL ){
+					if( textureRef == NULL ){
 							 this->sg->addAppearence( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess ) );
 					  } else {
 						  this->sg->addAppearence( new Appearence( id, emissiveValues, diffuseValues, ambientValues, specularValues, shininess, textureRef, sWrap, tWrap ) );
