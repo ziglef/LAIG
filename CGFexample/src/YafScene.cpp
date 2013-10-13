@@ -100,9 +100,9 @@ void YafScene::display(){
 	//activeCamera->applyView();
 
 	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){      
-             if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
-                     this->activateCamera( *(sg->getActualCamera()) + 3);
-       }
+			if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
+					this->activateCamera( *(sg->getActualCamera()) + 3);
+	}
 
 	activeCamera->applyView();
 
@@ -113,8 +113,9 @@ void YafScene::display(){
 		}
 		else
 			it->second->disable();
-	it->second->update();
-	it->second->draw();
+
+		it->second->update();
+		it->second->draw();
 	}
 
 	// Draw axis
@@ -138,11 +139,12 @@ void YafScene::processGraph( string rootid ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
+	glMultMatrixf( n0->getTransformationMatrix() );
+
 	if( n0->appRefId != "" ){
 		glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
 		sg->appearences->at( n0->appRefId )->apply();
 	}
-	glMultMatrixf( n0->getTransformationMatrix() );
 
 	if( n0->primitives.size() > 0){
 		for(unsigned int i=0; i<n0->primitives.size(); i++){
