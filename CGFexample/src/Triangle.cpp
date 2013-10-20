@@ -12,6 +12,7 @@ Triangle::Triangle( float x1, float y1, float z1, float x2, float y2, float z2, 
 	this->z3 = z3;
 }
 
+// Triangle Destructor
 Triangle::~Triangle(){
 }
 
