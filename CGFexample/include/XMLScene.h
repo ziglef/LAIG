@@ -50,14 +50,24 @@ protected:
 	TiXmlElement* appearances;
 		TiXmlElement* appearanceAppearances; // Scene Appearance (Single Instance) //
 
+	// Scene Animations <- NEW -> //
+	TiXmlElement* animations;
+		TiXmlElement* animationsAnimation;   // Scene Animation (Single Instance) //
+
 	// Scene Graph //
 	TiXmlElement* sceneGraph;
 		TiXmlElement* nodeGraph;								// Graph Node //
 			TiXmlElement* transformsNodeGraph;					// Node Transformation //
 				TiXmlElement* transformsChildNodeGraph;         // Tranformations //
 				TiXmlElement* appearanceRefNodeGraph;			// Appearance Referecene //
+				TiXmlElement* animationRefNodeGraph;			// Animation <- NEW -> //
+				TiXmlElement* planePartsNodeGraph;				// Plane <- NEW -> //
+				TiXmlElement* patchNodeGraph;					// Patch <- NEW -> //
+					TiXmlElement* controlpointNodeGraph;		// Control Point <- NEW -> //
+				TiXmlElement* vehicleNodeGraph;					// Vehicle <- NEW -> //
+				TiXmlElement* waterlineNodeGraph;				// Water Line <- NEW -> //
 			TiXmlElement* childrenNodeGraph;					// Node Children //
-				TiXmlElement* noderefChildrenNodeGraph;			// Node Children Refernce //
+				TiXmlElement* noderefChildrenNodeGraph;			// Node Children Reference //
 				TiXmlElement* rectangleChildrenNodeGraph;		// Node Rectangle Primitive //
 				TiXmlElement* triangleChildrenNodeGraph;		// Node Triangle Primitive //
 				TiXmlElement* cylinderChildrenNodeGraph;		// Node Cylinder Primitive //
