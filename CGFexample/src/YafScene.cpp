@@ -73,6 +73,34 @@ void YafScene::init(){
 
 	// Defines a default normal
 	glNormal3f(0,0,1);
+
+	initGraph( this->sg->getRootid() );
+}
+
+void YafScene::initGraph( string rootid ){
+
+	GraphNode *n0 = sg->graphNodes->at( rootid );
+	unsigned int maxSize = n0->nodeRefIdVector.size();
+
+	glMultMatrixf( n0->getTransformationMatrix() );
+
+	if( n0->appRefId != "" ){
+		glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
+		sg->appearences->at( n0->appRefId )->apply();
+	}
+
+	if( n0->primitives.size() > 0){
+		for(unsigned int i=0; i<n0->primitives.size(); i++){
+			n0->primitives[i]->draw();
+		}
+	}
+
+	for(unsigned int i = 0; i<maxSize; i++){
+		glPushMatrix();
+		processGraph( n0->nodeRefIdVector[i] );
+		glPopMatrix();
+	}
+
 }
 
 void YafScene::display(){
