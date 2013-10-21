@@ -10,15 +10,17 @@ using std::vector;
 
 class GraphNode{
 	public:
-		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector );
-		GraphNode( char *id, vector<string> &nodeRefIdVector );
+		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector, bool hasDL );
+		GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL );
 		void setPrimitives( vector<CGFobject*> primitives );
 		vector<CGFobject*> getPrimitives();
 		float *getTransformationMatrix();
 		string getAppRefId();
 		vector<string> getNodeRefIdVector();
-		~GraphNode();
 		string getID();
+		bool hasDL();
+		void setDL( GLuint DL );
+		~GraphNode();
 
 	protected:
 		string id;
@@ -26,6 +28,8 @@ class GraphNode{
 		vector<string> nodeRefIdVector;
 		vector<CGFobject*> primitives;
 		float transformationMatrix[16];
+		bool DL;
+		GLuint displayList;
 
 	friend class YafScene;
 };

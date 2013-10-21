@@ -1,15 +1,17 @@
 #include "../include/GraphNode.h"
 
-GraphNode::GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector ){
+GraphNode::GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector, bool hasDL ){
 	this->id = id;
 	this->appRefId = appRefId;
 	this->nodeRefIdVector = nodeRefIdVector;
+	this->DL = hasDL;
 }
 
-GraphNode::GraphNode( char *id, vector<string> &nodeRefIdVector ){
+GraphNode::GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL ){
 	this->id = id;
 	this->appRefId = "";
 	this->nodeRefIdVector = nodeRefIdVector;
+	this->DL = hasDL;
 }
 
 float *GraphNode::getTransformationMatrix(){
@@ -32,10 +34,18 @@ string GraphNode::getAppRefId(){
 	return this->appRefId;
 }
 
-GraphNode::~GraphNode(){
-
-}
-
 string GraphNode::getID(){
 	return this->id;
+}
+
+bool GraphNode::hasDL(){
+	return this->DL;
+}
+
+void GraphNode::setDL( GLuint DL ){
+	this->displayList = DL;
+}
+
+GraphNode::~GraphNode(){
+
 }

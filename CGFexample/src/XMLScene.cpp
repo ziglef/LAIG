@@ -645,13 +645,14 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 			  // Graph values //
 			  char *rootid;
-			  char *displayList;
 
 			  // Nodes Vector //
 			  GraphNode *node;
 
 			  // Node values //
 			  char *id;
+			  char *displayList;
+			  bool hasDL;
 
 			  // AppearanceRef Values //
 			  char *appRefId = NULL;
@@ -738,6 +739,12 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						  if( debug ) printf("\t!! Error parsing node ID !!\n");
 
 					  // Dispay List //
+					  if( displayList )
+						  if( strcmp( "true", displayList )== 0 )
+							  hasDL = true;
+						  else
+							  hasDL = false;
+
 					  if( displayList && debug )
 						  printf("\tDislplay list : %s", displayList);
 					  else
@@ -963,9 +970,9 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						  }while( torusChildrenNodeGraph );
 					  }
 					  if( appRefId == NULL ){
-							node = new GraphNode( id, nodeRefIdVector );
+							node = new GraphNode( id, nodeRefIdVector, hasDL );
 					  } else {
-						  node = new GraphNode( id, appRefId, nodeRefIdVector );
+						  node = new GraphNode( id, appRefId, nodeRefIdVector, hasDL );
 						  appRefId = NULL;
 					  }
 
