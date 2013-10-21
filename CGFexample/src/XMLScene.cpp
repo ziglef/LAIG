@@ -31,6 +31,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 	lighting =  yafElement->FirstChildElement( "lighting" );
 	textures =  yafElement->FirstChildElement( "textures" );
 	appearances =  yafElement->FirstChildElement( "appearances" );
+	animations = yafElement->FirstChildElement( "animations" );
 	sceneGraph =  yafElement->FirstChildElement( "graph" );
 
 	// Globals //
@@ -591,6 +592,50 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			}
 		}
 
+		// Animations Block //
+		if( animations == NULL && debug )
+			printf("Animations block not found!\n");
+		else{
+			if( debug ) printf("Processing animations:\n");
+
+			// Animation values //
+			char *id;
+			float span;
+
+			// Control point values //
+			float x, y, z;
+
+			animationsAnimation = animations->FirstChildElement( "animation" );
+			controlpointAnimation = animations->FirstChildElement( "controlpoint" );
+
+			 id = (char *)animationsAnimation->Attribute( "id" );
+			 if( id && debug )
+				  printf("\tAnimation ID: %s\n\n", id);
+			  else
+				  if( debug ) printf("\t!! Error parsing Animation ID !!\n");
+
+			 if( animationsAnimation->QueryFloatAttribute( "span", &span )==TIXML_SUCCESS && debug )
+				 printf("\tSpan Value : %f\n", span);
+			 else
+				 if( debug ) printf("\t!! Error parsing span value !!\n");
+
+			 if( controlpointAnimation->QueryFloatAttribute( "x", &x )==TIXML_SUCCESS && debug )
+				 printf("\tSpan X:%f\n", x);
+			 else
+				 if( debug ) printf("\t!! Error parsing Span X !!\n");
+
+			 if( controlpointAnimation->QueryFloatAttribute( "y", &y )==TIXML_SUCCESS && debug )
+				 printf("\tSpan Y:%f\n", y);
+			 else
+				 if( debug ) printf("\t!! Error parsing Span Y !!\n");
+
+			 if( controlpointAnimation->QueryFloatAttribute( "z", &z )==TIXML_SUCCESS && debug )
+				 printf("\tSpan Z:%f\n", z);
+			 else
+				 if( debug ) printf("\t!! Error parsing Span Z !!\n");
+
+		}
+
 		// Graph Block //
 		if( sceneGraph == NULL && debug )
 			printf("Graph block not found!\n");
@@ -599,6 +644,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 			  // Graph values //
 			  char *rootid;
+			  char *displayList;
 
 			  // Nodes Vector //
 			  GraphNode *node;
@@ -672,6 +718,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  // Primitives Vector //
 					  vector<CGFobject*> primitives;
 					  id = (char *)nodeGraph->Attribute( "id" );
+					  displayList = (char *)nodeGraph->Attribute( "displayList" );
 					  transformsNodeGraph = nodeGraph->FirstChildElement( "transforms" );
 					  transformsChildNodeGraph = transformsNodeGraph->FirstChildElement();
 					  appearanceRefNodeGraph = nodeGraph->FirstChildElement( "appearanceref" );
@@ -688,6 +735,12 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						  printf("\tNode ID: %s\n", id);
 					  else
 						  if( debug ) printf("\t!! Error parsing node ID !!\n");
+
+					  // Dispay List //
+					  if( displayList && debug )
+						  printf("\tDislplay list : %s", displayList);
+					  else
+						  if( debug ) printf("\t!! Error parsing display list element !!\n");
 
 					  // Tranformations //
 

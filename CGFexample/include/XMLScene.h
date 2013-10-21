@@ -53,6 +53,7 @@ protected:
 	// Scene Animations <- NEW -> //
 	TiXmlElement* animations;
 		TiXmlElement* animationsAnimation;   // Scene Animation (Single Instance) //
+		TiXmlElement* controlpointAnimation; // Scene Anumation control point //
 
 	// Scene Graph //
 	TiXmlElement* sceneGraph;
