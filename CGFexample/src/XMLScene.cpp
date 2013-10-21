@@ -600,6 +600,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 			// Animation values //
 			char *id;
+			char *type = "linear";
 			float span;
 
 			// Control point values //
