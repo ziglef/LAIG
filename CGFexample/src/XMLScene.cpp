@@ -657,6 +657,26 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  // AppearanceRef Values //
 			  char *appRefId = NULL;
 
+			  // Animationref Values //
+			  char *animRefId = NULL;
+
+			  // Plane Values //
+			  int parts;
+
+			  // Patch Values //
+			  int order, partsU, partsV;
+			  char *compute;
+			 
+			  // Control Point Values //
+			  float cpx, cpy, cpz;
+
+			  // Waterline Values //
+			  char *heightmap;
+			  char *texturemap;
+			  char *fragmentshader;
+			  char *vertexshader;
+
+
 			  // Tranformation Values //
 			  char *translate;
 			  float translateX, translateY, translateZ;
@@ -724,6 +744,11 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  transformsNodeGraph = nodeGraph->FirstChildElement( "transforms" );
 					  transformsChildNodeGraph = transformsNodeGraph->FirstChildElement();
 					  appearanceRefNodeGraph = nodeGraph->FirstChildElement( "appearanceref" );
+					  animationRefNodeGraph = nodeGraph->FirstChildElement( "animationref" );
+					  planePartsNodeGraph = nodeGraph->FirstChildElement( "plane" );
+					  patchNodeGraph = nodeGraph->FirstChildElement( "patch" );
+					  vehicleNodeGraph = nodeGraph->FirstChildElement( "vehicle" );
+					  waterlineNodeGraph = nodeGraph->FirstChildElement( "waterline" );
 					  childrenNodeGraph = nodeGraph->FirstChildElement( "children" );
 					  noderefChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "noderef" );
 					  rectangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "rectangle" );
@@ -816,6 +841,94 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							appRefId = NULL;
 					  }
 
+					  // Animation Reference //
+					  if( animationRefNodeGraph ){
+						  animRefId = (char *)animationRefNodeGraph->Attribute( "id" );
+						  if( animRefId && debug )
+							  printf("\tAnimation Reference: %s\n", animRefId);
+						  else
+							  if( debug ) printf("\t!! Error parsing animation reference !!\n");
+
+						  if( !animRefId )
+							  animRefId = NULL;
+					  }
+					  
+					  // Plane //
+					  if( planePartsNodeGraph ){
+						  if( planePartsNodeGraph->QueryIntAttribute( "parts", &parts )==TIXML_SUCCESS && debug )
+							  printf("\tParts: %d\n", parts);
+						  else
+							  if( debug ) printf("\t!! Error parsing Parts !!\n");
+					  }
+
+					  // Patch //
+					  if( patchNodeGraph ){
+						  if( patchNodeGraph->QueryIntAttribute( "order", &order )==TIXML_SUCCESS && debug )
+							  printf("\tOrder: %d\n", order);
+						  else
+							  if( debug ) printf("\t!! Error parsing Order !!\n");
+
+						  if( patchNodeGraph->QueryIntAttribute( "partsU", &partsU )==TIXML_SUCCESS && debug )
+							  printf("\tPartsU: %d\n", partsU);
+						  else
+							  if( debug ) printf("\t!! Error parsing PartsU !!\n");
+
+						  compute = (char *)patchNodeGraph->Attribute( "compute" );
+						  if( compute && debug )
+							  printf("\tCompute: %s\n", compute );
+						  else
+							  if( debug ) printf("\t!! Error parsing compute value !!\n");
+
+						  controlpointNodeGraph = patchNodeGraph->FirstChildElement( "controlpoint" );
+						  if( controlpointNodeGraph ){
+								if( controlpointNodeGraph->QueryFloatAttribute( "x", &cpx )==TIXML_SUCCESS && debug )
+									printf("\tControl Point X: %f\n", cpx);
+								else
+									if( debug ) printf("\t!! Error parsing Control Point X !!\n");
+
+								if( controlpointNodeGraph->QueryFloatAttribute( "y", &cpy )==TIXML_SUCCESS && debug )
+									printf("\tControl Point y: %f\n", cpy);
+								else
+									if( debug ) printf("\t!! Error parsing Control Point y !!\n");
+
+								if( controlpointNodeGraph->QueryFloatAttribute( "z", &cpz )==TIXML_SUCCESS && debug )
+									printf("\tControl Point Z: %f\n", cpz);
+								else
+									if( debug ) printf("\t!! Error parsing Control Point Z !!\n");
+						  }
+					  }
+
+					  // Vehicle //
+					  if( vehicleNodeGraph ){
+						
+					  }
+
+					  // Waterline //
+					  if( waterlineNodeGraph ){
+						  heightmap = (char *)waterlineNodeGraph->Attribute( "heightmap" );
+						  if( heightmap && debug )
+							  printf("\tHeightmap: %s\n", heightmap);
+						  else
+							  if( debug ) printf("\t!! Error parsing heightmap \n");
+
+						  texturemap = (char *)waterlineNodeGraph->Attribute( "texturemap" );
+						  if( texturemap && debug )
+							  printf("\tTexturemap: %s\n", texturemap);
+						  else
+							  if( debug ) printf("\t!! Error parsing Texturemap \n");
+
+						  fragmentshader = (char *)waterlineNodeGraph->Attribute( "fragmentshader" );
+						  if( fragmentshader && debug )
+							  printf("\tFragmentshader: %s\n", fragmentshader);
+						  else
+							  if( debug ) printf("\t!! Error parsing Fragmentshader \n");
+
+						  vertexshader = (char *)waterlineNodeGraph->Attribute( "vertexshader" );
+						  if( vertexshader && debug )
+							  printf("\tVertexshader: %s\n", vertexshader);
+						  else
+							  if( debug ) printf("\t!! Error parsing Vertexshader \n");
+					  }
 					  // Children //
 
 					  // Node ref //
