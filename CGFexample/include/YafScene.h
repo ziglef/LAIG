@@ -21,6 +21,9 @@ class YafScene : public CGFscene{
 	protected:
 		SceneGraph *sg;
 
+	private:
+		void initGraph( string rootId );
+
 	friend class SceneGraph;
 	friend class GraphNode;
 };
