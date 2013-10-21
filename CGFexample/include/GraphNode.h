@@ -20,6 +20,7 @@ class GraphNode{
 		string getID();
 		bool hasDL();
 		void setDL( GLuint DL );
+		GLuint getDL();
 		~GraphNode();
 
 	protected:

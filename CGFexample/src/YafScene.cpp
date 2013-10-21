@@ -81,24 +81,50 @@ void YafScene::initGraph( string rootid ){
 
 	GraphNode *n0 = sg->graphNodes->at( rootid );
 	unsigned int maxSize = n0->nodeRefIdVector.size();
+	
+	if( !n0->hasDL() ){
+		glMultMatrixf( n0->getTransformationMatrix() );
 
-	glMultMatrixf( n0->getTransformationMatrix() );
-
-	if( n0->appRefId != "" ){
-		glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
-		sg->appearences->at( n0->appRefId )->apply();
-	}
-
-	if( n0->primitives.size() > 0){
-		for(unsigned int i=0; i<n0->primitives.size(); i++){
-			n0->primitives[i]->draw();
+		if( n0->appRefId != "" ){
+			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
+			sg->appearences->at( n0->appRefId )->apply();
 		}
-	}
 
-	for(unsigned int i = 0; i<maxSize; i++){
-		glPushMatrix();
-		processGraph( n0->nodeRefIdVector[i] );
-		glPopMatrix();
+		if( n0->primitives.size() > 0){
+			for(unsigned int i=0; i<n0->primitives.size(); i++){
+				n0->primitives[i]->draw();
+			}
+		}
+
+		for(unsigned int i = 0; i<maxSize; i++){
+			glPushMatrix();
+			initGraph( n0->nodeRefIdVector[i] );
+			glPopMatrix();
+		}
+	} else {
+		if( n0->getDL() == 0 ){		// Node DL isn't yet created
+			if( maxSize == 0 ){		// If there aren't any more children
+				n0->setDL( glGenLists(1) );
+				glNewList( n0->getDL(), GL_COMPILE );
+					glMultMatrixf( n0->getTransformationMatrix() );
+
+					if( n0->appRefId != "" ){
+						glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
+						sg->appearences->at( n0->appRefId )->apply();
+					}
+
+					if( n0->primitives.size() > 0){
+						for(unsigned int i=0; i<n0->primitives.size(); i++){
+							n0->primitives[i]->draw();
+						}
+					}
+				glEndList();
+			} else {				// If there are still children
+			// TODO: END LISTS
+			}
+		} else {					// Node DL is already created
+			glCallList( n0->getDL() );
+		}
 	}
 
 }

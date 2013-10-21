@@ -5,6 +5,7 @@ GraphNode::GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector,
 	this->appRefId = appRefId;
 	this->nodeRefIdVector = nodeRefIdVector;
 	this->DL = hasDL;
+	this->displayList = 0;
 }
 
 GraphNode::GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL ){
@@ -12,6 +13,7 @@ GraphNode::GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL ){
 	this->appRefId = "";
 	this->nodeRefIdVector = nodeRefIdVector;
 	this->DL = hasDL;
+	this->displayList = 0;
 }
 
 float *GraphNode::getTransformationMatrix(){
@@ -44,6 +46,10 @@ bool GraphNode::hasDL(){
 
 void GraphNode::setDL( GLuint DL ){
 	this->displayList = DL;
+}
+
+GLuint GraphNode::getDL(){
+	return this->displayList;
 }
 
 GraphNode::~GraphNode(){
