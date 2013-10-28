@@ -652,7 +652,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  // Node values //
 			  char *id;
 			  char *displayList;
-			  bool hasDL;
+			  bool hasDL = false;
 
 			  // AppearanceRef Values //
 			  char *appRefId = NULL;
@@ -764,11 +764,12 @@ XMLScene::XMLScene(char *filename, bool debug) {
 						  if( debug ) printf("\t!! Error parsing node ID !!\n");
 
 					  // Dispay List //
-					  if( displayList )
+					  if( displayList ){
 						  if( strcmp( "true", displayList )== 0 )
 							  hasDL = true;
 						  else
 							  hasDL = false;
+					  }
 
 					  if( displayList && debug )
 						  printf("\tDislplay list : %s", displayList);
