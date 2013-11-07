@@ -1,10 +1,12 @@
 #include "../include/YafScene.h"
-
-#include "../include/Rectangle.h"
+#include "../include/Plane.h"
 #include "../include/CGF/CGFappearance.h"
+
+Plane *plane;
 
 void YafScene::init(){
 
+	plane = new Plane(5);
 	// Globals //
 
 	// Background color //
@@ -200,7 +202,7 @@ void YafScene::display(){
 
 	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){      
 			if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
-					this->activateCamera( *(sg->getActualCamera()) + 3);
+					this->activateCamera( *(sg->getActualCamera()) );
 	}
 
 	activeCamera->applyView();
@@ -226,7 +228,11 @@ void YafScene::display(){
 
 	// ---- END feature demos
 	processGraph( this->sg->getRootid() );
-	
+	glPushMatrix();
+		glRotatef(180,0,0,1);
+		glTranslatef(1,0,0);
+		plane->draw();
+	glPopMatrix();
 	// We have been drawing in a memory area that is not visible - the back buffer, 
 	// while the graphics card is showing the contents of another buffer - the front buffer
 	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
@@ -238,23 +244,27 @@ void YafScene::processGraph( string rootid ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
-	glMultMatrixf( n0->getTransformationMatrix() );
+	if( n0->hasDL() ){
+		glCallList( n0->getDL() );
+	}else{
+		glMultMatrixf( n0->getTransformationMatrix() );
 
-	if( n0->appRefId != "" ){
-		glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
-		sg->appearences->at( n0->appRefId )->apply();
-	}
-
-	if( n0->primitives.size() > 0){
-		for(unsigned int i=0; i<n0->primitives.size(); i++){
-			n0->primitives[i]->draw();
+		if( n0->appRefId != "" ){
+			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
+			sg->appearences->at( n0->appRefId )->apply();
 		}
-	}
 
-	for(unsigned int i = 0; i<maxSize; i++){
-		glPushMatrix();
-		processGraph( n0->nodeRefIdVector[i] );
-		glPopMatrix();
+		if( n0->primitives.size() > 0){
+			for(unsigned int i=0; i<n0->primitives.size(); i++){
+				n0->primitives[i]->draw();
+			}
+		}
+
+		for(unsigned int i = 0; i<maxSize; i++){
+			glPushMatrix();
+			processGraph( n0->nodeRefIdVector[i] );
+			glPopMatrix();
+		}
 	}
 
 }

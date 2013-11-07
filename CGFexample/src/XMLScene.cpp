@@ -603,38 +603,61 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			char *type = "linear";
 			float span;
 
+			GLfloat **cpAnimationMatrix = NULL;
+			int controlAnimationPoints = 0;
+
 			// Control point values //
 			float x, y, z;
 
 			animationsAnimation = animations->FirstChildElement( "animation" );
 			controlpointAnimation = animations->FirstChildElement( "controlpoint" );
 
-			 id = (char *)animationsAnimation->Attribute( "id" );
-			 if( id && debug )
-				  printf("\tAnimation ID: %s\n\n", id);
-			  else
-				  if( debug ) printf("\t!! Error parsing Animation ID !!\n");
 
-			 if( animationsAnimation->QueryFloatAttribute( "span", &span )==TIXML_SUCCESS && debug )
-				 printf("\tSpan Value : %f\n", span);
-			 else
-				 if( debug ) printf("\t!! Error parsing span value !!\n");
+			if( animationsAnimation ){
+				do{
+					 id = (char *)animationsAnimation->Attribute( "id" );
+					 if( id && debug )
+						  printf("\tAnimation ID: %s\n\n", id);
+					  else
+						  if( debug ) printf("\t!! Error parsing Animation ID !!\n");
 
-			 if( controlpointAnimation->QueryFloatAttribute( "x", &x )==TIXML_SUCCESS && debug )
-				 printf("\tSpan X:%f\n", x);
-			 else
-				 if( debug ) printf("\t!! Error parsing Span X !!\n");
+					 if( animationsAnimation->QueryFloatAttribute( "span", &span )==TIXML_SUCCESS && debug )
+						 printf("\tSpan Value : %f\n", span);
+					 else
+						 if( debug ) printf("\t!! Error parsing span value !!\n");
 
-			 if( controlpointAnimation->QueryFloatAttribute( "y", &y )==TIXML_SUCCESS && debug )
-				 printf("\tSpan Y:%f\n", y);
-			 else
-				 if( debug ) printf("\t!! Error parsing Span Y !!\n");
+					 if( controlpointAnimation ){
+						 do{
+							 if( controlpointAnimation->QueryFloatAttribute( "x", &x )==TIXML_SUCCESS && debug )
+								 printf("\tAnimation control point X:%f\n", x);
+							 else
+								 if( debug ) printf("\t!! Error parsing Animation control point X !!\n");
 
-			 if( controlpointAnimation->QueryFloatAttribute( "z", &z )==TIXML_SUCCESS && debug )
-				 printf("\tSpan Z:%f\n", z);
-			 else
-				 if( debug ) printf("\t!! Error parsing Span Z !!\n");
+							 if( controlpointAnimation->QueryFloatAttribute( "y", &y )==TIXML_SUCCESS && debug )
+								 printf("\tAnimation control point Y:%f\n", y);
+							 else
+								 if( debug ) printf("\t!! Error parsing Animation control point Y !!\n");
 
+							 if( controlpointAnimation->QueryFloatAttribute( "z", &z )==TIXML_SUCCESS && debug )
+								 printf("\tSAnimation control point Z:%f\n", z);
+							 else
+								 if( debug ) printf("\t!! Error parsing Animation control point Z !!\n");
+
+							controlAnimationPoints++;
+							cpAnimationMatrix = (GLfloat **)realloc(cpAnimationMatrix, sizeof(GLfloat *) * controlAnimationPoints);
+							for(int i=0; i<controlAnimationPoints; ++i){
+								cpAnimationMatrix[i] = (GLfloat *)malloc(sizeof(GLfloat) * 3);
+								cpAnimationMatrix[i][0] = x;
+								cpAnimationMatrix[i][1] = y;
+								cpAnimationMatrix[i][2] = z;
+							}
+
+							 controlpointAnimation = controlpointAnimation->NextSiblingElement( "controlpoint" );
+						 }while( controlpointAnimation );
+					 }
+					 animationsAnimation = animationsAnimation->NextSiblingElement( "animation" );
+				}while( animationsAnimation );
+			 }
 		}
 
 		// Graph Block //
@@ -666,6 +689,8 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  // Patch Values //
 			  int order, partsU, partsV;
 			  char *compute;
+			  GLfloat **cpPatchMatrix = NULL;
+			  int controlPatchPoints = 0;
 			 
 			  // Control Point Values //
 			  float cpx, cpy, cpz;
@@ -675,7 +700,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  char *texturemap;
 			  char *fragmentshader;
 			  char *vertexshader;
-
 
 			  // Tranformation Values //
 			  char *translate;
@@ -740,7 +764,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  // Primitives Vector //
 					  vector<CGFobject*> primitives;
 					  id = (char *)nodeGraph->Attribute( "id" );
-					  displayList = (char *)nodeGraph->Attribute( "displayList" );
+					  displayList = (char *)nodeGraph->Attribute( "displaylist" );
 					  transformsNodeGraph = nodeGraph->FirstChildElement( "transforms" );
 					  transformsChildNodeGraph = transformsNodeGraph->FirstChildElement();
 					  appearanceRefNodeGraph = nodeGraph->FirstChildElement( "appearanceref" );
@@ -882,6 +906,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 						  controlpointNodeGraph = patchNodeGraph->FirstChildElement( "controlpoint" );
 						  if( controlpointNodeGraph ){
+							  do{
 								if( controlpointNodeGraph->QueryFloatAttribute( "x", &cpx )==TIXML_SUCCESS && debug )
 									printf("\tControl Point X: %f\n", cpx);
 								else
@@ -896,6 +921,18 @@ XMLScene::XMLScene(char *filename, bool debug) {
 									printf("\tControl Point Z: %f\n", cpz);
 								else
 									if( debug ) printf("\t!! Error parsing Control Point Z !!\n");
+
+								controlPatchPoints++;
+								cpPatchMatrix = (GLfloat **)realloc(cpPatchMatrix, sizeof(GLfloat *) * controlPatchPoints);
+								for(int i=0; i<controlPatchPoints; ++i){
+									cpPatchMatrix[i] = (GLfloat *)malloc(sizeof(GLfloat) * 3);
+									cpPatchMatrix[i][0] = cpx;
+									cpPatchMatrix[i][1] = cpy;
+									cpPatchMatrix[i][2] = cpz;
+								}
+
+								controlpointNodeGraph = controlpointNodeGraph->NextSiblingElement( "controlpoint" );
+							  }while( controlpointNodeGraph );
 						  }
 					  }
 
