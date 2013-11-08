@@ -5,12 +5,12 @@ class Animation{
 	public:
 		Animation();
 		~Animation();
+		void init( unsigned long t );
 		void reset();
 		void update( unsigned long t );
 		void draw();
 
 	private:
-		void init( unsigned long t );
 		double  obj_radius, obj_rotate, radius_speed_ms, rotate_speed_ms;
 		unsigned long startTime;
 		unsigned char doReset;
