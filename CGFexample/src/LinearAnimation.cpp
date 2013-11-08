@@ -3,8 +3,12 @@
 
 LinearAnimation::LinearAnimation(  char *id, int animationCp, float **originalMatrix, float totalDuration ){
 
+<<<<<<< HEAD
 	float totalDistance, pointsDistance, pointDuration;
 	this->id = id;
+=======
+	float totalDistance=0.0, pointsDistance, pointDuration;
+>>>>>>> no message
 
 	for(int i=0; i<animationCp; ++i){
 			AnimationPoint *point;

@@ -22,7 +22,7 @@ float AnimationPoint::getDistance(){
 
 void AnimationPoint::setDuration( float duration ){
 	this->duration = duration;
-	this->maxIterations = duration*30;
+	this->maxIterations = (int)duration*30;
 }
 
 float AnimationPoint::getDuration(){

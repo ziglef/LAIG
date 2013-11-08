@@ -30,7 +30,7 @@ Plane::~Plane(){
 }
 
 void Plane::draw(){
-	float counter1, counter2;
+	// float counter1, counter2;
 
 	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 2,  0.0, 1.0, 6, 2,  &ctrlpoints[0][0]);
 	glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &colorpoints[0][0]);
