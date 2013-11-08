@@ -4,6 +4,8 @@ AnimationPoint::AnimationPoint( float x, float y, float z ){
 	this->x = x;
 	this->x = y;
 	this->x = z;
+
+	this->iterations = 0;
 }
 
 AnimationPoint::~AnimationPoint(){
@@ -20,6 +22,7 @@ float AnimationPoint::getDistance(){
 
 void AnimationPoint::setDuration( float duration ){
 	this->duration = duration;
+	this->MaxIterations = duration*30;
 }
 
 float AnimationPoint::getDuration(){
@@ -36,4 +39,20 @@ float AnimationPoint::getY(){
 
 float AnimationPoint::getZ(){
 	return this->z;
+}
+
+void setIterations( int iterations ){
+	this->iterations = iterations;
+}
+
+int getIterations(){
+	return this->iterations;
+}
+
+void setMaxIterations( int maxIterations ){
+	this->maxIterations = maxIterations;
+}
+
+int getMaxIterations(){
+	return this->maxIterations;
 }

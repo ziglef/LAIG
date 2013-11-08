@@ -21,6 +21,8 @@ class LinearAnimation{
 		vector<AnimationPoint*> ctrlPoints;
 		unsigned long startTime;
 		unsigned char doReset;
+		int pointNumber;
+		float x, y, z;
 };
 
 #endif

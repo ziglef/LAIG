@@ -12,9 +12,15 @@ class AnimationPoint{
 		float getX();
 		float getY();
 		float getZ();
+		void setIterations( int iterations );
+		int getIterations();
+		void setMaxIterations( int maxIterations );
+		int getMaxIterations();
     private:
 		float distance;
 		float duration;
+		int iterations;
+		int maxIterations;
 		float x, y, z;
 };
 
