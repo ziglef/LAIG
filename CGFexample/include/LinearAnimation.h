@@ -11,11 +11,12 @@ using std::vector;
 
 class LinearAnimation{
 	public:
-		LinearAnimation( int animationCp, float **originalMatrix, float totalDuration );
+		LinearAnimation( char *id, int animationCp, float **originalMatrix, float totalDuration );
 		~LinearAnimation();
 		void reset();
-		void draw();
-		void update( unsigned long t );  
+		void apply();
+		void update( unsigned long t ); 
+		string getID();
 	private:
 		void init( unsigned long t );
 		vector<AnimationPoint*> ctrlPoints;
@@ -23,6 +24,8 @@ class LinearAnimation{
 		unsigned char doReset;
 		int pointNumber;
 		float x, y, z;
+		float rotationAngle;
+		string id; 
 };
 
 #endif

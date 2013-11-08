@@ -35,6 +35,7 @@ class SceneGraph {
 		void addLight( Lighting *light );
 
 		void addTexture( Texture *texture );
+		void addAnimation( LinearAnimation *animation );
 		void addAppearence( Appearence *appearence );
 		void setRootId( char *rootId );
 		void addGraphNode( GraphNode *graphNode );
@@ -61,6 +62,8 @@ class SceneGraph {
 		map<string, Texture*> *getTextures();
 
 		map<string, Appearence*> *getAppearences();
+
+		map<string, LinearAnimation*> *getAnimations();
 
 		string getRootid();
 		map<string, GraphNode*> *getGraphnodes();
@@ -91,6 +94,9 @@ class SceneGraph {
 
 		// Texture Values //
 		map<string, Texture*> *textures;
+
+		// Animation Values //
+		map<string, LinearAnimation*> *animations;
 
 		// Appearence Values //
 		map<string, Appearence*> *appearences;

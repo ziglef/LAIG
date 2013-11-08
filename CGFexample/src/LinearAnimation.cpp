@@ -1,9 +1,10 @@
 #include "../include/LinearAnimation.h"
 #include <GL/glut.h>
 
-LinearAnimation::LinearAnimation( int animationCp, float **originalMatrix, float totalDuration ){
+LinearAnimation::LinearAnimation(  char *id, int animationCp, float **originalMatrix, float totalDuration ){
 
 	float totalDistance, pointsDistance, pointDuration;
+	this->id = id;
 
 	for(int i=0; i<animationCp; ++i){
 			AnimationPoint *point;
@@ -51,8 +52,10 @@ void LinearAnimation::update( unsigned long t ){
 	}else{
 		if( pointNumber < ctrlPoints.size() ){
 
-			if( ctrlPoints.at(pointNumber)->getIterations() == 0 )
-				//calcular rotação
+			if( ctrlPoints.at(pointNumber)->getIterations() == 0 ){
+				rotationAngle = acos( (0.0*( ctrlPoints.at(pointNumber+1)->getX()-ctrlPoints.at(pointNumber)->getX() ) + 0.0*( ctrlPoints.at(pointNumber+1)->getY()-ctrlPoints.at(pointNumber)->getY() ) + 1.0*( ctrlPoints.at(pointNumber+1)->getZ()-ctrlPoints.at(pointNumber)->getZ() ))
+								    /( sqrt( pow( ctrlPoints.at(pointNumber)->getX(),2 ) + pow( ctrlPoints.at(pointNumber)->getY(),2 ) + pow( ctrlPoints.at(pointNumber)->getZ(),2 ) ) * sqrt( pow( ctrlPoints.at(pointNumber+1)->getX(),2 ) + pow( ctrlPoints.at(pointNumber+1)->getY(),2 ) + pow( ctrlPoints.at(pointNumber+1)->getZ(),2 ) ) ) );
+			}
 
 			this->x += ( ctrlPoints.at(pointNumber+1)->getX() -  ctrlPoints.at(pointNumber)->getX() )/( ctrlPoints.at(pointNumber)->getDuration() * 30 );
 			this->y += ( ctrlPoints.at(pointNumber+1)->getY() -  ctrlPoints.at(pointNumber)->getY() )/( ctrlPoints.at(pointNumber)->getDuration() * 30 );
@@ -65,8 +68,14 @@ void LinearAnimation::update( unsigned long t ){
 	}
 }
 
-void LinearAnimation::draw(){
+void LinearAnimation::apply(){
 	glPushMatrix();
+		if( ctrlPoints.at(pointNumber)->getIterations() == 0 )
+			glRotatef( rotationAngle, 0.0, 0.0, 1.0 );
 		glTranslatef( this->x, this->y, this->z );
 	glPopMatrix();
+}
+
+string LinearAnimation::getID(){
+	return this->id;
 }

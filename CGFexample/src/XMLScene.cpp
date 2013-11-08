@@ -606,6 +606,8 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			GLfloat **cpAnimationMatrix = NULL;
 			int controlAnimationPoints = 0;
 
+			vector<LinearAnimation> animationsVector;
+
 			// Control point values //
 			float x, y, z;
 
@@ -655,6 +657,8 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							 controlpointAnimation = controlpointAnimation->NextSiblingElement( "controlpoint" );
 						 }while( controlpointAnimation );
 					 }
+
+					 this->sg->addAnimation( new LinearAnimation( id, controlAnimationPoints, cpAnimationMatrix, span ) );
 					 animationsAnimation = animationsAnimation->NextSiblingElement( "animation" );
 				}while( animationsAnimation );
 			 }

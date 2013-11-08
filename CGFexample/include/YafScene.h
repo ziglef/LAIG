@@ -13,6 +13,7 @@ class YafScene : public CGFscene{
 		};
 		void init();
 		void display();
+		void update(unsigned long t);
 		void processGraph( string rootId );
 		vector<CGFcamera*> *getSceneCameras();
 		void activateCamera( int i );

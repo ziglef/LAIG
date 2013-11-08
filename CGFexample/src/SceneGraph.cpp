@@ -22,7 +22,6 @@ void SceneGraph::setInitialCamera( char *initCamera){
 	this->initialCamera = initCamera;
 }
 
-
 void SceneGraph::addCamera( Camera *camera ){
 	this->cameras->insert( std::pair<string, Camera*>(camera->getID(), camera) );
 }
@@ -41,6 +40,10 @@ void SceneGraph::addLightingValues( char *doublesided, char *local, char *Lighti
 
 void SceneGraph::addTexture( Texture *texture ){
 	this->textures->insert( std::pair<string, Texture *>(texture->getID(), texture) );
+}
+
+void SceneGraph::addAnimation( LinearAnimation *animation ){
+	this->animations->insert( std::pair<string, LinearAnimation *>(animation->getID(), animation) );
 }
 
 void SceneGraph::addAppearence( Appearence *appearence ){
@@ -117,6 +120,10 @@ map<string, Lighting*>* SceneGraph::getLights(){
 
 map<string, Texture*>* SceneGraph::getTextures(){
 	return this->textures;
+}
+
+map<string, LinearAnimation*>* SceneGraph::getAnimations(){
+	return this->animations;
 }
 
 map<string, Appearence*>* SceneGraph::getAppearences(){

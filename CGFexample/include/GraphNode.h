@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "CGF\CGFobject.h"
+#include "LinearAnimation.h"
 
 using std::string;
 using std::vector;
@@ -12,6 +13,7 @@ class GraphNode{
 	public:
 		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector, bool hasDL );
 		GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL );
+		GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL, char *animationRef );
 		void setPrimitives( vector<CGFobject*> primitives );
 		vector<CGFobject*> getPrimitives();
 		float *getTransformationMatrix();
@@ -21,6 +23,8 @@ class GraphNode{
 		bool hasDL();
 		void setDL( GLuint DL );
 		GLuint getDL();
+		bool hasAnimation();
+		string getAnimationRef();
 		~GraphNode();
 
 	protected:
@@ -31,7 +35,8 @@ class GraphNode{
 		float transformationMatrix[16];
 		bool DL;
 		GLuint displayList;
-
+		string animationRef;
+		bool anim;
 	friend class YafScene;
 };
 

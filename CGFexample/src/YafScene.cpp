@@ -76,7 +76,20 @@ void YafScene::init(){
 	// Defines a default normal
 	glNormal3f(0,0,1);
 
+	// Animation-related code
+	unsigned long updatePeriod=30;
+	setUpdatePeriod(updatePeriod);
+
 	initGraph( this->sg->getRootid() );
+}
+
+void YafScene::update(unsigned long t){
+	map<string, GraphNode*>::iterator iter;
+
+	for(iter= sg->graphNodes->begin(); iter != sg->graphNodes->end(); iter++){
+		if( iter->second->hasAnimation() )
+			sg->getAnimations()->at( iter->second->getAnimationRef() )->update(t);
+	}
 }
 
 void YafScene::initGraph( string rootid ){
@@ -85,7 +98,8 @@ void YafScene::initGraph( string rootid ){
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 	
 	if( !n0->hasDL() ){
-		glMultMatrixf( n0->getTransformationMatrix() );
+		if( !n0->hasAnimation() )
+			glMultMatrixf( n0->getTransformationMatrix() );
 
 		if( n0->appRefId != "" ){
 			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
@@ -108,6 +122,7 @@ void YafScene::initGraph( string rootid ){
 			if( maxSize == 0 ){		// If there aren't any more children
 				n0->setDL( glGenLists(1) );
 				glNewList( n0->getDL(), GL_COMPILE );
+				if( !n0->hasAnimation() )
 					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->appRefId != "" ){
@@ -124,6 +139,7 @@ void YafScene::initGraph( string rootid ){
 			} else {				// If there are still children
 				// Call Children //
 				glPushMatrix();
+				if( !n0->hasAnimation() )
 					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->appRefId != "" ){
@@ -147,7 +163,8 @@ void YafScene::initGraph( string rootid ){
 				n0->setDL( glGenLists(1) );
 				glNewList( n0->getDL(), GL_COMPILE );
 				// Call Children //
-								glPushMatrix();
+				glPushMatrix();
+				if( !n0->hasAnimation() )
 					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->appRefId != "" ){
@@ -247,7 +264,8 @@ void YafScene::processGraph( string rootid ){
 	if( n0->hasDL() ){
 		glCallList( n0->getDL() );
 	}else{
-		glMultMatrixf( n0->getTransformationMatrix() );
+		if( !n0->hasAnimation() )
+			glMultMatrixf( n0->getTransformationMatrix() );
 
 		if( n0->appRefId != "" ){
 			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
