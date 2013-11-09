@@ -1,7 +1,7 @@
 #include "../include/Patch.h"
 #include <GL/glut.h>
 
-GLfloat **cpMatrix = NULL;
+GLfloat *cpMatrix = NULL;
 
 GLfloat patchColorpoints[4][4] = {	{ 0.0, 0.7, 0.7, 0},
 								{ 0.0, 0.0, 0.7, 0}, 
@@ -21,20 +21,17 @@ Patch::Patch( int order, int partsU, int partsV, string compute, int ctrlPoints,
 	this->compute = compute;
 	this->ctrlPoints = ctrlPoints;
 
-	cpMatrix = (GLfloat **)realloc(cpMatrix, sizeof(GLfloat *) * ctrlPoints);
-	for(int i=0; i<ctrlPoints; ++i){
-		cpMatrix[i] = (GLfloat *)malloc(sizeof(GLfloat) * 3);
-	}
+	cpMatrix = (GLfloat*)malloc(ctrlPoints*sizeof(GLfloat)*3);
  
 	for(int i=0; i<ctrlPoints; ++i){
-		for(int j=0; j<3; ++j){
-			cpMatrix[i][j] = originalMatrix[i][j];
-		}
-}
+		cpMatrix[3*i+0] = originalMatrix[i][0];
+		cpMatrix[3*i+1] = originalMatrix[i][1];
+		cpMatrix[3*i+2] = originalMatrix[i][2];
+	}
 }
 
 void Patch::draw(){
-	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, partsU,  0.0, 1.0, partsU*2, partsV,  *cpMatrix);
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, partsU,  0.0, 1.0, partsU*2, partsV,  cpMatrix);
 	glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &patchColorpoints[0][0]);
 	glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, 2,  0.0, 1.0, 4, 2,  &patchTextpoints[0][0]);
 

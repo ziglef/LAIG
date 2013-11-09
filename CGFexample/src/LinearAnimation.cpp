@@ -3,20 +3,17 @@
 
 LinearAnimation::LinearAnimation(  char *id, int animationCp, float **originalMatrix, float totalDuration ){
 
-<<<<<<< HEAD
-	float totalDistance, pointsDistance, pointDuration;
+	float totalDistance=0.0;
+	float pointsDistance, pointDuration;
 	this->id = id;
-=======
-	float totalDistance=0.0, pointsDistance, pointDuration;
->>>>>>> no message
 
-	for(int i=0; i<animationCp; ++i){
-			AnimationPoint *point;
-			point = new AnimationPoint( originalMatrix[i][0], originalMatrix[i][1], originalMatrix[i][2] );
-			ctrlPoints.push_back( point );
+	for(int i=0; i<animationCp; i++){
+		AnimationPoint *point;
+		point = new AnimationPoint( originalMatrix[i][0], originalMatrix[i][1], originalMatrix[i][2] );
+		ctrlPoints.push_back( point );
 	}
 
-	for(int i=1; i<animationCp; ++i ){
+	for(int i=1; i<animationCp; i++ ){
 		pointsDistance = sqrt( pow(( ctrlPoints.at(i)->getX()-ctrlPoints.at(i-1)->getX() ), 2 ) + pow(( ctrlPoints.at(i)->getZ()-ctrlPoints.at(i-1)->getZ() ), 2) );
 		totalDistance += pointsDistance;
 		ctrlPoints.at(i-1)->setDistance( pointsDistance );
@@ -29,12 +26,11 @@ LinearAnimation::LinearAnimation(  char *id, int animationCp, float **originalMa
 		ctrlPoints.at(i)->setDuration(pointDuration);
 	}
 
-
 	this->x = ctrlPoints.at(0)->getX();
 	this->y = ctrlPoints.at(0)->getY();
 	this->z = ctrlPoints.at(0)->getZ();
 
-	pointNumber=0;
+	this->pointNumber=0;
 }
 
 LinearAnimation::~LinearAnimation(){

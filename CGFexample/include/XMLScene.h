@@ -8,6 +8,7 @@
 #include "Sphere.h"
 #include "Triangle.h"
 #include "Rectangle.h"
+#include "Patch.h"
 #include "CGF\CGFscene.h"
 #include <cmath>
 

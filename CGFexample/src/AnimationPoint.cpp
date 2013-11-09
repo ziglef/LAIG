@@ -2,8 +2,8 @@
 
 AnimationPoint::AnimationPoint( float x, float y, float z ){
 	this->x = x;
-	this->x = y;
-	this->x = z;
+	this->y = y;
+	this->z = z;
 
 	this->iterations = 0;
 }

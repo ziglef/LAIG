@@ -612,7 +612,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			float x, y, z;
 
 			animationsAnimation = animations->FirstChildElement( "animation" );
-			controlpointAnimation = animations->FirstChildElement( "controlpoint" );
+			controlpointAnimation = animationsAnimation->FirstChildElement( "controlpoint" );
 
 
 			if( animationsAnimation ){
@@ -630,36 +630,36 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 					 if( controlpointAnimation ){
 						 do{
-							 if( controlpointAnimation->QueryFloatAttribute( "x", &x )==TIXML_SUCCESS && debug )
+							 if( controlpointAnimation->QueryFloatAttribute( "xx", &x )==TIXML_SUCCESS && debug )
 								 printf("\tAnimation control point X:%f\n", x);
 							 else
 								 if( debug ) printf("\t!! Error parsing Animation control point X !!\n");
 
-							 if( controlpointAnimation->QueryFloatAttribute( "y", &y )==TIXML_SUCCESS && debug )
+							 if( controlpointAnimation->QueryFloatAttribute( "yy", &y )==TIXML_SUCCESS && debug )
 								 printf("\tAnimation control point Y:%f\n", y);
 							 else
 								 if( debug ) printf("\t!! Error parsing Animation control point Y !!\n");
 
-							 if( controlpointAnimation->QueryFloatAttribute( "z", &z )==TIXML_SUCCESS && debug )
-								 printf("\tSAnimation control point Z:%f\n", z);
+							 if( controlpointAnimation->QueryFloatAttribute( "zz", &z )==TIXML_SUCCESS && debug )
+								 printf("\tAnimation control point Z:%f\n", z);
 							 else
 								 if( debug ) printf("\t!! Error parsing Animation control point Z !!\n");
 
 							controlAnimationPoints++;
 							cpAnimationMatrix = (GLfloat **)realloc(cpAnimationMatrix, sizeof(GLfloat *) * controlAnimationPoints);
-							for(int i=0; i<controlAnimationPoints; ++i){
-								cpAnimationMatrix[i] = (GLfloat *)malloc(sizeof(GLfloat) * 3);
-								cpAnimationMatrix[i][0] = x;
-								cpAnimationMatrix[i][1] = y;
-								cpAnimationMatrix[i][2] = z;
-							}
+							cpAnimationMatrix[controlAnimationPoints-1] = (GLfloat *)malloc(sizeof(GLfloat) * 3);
+							cpAnimationMatrix[controlAnimationPoints-1][0] = x;
+							cpAnimationMatrix[controlAnimationPoints-1][1] = y;
+							cpAnimationMatrix[controlAnimationPoints-1][2] = z;
 
 							 controlpointAnimation = controlpointAnimation->NextSiblingElement( "controlpoint" );
+							 if( debug ) printf("\n");
 						 }while( controlpointAnimation );
 					 }
 
 					 this->sg->addAnimation( new LinearAnimation( id, controlAnimationPoints, cpAnimationMatrix, span ) );
 					 animationsAnimation = animationsAnimation->NextSiblingElement( "animation" );
+					 if( debug ) printf("\n");
 				}while( animationsAnimation );
 			 }
 		}
@@ -774,10 +774,10 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  appearanceRefNodeGraph = nodeGraph->FirstChildElement( "appearanceref" );
 					  animationRefNodeGraph = nodeGraph->FirstChildElement( "animationref" );
 					  planePartsNodeGraph = nodeGraph->FirstChildElement( "plane" );
-					  patchNodeGraph = nodeGraph->FirstChildElement( "patch" );
 					  vehicleNodeGraph = nodeGraph->FirstChildElement( "vehicle" );
 					  waterlineNodeGraph = nodeGraph->FirstChildElement( "waterline" );
 					  childrenNodeGraph = nodeGraph->FirstChildElement( "children" );
+					  patchNodeGraph = childrenNodeGraph->FirstChildElement( "patch" );
 					  noderefChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "noderef" );
 					  rectangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "rectangle" );
 					  triangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "triangle" );
@@ -890,56 +890,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  if( debug ) printf("\t!! Error parsing Parts !!\n");
 					  }
 
-					  // Patch //
-					  if( patchNodeGraph ){
-						  if( patchNodeGraph->QueryIntAttribute( "order", &order )==TIXML_SUCCESS && debug )
-							  printf("\tOrder: %d\n", order);
-						  else
-							  if( debug ) printf("\t!! Error parsing Order !!\n");
-
-						  if( patchNodeGraph->QueryIntAttribute( "partsU", &partsU )==TIXML_SUCCESS && debug )
-							  printf("\tPartsU: %d\n", partsU);
-						  else
-							  if( debug ) printf("\t!! Error parsing PartsU !!\n");
-
-						  compute = (char *)patchNodeGraph->Attribute( "compute" );
-						  if( compute && debug )
-							  printf("\tCompute: %s\n", compute );
-						  else
-							  if( debug ) printf("\t!! Error parsing compute value !!\n");
-
-						  controlpointNodeGraph = patchNodeGraph->FirstChildElement( "controlpoint" );
-						  if( controlpointNodeGraph ){
-							  do{
-								if( controlpointNodeGraph->QueryFloatAttribute( "x", &cpx )==TIXML_SUCCESS && debug )
-									printf("\tControl Point X: %f\n", cpx);
-								else
-									if( debug ) printf("\t!! Error parsing Control Point X !!\n");
-
-								if( controlpointNodeGraph->QueryFloatAttribute( "y", &cpy )==TIXML_SUCCESS && debug )
-									printf("\tControl Point y: %f\n", cpy);
-								else
-									if( debug ) printf("\t!! Error parsing Control Point y !!\n");
-
-								if( controlpointNodeGraph->QueryFloatAttribute( "z", &cpz )==TIXML_SUCCESS && debug )
-									printf("\tControl Point Z: %f\n", cpz);
-								else
-									if( debug ) printf("\t!! Error parsing Control Point Z !!\n");
-
-								controlPatchPoints++;
-								cpPatchMatrix = (GLfloat **)realloc(cpPatchMatrix, sizeof(GLfloat *) * controlPatchPoints);
-								for(int i=0; i<controlPatchPoints; ++i){
-									cpPatchMatrix[i] = (GLfloat *)malloc(sizeof(GLfloat) * 3);
-									cpPatchMatrix[i][0] = cpx;
-									cpPatchMatrix[i][1] = cpy;
-									cpPatchMatrix[i][2] = cpz;
-								}
-
-								controlpointNodeGraph = controlpointNodeGraph->NextSiblingElement( "controlpoint" );
-							  }while( controlpointNodeGraph );
-						  }
-					  }
-
 					  // Vehicle //
 					  if( vehicleNodeGraph ){
 						
@@ -989,6 +939,60 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  }
 
 					  // Primitives //
+
+					  // Patch //
+					  if( patchNodeGraph ){
+						  if( patchNodeGraph->QueryIntAttribute( "order", &order )==TIXML_SUCCESS && debug )
+							  printf("\tOrder: %d\n", order);
+						  else
+							  if( debug ) printf("\t!! Error parsing Order !!\n");
+
+						  if( patchNodeGraph->QueryIntAttribute( "partsU", &partsU )==TIXML_SUCCESS && debug )
+							  printf("\tPartsU: %d\n", partsU);
+						  else
+							  if( debug ) printf("\t!! Error parsing PartsU !!\n");
+
+						  if( patchNodeGraph->QueryIntAttribute( "partsV", &partsV )==TIXML_SUCCESS && debug )
+							  printf("\tPartsV: %d\n", partsV);
+						  else
+							  if( debug ) printf("\t!! Error parsing PartsU !!\n");
+
+						  compute = (char *)patchNodeGraph->Attribute( "compute" );
+						  if( compute && debug )
+							  printf("\tCompute: %s\n", compute );
+						  else
+							  if( debug ) printf("\t!! Error parsing compute value !!\n");
+
+						  controlpointNodeGraph = patchNodeGraph->FirstChildElement( "controlpoint" );
+						  if( controlpointNodeGraph ){
+							  do{
+								if( controlpointNodeGraph->QueryFloatAttribute( "x", &cpx )==TIXML_SUCCESS && debug )
+									printf("\tControl Point X: %f\n", cpx);
+								else
+									if( debug ) printf("\t!! Error parsing Control Point X !!\n");
+
+								if( controlpointNodeGraph->QueryFloatAttribute( "y", &cpy )==TIXML_SUCCESS && debug )
+									printf("\tControl Point y: %f\n", cpy);
+								else
+									if( debug ) printf("\t!! Error parsing Control Point y !!\n");
+
+								if( controlpointNodeGraph->QueryFloatAttribute( "z", &cpz )==TIXML_SUCCESS && debug )
+									printf("\tControl Point Z: %f\n", cpz);
+								else
+									if( debug ) printf("\t!! Error parsing Control Point Z !!\n");
+
+								controlPatchPoints++;
+								cpPatchMatrix = (GLfloat **)realloc(cpPatchMatrix, sizeof(GLfloat *) * controlPatchPoints);
+								cpPatchMatrix[controlPatchPoints-1] = (GLfloat *)malloc(sizeof(GLfloat) * 3);
+								cpPatchMatrix[controlPatchPoints-1][0] = cpx;
+								cpPatchMatrix[controlPatchPoints-1][1] = cpy;
+								cpPatchMatrix[controlPatchPoints-1][2] = cpz;
+								
+								controlpointNodeGraph = controlpointNodeGraph->NextSiblingElement( "controlpoint" );
+							  }while( controlpointNodeGraph );
+							  primitives.push_back( new Patch( order, partsU, partsV, compute, controlPatchPoints, cpPatchMatrix ) );
+						  }
+					  }
 
 					  // Rectangle //
 					  if( rectangleChildrenNodeGraph ){

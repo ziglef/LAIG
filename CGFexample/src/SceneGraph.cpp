@@ -16,6 +16,7 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 	this->textures = new map<string, Texture*>;
 	this->appearences = new map<string, Appearence*>;
 	this->graphNodes = new map<string, GraphNode*>;
+	this->animations = new map<string, LinearAnimation*>;
 }
 
 void SceneGraph::setInitialCamera( char *initCamera){
