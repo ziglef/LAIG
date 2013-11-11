@@ -28,6 +28,16 @@ GraphNode::GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL, cha
 	this->animationRef = animationRef;
 }
 
+GraphNode::GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector, bool hasDL, char *animationRef ){
+	this->id = id;
+	this->appRefId = appRefId;
+	this->nodeRefIdVector = nodeRefIdVector;
+	this->DL = hasDL;
+	this->displayList = 0;
+	this->anim = true;
+	this->animationRef = animationRef;
+}
+
 float *GraphNode::getTransformationMatrix(){
 	return &transformationMatrix[0];
 }

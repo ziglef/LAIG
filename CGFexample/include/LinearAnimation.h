@@ -14,7 +14,7 @@ class LinearAnimation{
 		LinearAnimation( char *id, int animationCp, float **originalMatrix, float totalDuration );
 		~LinearAnimation();
 		void reset();
-		void apply();
+		void apply( float xx, float yy, float zz );
 		void update( unsigned long t ); 
 		string getID();
 	private:

@@ -14,7 +14,7 @@ LinearAnimation::LinearAnimation(  char *id, int animationCp, float **originalMa
 	}
 
 	for(int i=1; i<animationCp; i++ ){
-		pointsDistance = sqrt( pow(( ctrlPoints.at(i)->getX()-ctrlPoints.at(i-1)->getX() ), 2 ) + pow(( ctrlPoints.at(i)->getZ()-ctrlPoints.at(i-1)->getZ() ), 2) );
+		pointsDistance = sqrt( pow(( ctrlPoints.at(i)->getX()-ctrlPoints.at(i-1)->getX() ), 2 ) + pow(( ctrlPoints.at(i)->getY()-ctrlPoints.at(i-1)->getY() ), 2 ) + pow(( ctrlPoints.at(i)->getZ()-ctrlPoints.at(i-1)->getZ() ), 2) );
 		totalDistance += pointsDistance;
 		ctrlPoints.at(i-1)->setDistance( pointsDistance );
 	}
@@ -31,6 +31,7 @@ LinearAnimation::LinearAnimation(  char *id, int animationCp, float **originalMa
 	this->z = ctrlPoints.at(0)->getZ();
 
 	this->pointNumber=0;
+	this->rotationAngle=0;
 }
 
 LinearAnimation::~LinearAnimation(){
@@ -46,34 +47,35 @@ void LinearAnimation::reset(){
 	doReset=true;
 }
 
-void LinearAnimation::update( unsigned long t ){
+void LinearAnimation::update( unsigned long t ){/*
+	printf("this->pointNumber: %d\n", this->pointNumber);
+	printf("this->ctrlPoints.size(): %d\n", this->ctrlPoints.size());*/
 	if (doReset){
 		init(t);
 	}else{
-		if( pointNumber < ctrlPoints.size() ){
+		if( this->pointNumber < (this->ctrlPoints.size()-1) ){
 
-			if( ctrlPoints.at(pointNumber)->getIterations() == 0 ){
-				rotationAngle = acos( (0.0*( ctrlPoints.at(pointNumber+1)->getX()-ctrlPoints.at(pointNumber)->getX() ) + 0.0*( ctrlPoints.at(pointNumber+1)->getY()-ctrlPoints.at(pointNumber)->getY() ) + 1.0*( ctrlPoints.at(pointNumber+1)->getZ()-ctrlPoints.at(pointNumber)->getZ() ))
-								    /( sqrt( pow( ctrlPoints.at(pointNumber)->getX(),2 ) + pow( ctrlPoints.at(pointNumber)->getY(),2 ) + pow( ctrlPoints.at(pointNumber)->getZ(),2 ) ) * sqrt( pow( ctrlPoints.at(pointNumber+1)->getX(),2 ) + pow( ctrlPoints.at(pointNumber+1)->getY(),2 ) + pow( ctrlPoints.at(pointNumber+1)->getZ(),2 ) ) ) );
+			if( ctrlPoints.at(this->pointNumber)->getIterations() == 0 ){
+				this->rotationAngle = acos( ( ctrlPoints.at(this->pointNumber+1)->getZ()-ctrlPoints.at(this->pointNumber)->getZ() ) / ( sqrt( pow( ctrlPoints.at(this->pointNumber+1)->getX()-ctrlPoints.at(this->pointNumber)->getX(),2 ) + pow( ctrlPoints.at(this->pointNumber+1)->getY()-ctrlPoints.at(this->pointNumber)->getY(),2 ) + pow( ctrlPoints.at(this->pointNumber+1)->getZ()-ctrlPoints.at(this->pointNumber)->getZ(),2 ) ) ) );
+				this->rotationAngle = this->rotationAngle*(180.0/3.141592653589793);
 			}
 
-			this->x += ( ctrlPoints.at(pointNumber+1)->getX() -  ctrlPoints.at(pointNumber)->getX() )/( ctrlPoints.at(pointNumber)->getDuration() * 30 );
-			this->y += ( ctrlPoints.at(pointNumber+1)->getY() -  ctrlPoints.at(pointNumber)->getY() )/( ctrlPoints.at(pointNumber)->getDuration() * 30 );
-			this->z += ( ctrlPoints.at(pointNumber+1)->getZ() -  ctrlPoints.at(pointNumber)->getZ() )/( ctrlPoints.at(pointNumber)->getDuration() * 30 );
+			this->x += ( ctrlPoints.at(this->pointNumber+1)->getX() -  ctrlPoints.at(this->pointNumber)->getX() )/( ctrlPoints.at(this->pointNumber)->getDuration() * 30 );
+			this->y += ( ctrlPoints.at(this->pointNumber+1)->getY() -  ctrlPoints.at(this->pointNumber)->getY() )/( ctrlPoints.at(this->pointNumber)->getDuration() * 30 );
+			this->z += ( ctrlPoints.at(this->pointNumber+1)->getZ() -  ctrlPoints.at(this->pointNumber)->getZ() )/( ctrlPoints.at(this->pointNumber)->getDuration() * 30 );
 
-			ctrlPoints.at(pointNumber)->setIterations(ctrlPoints.at(pointNumber)->getIterations()+1);
-			if( ctrlPoints.at(pointNumber)->getIterations() == ctrlPoints.at(pointNumber)->getMaxIterations() )
-				pointNumber++;
+			ctrlPoints.at(this->pointNumber)->setIterations(ctrlPoints.at(this->pointNumber)->getIterations()+1);
+			if( ctrlPoints.at(this->pointNumber)->getIterations() == ctrlPoints.at(this->pointNumber)->getMaxIterations() )
+				this->pointNumber++;
 		}
 	}
 }
 
-void LinearAnimation::apply(){
-	glPushMatrix();
-		if( ctrlPoints.at(pointNumber)->getIterations() == 0 )
-			glRotatef( rotationAngle, 0.0, 0.0, 1.0 );
+void LinearAnimation::apply( float xx, float yy, float zz ){
+	if( this->pointNumber < ctrlPoints.size() ){
 		glTranslatef( this->x, this->y, this->z );
-	glPopMatrix();
+		glRotatef( this->rotationAngle, 0.0, 1.0, 0.0 );
+	}	
 }
 
 string LinearAnimation::getID(){

@@ -8,7 +8,8 @@
 #include "Sphere.h"
 #include "Triangle.h"
 #include "Rectangle.h"
-#include "Patch.h"
+#include "Vehicle.h"
+#include "Shader.h"
 #include "CGF\CGFscene.h"
 #include <cmath>
 
@@ -65,7 +66,7 @@ protected:
 				TiXmlElement* animationRefNodeGraph;			// Animation <- NEW -> //
 				TiXmlElement* planePartsNodeGraph;				// Plane <- NEW -> //
 				TiXmlElement* patchNodeGraph;					// Patch <- NEW -> //
-					TiXmlElement* controlpointNodeGraph;		// Control Point <- NEW -> //
+				TiXmlElement* controlpointNodeGraph;		// Control Point <- NEW -> //
 				TiXmlElement* vehicleNodeGraph;					// Vehicle <- NEW -> //
 				TiXmlElement* waterlineNodeGraph;				// Water Line <- NEW -> //
 			TiXmlElement* childrenNodeGraph;					// Node Children //

@@ -699,12 +699,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  // Control Point Values //
 			  float cpx, cpy, cpz;
 
-			  // Waterline Values //
-			  char *heightmap;
-			  char *texturemap;
-			  char *fragmentshader;
-			  char *vertexshader;
-
 			  // Tranformation Values //
 			  char *translate;
 			  float translateX, translateY, translateZ;
@@ -749,6 +743,12 @@ XMLScene::XMLScene(char *filename, bool debug) {
 			  int tslices;
 			  int tloops;
 
+			   // Waterline Values //
+			  char *heightmap;
+			  char *texturemap;
+			  char *fragmentshader;
+			  char *vertexshader;
+
 			  // Process the Graph ID //
 			  rootid = (char*)sceneGraph->Attribute( "rootid" );
 			  if( rootid && debug )
@@ -774,16 +774,16 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  appearanceRefNodeGraph = nodeGraph->FirstChildElement( "appearanceref" );
 					  animationRefNodeGraph = nodeGraph->FirstChildElement( "animationref" );
 					  planePartsNodeGraph = nodeGraph->FirstChildElement( "plane" );
-					  vehicleNodeGraph = nodeGraph->FirstChildElement( "vehicle" );
-					  waterlineNodeGraph = nodeGraph->FirstChildElement( "waterline" );
 					  childrenNodeGraph = nodeGraph->FirstChildElement( "children" );
 					  patchNodeGraph = childrenNodeGraph->FirstChildElement( "patch" );
+					  vehicleNodeGraph = childrenNodeGraph->FirstChildElement( "vehicle" );
 					  noderefChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "noderef" );
 					  rectangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "rectangle" );
 					  triangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "triangle" );
 					  cylinderChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "cylinder" );
 					  sphereChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "sphere" );
 					  torusChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "torus" );
+					  waterlineNodeGraph = childrenNodeGraph->FirstChildElement( "waterline" );
 
 					  // Node ID //
 					  if( id && debug )
@@ -890,37 +890,6 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  if( debug ) printf("\t!! Error parsing Parts !!\n");
 					  }
 
-					  // Vehicle //
-					  if( vehicleNodeGraph ){
-						
-					  }
-
-					  // Waterline //
-					  if( waterlineNodeGraph ){
-						  heightmap = (char *)waterlineNodeGraph->Attribute( "heightmap" );
-						  if( heightmap && debug )
-							  printf("\tHeightmap: %s\n", heightmap);
-						  else
-							  if( debug ) printf("\t!! Error parsing heightmap \n");
-
-						  texturemap = (char *)waterlineNodeGraph->Attribute( "texturemap" );
-						  if( texturemap && debug )
-							  printf("\tTexturemap: %s\n", texturemap);
-						  else
-							  if( debug ) printf("\t!! Error parsing Texturemap \n");
-
-						  fragmentshader = (char *)waterlineNodeGraph->Attribute( "fragmentshader" );
-						  if( fragmentshader && debug )
-							  printf("\tFragmentshader: %s\n", fragmentshader);
-						  else
-							  if( debug ) printf("\t!! Error parsing Fragmentshader \n");
-
-						  vertexshader = (char *)waterlineNodeGraph->Attribute( "vertexshader" );
-						  if( vertexshader && debug )
-							  printf("\tVertexshader: %s\n", vertexshader);
-						  else
-							  if( debug ) printf("\t!! Error parsing Vertexshader \n");
-					  }
 					  // Children //
 
 					  // Node ref //
@@ -992,6 +961,11 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  }while( controlpointNodeGraph );
 							  primitives.push_back( new Patch( order, partsU, partsV, compute, controlPatchPoints, cpPatchMatrix ) );
 						  }
+					  }
+
+					  // Vehicle //
+					  if( vehicleNodeGraph ){
+						 primitives.push_back( new Vehicle());
 					  }
 
 					  // Rectangle //
@@ -1128,12 +1102,52 @@ XMLScene::XMLScene(char *filename, bool debug) {
 							  if( debug )printf("\n");
 						  }while( torusChildrenNodeGraph );
 					  }
-					  if( appRefId == NULL ){
-							node = new GraphNode( id, nodeRefIdVector, hasDL );
-					  } else {
-						  node = new GraphNode( id, appRefId, nodeRefIdVector, hasDL );
-						  appRefId = NULL;
+
+					  // Waterline //
+					  if( waterlineNodeGraph ){
+						  heightmap = (char *)waterlineNodeGraph->Attribute( "heightmap" );
+						  if( heightmap && debug )
+							  printf("\tHeightmap: %s\n", heightmap);
+						  else
+							  if( debug ) printf("\t!! Error parsing heightmap \n");
+
+						  texturemap = (char *)waterlineNodeGraph->Attribute( "texturemap" );
+						  if( texturemap && debug )
+							  printf("\tTexturemap: %s\n", texturemap);
+						  else
+							  if( debug ) printf("\t!! Error parsing Texturemap \n");
+
+						  fragmentshader = (char *)waterlineNodeGraph->Attribute( "fragmentshader" );
+						  if( fragmentshader && debug )
+							  printf("\tFragmentshader: %s\n", fragmentshader);
+						  else
+							  if( debug ) printf("\t!! Error parsing Fragmentshader \n");
+
+						  vertexshader = (char *)waterlineNodeGraph->Attribute( "vertexshader" );
+						  if( vertexshader && debug )
+							  printf("\tVertexshader: %s\n", vertexshader);
+						  else
+							  if( debug ) printf("\t!! Error parsing Vertexshader \n");
+
+						   primitives.push_back(new Shader( heightmap, texturemap, fragmentshader, vertexshader ));
 					  }
+
+					  if( animRefId == NULL && appRefId == NULL ){
+						  node = new GraphNode( id, nodeRefIdVector, hasDL );
+					  }else
+						  if( animRefId == NULL && appRefId != NULL ){
+							 node = new GraphNode( id, appRefId, nodeRefIdVector, hasDL );
+							 appRefId = NULL;
+						  }else
+							  if( animRefId != NULL && appRefId == NULL ){
+								  node = new GraphNode( id, nodeRefIdVector, hasDL, animRefId );
+								  animRefId = NULL;
+							  }else
+								  if( animRefId != NULL && appRefId != NULL ){
+									 node = new GraphNode( id, appRefId, nodeRefIdVector, hasDL, animRefId );
+									 appRefId = NULL;
+									 animRefId = NULL;
+								  }
 
 					  glGetFloatv( GL_MODELVIEW_MATRIX, node->getTransformationMatrix() );
 					  node->setPrimitives( primitives );

@@ -14,6 +14,7 @@ class GraphNode{
 		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector, bool hasDL );
 		GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL );
 		GraphNode( char *id, vector<string> &nodeRefIdVector, bool hasDL, char *animationRef );
+		GraphNode( char *id, char *appRefId, vector<string> &nodeRefIdVector, bool hasDL, char *animationRef );
 		void setPrimitives( vector<CGFobject*> primitives );
 		vector<CGFobject*> getPrimitives();
 		float *getTransformationMatrix();

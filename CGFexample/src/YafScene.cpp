@@ -6,7 +6,6 @@ Plane *plane;
 
 void YafScene::init(){
 
-	plane = new Plane(5);
 	// Globals //
 
 	// Background color //
@@ -87,8 +86,9 @@ void YafScene::update(unsigned long t){
 	map<string, GraphNode*>::iterator iter;
 
 	for(iter= sg->graphNodes->begin(); iter != sg->graphNodes->end(); iter++){
-		if( iter->second->hasAnimation() )
+		if( iter->second->hasAnimation() ){
 			sg->getAnimations()->at( iter->second->getAnimationRef() )->update(t);
+		}
 	}
 }
 
@@ -98,11 +98,10 @@ void YafScene::initGraph( string rootid ){
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 	
 	if( !n0->hasDL() ){
-		if( !n0->hasAnimation() )
-			glMultMatrixf( n0->getTransformationMatrix() );
+		glMultMatrixf( n0->getTransformationMatrix() );
 
 		if( n0->appRefId != "" ){
-			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
+			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive());
 			sg->appearences->at( n0->appRefId )->apply();
 		}
 
@@ -122,7 +121,6 @@ void YafScene::initGraph( string rootid ){
 			if( maxSize == 0 ){		// If there aren't any more children
 				n0->setDL( glGenLists(1) );
 				glNewList( n0->getDL(), GL_COMPILE );
-				if( !n0->hasAnimation() )
 					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->appRefId != "" ){
@@ -139,7 +137,6 @@ void YafScene::initGraph( string rootid ){
 			} else {				// If there are still children
 				// Call Children //
 				glPushMatrix();
-				if( !n0->hasAnimation() )
 					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->appRefId != "" ){
@@ -164,7 +161,6 @@ void YafScene::initGraph( string rootid ){
 				glNewList( n0->getDL(), GL_COMPILE );
 				// Call Children //
 				glPushMatrix();
-				if( !n0->hasAnimation() )
 					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->appRefId != "" ){
@@ -178,11 +174,11 @@ void YafScene::initGraph( string rootid ){
 						}
 					}
 
-					for(unsigned int i = 0; i<maxSize; i++){
-						glPushMatrix();
-						initGraph( n0->nodeRefIdVector[i] );
-						glPopMatrix();
-					}
+				for(unsigned int i = 0; i<maxSize; i++){
+					glPushMatrix();
+					initGraph( n0->nodeRefIdVector[i] );
+					glPopMatrix();
+				}
 				glPopMatrix();
 				glEndList();
 			}
@@ -245,11 +241,6 @@ void YafScene::display(){
 
 	// ---- END feature demos
 	processGraph( this->sg->getRootid() );
-	glPushMatrix();
-		glRotatef(180,0,0,1);
-		glTranslatef(1,0,0);
-		plane->draw();
-	glPopMatrix();
 	// We have been drawing in a memory area that is not visible - the back buffer, 
 	// while the graphics card is showing the contents of another buffer - the front buffer
 	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
@@ -264,18 +255,26 @@ void YafScene::processGraph( string rootid ){
 	if( n0->hasDL() ){
 		glCallList( n0->getDL() );
 	}else{
-		if( !n0->hasAnimation() )
-			glMultMatrixf( n0->getTransformationMatrix() );
-
 		if( n0->appRefId != "" ){
 			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
 			sg->appearences->at( n0->appRefId )->apply();
 		}
 
-		if( n0->primitives.size() > 0){
-			for(unsigned int i=0; i<n0->primitives.size(); i++){
-				n0->primitives[i]->draw();
+		glMultMatrixf( n0->getTransformationMatrix() );
+
+		if( !n0->hasAnimation() ){
+			if( n0->primitives.size() > 0){
+				for(unsigned int i=0; i<n0->primitives.size(); i++){
+					n0->primitives[i]->draw();
+				}
 			}
+		} else {
+			sg->getAnimations()->at( n0->getAnimationRef() )->apply( n0->getTransformationMatrix()[12], n0->getTransformationMatrix()[13],  n0->getTransformationMatrix()[14] );
+			if( n0->primitives.size() > 0){
+				for(unsigned int i=0; i<n0->primitives.size(); i++){
+					n0->primitives[i]->draw();
+				}
+			}		
 		}
 
 		for(unsigned int i = 0; i<maxSize; i++){

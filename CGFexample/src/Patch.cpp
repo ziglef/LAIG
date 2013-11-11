@@ -31,32 +31,38 @@ Patch::Patch( int order, int partsU, int partsV, string compute, int ctrlPoints,
 }
 
 void Patch::draw(){
-	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, partsU,  0.0, 1.0, partsU*2, partsV,  cpMatrix);
-	glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &patchColorpoints[0][0]);
+	
+	glEnable(GL_MAP2_VERTEX_3);
+	glEnable(GL_MAP2_NORMAL);
+	glEnable(GL_MAP2_TEXTURE_COORD_2);
+	glEnable(GL_TEXTURE_2D);
+	
+	GLint currentCullFace;
+	glGetIntegerv( GL_CULL_FACE_MODE, &currentCullFace );
+
+	glEnable(GL_CCW);
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, this->order,  0.0, 1.0, this->order*3, this->order, cpMatrix);
+	glEnable(GL_CW);
+	glEnable(GL_AUTO_NORMAL);
 	glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, 2,  0.0, 1.0, 4, 2,  &patchTextpoints[0][0]);
 
-	glEnable(GL_MAP2_VERTEX_3);
-	glEnable(GL_AUTO_NORMAL);
-	glEnable(GL_MAP2_COLOR_4);
-	glEnable(GL_MAP2_TEXTURE_COORD_2);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_TEXTURE_2D);
-
-	glMapGrid2f(this->ctrlPoints, 0.0,1.0, this->ctrlPoints, 0.0,1.0); 
+	glMapGrid2f(this->partsU, 0.0,1.0, this->partsV, 0.0,1.0); 
 	if( strcmp( "fill", this->compute.c_str() ) == 0 )
-		glEvalMesh2(GL_FILL, 0,partsU, 0,partsU);
+		glEvalMesh2(GL_FILL, 0,partsU, 0,partsV);
 	else
 		if( strcmp( "line", this->compute.c_str() ) == 0 )
-			glEvalMesh2(GL_LINE, 0,partsU, 0,partsU);
+			glEvalMesh2(GL_LINE, 0,partsU, 0,partsV);
 		else
 			if( strcmp( "point", this->compute.c_str() ) == 0 )
-				glEvalMesh2(GL_POINT, 0,partsU, 0,partsU);
+				glEvalMesh2(GL_POINT, 0,partsU, 0,partsV);
 
-	glColor3f(1.0, 1.0, 0.0);
+	glEnable(currentCullFace);
+	
+	glDisable(GL_MAP2_VERTEX_3);
+	glDisable(GL_MAP2_NORMAL);
+	glDisable(GL_MAP2_TEXTURE_COORD_2);
+	glDisable(GL_TEXTURE_2D);
 }
 
 Patch::~Patch(){
-
 }
