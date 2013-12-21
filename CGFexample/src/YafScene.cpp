@@ -231,7 +231,7 @@ void YafScene::display(){
 		it->second->update();
 		it->second->draw();
 	}
-
+	
 	// Draw axis
 	axis.draw();
 
@@ -250,6 +250,27 @@ void YafScene::display(){
 
 void YafScene::processGraph( string rootid ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
+
+	/*if( strcmp(n0->getID().c_str(), "board" ) == 0 ){
+		for (int r=0; r < 8; r++)
+		{
+			glPushMatrix();
+			glTranslatef(0, r*4, 0);
+			glLoadName(r);
+			for (int c=0; c < 8; c++)
+			{
+				glPushMatrix();
+				glTranslatef(0,0,(c+1)*5);
+				glRotatef(90,0,1,0);
+				glPushName(c);
+				obj->draw();
+				glPopName();
+				glPopMatrix();
+			}
+			glPopMatrix();
+		}
+	}*/
+
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
 	if( n0->hasDL() ){

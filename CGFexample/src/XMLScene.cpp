@@ -777,6 +777,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  childrenNodeGraph = nodeGraph->FirstChildElement( "children" );
 					  patchNodeGraph = childrenNodeGraph->FirstChildElement( "patch" );
 					  vehicleNodeGraph = childrenNodeGraph->FirstChildElement( "vehicle" );
+					  boardNodeGraph = childrenNodeGraph->FirstChildElement( "board" );
 					  noderefChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "noderef" );
 					  rectangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "rectangle" );
 					  triangleChildrenNodeGraph = childrenNodeGraph->FirstChildElement( "triangle" );
@@ -967,6 +968,11 @@ XMLScene::XMLScene(char *filename, bool debug) {
 					  if( vehicleNodeGraph ){
 						 primitives.push_back( new Vehicle());
 					  }
+
+					  // Board //
+					if( boardNodeGraph ){
+						primitives.push_back( new Board());
+					}
 
 					  // Rectangle //
 					  if( rectangleChildrenNodeGraph ){

@@ -17,11 +17,12 @@ int main(int argc, char* argv[]) {
 	char f[256];
 
 	printf("Filename? ");
-	scanf("%s", f);
+	//scanf("%s", f);
 
 	printf("Would you like to run the DEBUG profile? ( 1/0 )\n");
-	scanf("%d", &debugOption);
-
+	//scanf("%d", &debugOption);
+	debugOption = 1;
+	
 	if(debugOption)
 		debug = true;
 	else
@@ -30,7 +31,7 @@ int main(int argc, char* argv[]) {
 	try {
 		CGFapplication app = CGFapplication();
 		app.init(&argc, argv);
-		XMLScene *GraphScene = new XMLScene(f, debug);
+		XMLScene *GraphScene = new XMLScene("boardgame2.yaf", debug);
 		app.setScene( new YafScene( GraphScene->getSG()) );
 		app.setInterface( new TPinterface( GraphScene->getSG()) );
 		app.run();
