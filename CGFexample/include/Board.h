@@ -11,10 +11,16 @@ class Board : public CGFobject{
 	public:
 		Board();
 		~Board();
+		int** getBoard();
+		void setBoardAt( int x, int y, int value );
+		int getBoardAt( int x, int y );
+		int** getAppBoard();
+		void setAppBoardAt( int x, int y, int value );
+		int getAppBoardAt( int x, int y );
 		void draw();
 	private:
-		int logicalBoard[8][8];
-		int appBoard[8][8];
+		int **logicalBoard;
+		int **appBoard;
 		CGFappearance *white;
 		CGFappearance *black;
 		BoardPiece *boardPiece;

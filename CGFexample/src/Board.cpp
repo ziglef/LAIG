@@ -1,6 +1,7 @@
 #include "../include/Board.h"
 
 Board::Board(){
+	logicalBoard = (int **)malloc(sizeof(int *)*8);	appBoard = (int **)malloc(sizeof(int *)*8);	int i;		for(i=0; i<8; i++)		logicalBoard[i] = (int *)malloc(sizeof(int)*8);	for(i=0; i<8; i++)		appBoard[i] = (int *)malloc(sizeof(int)*8);
 	for( int i=0; i<8 ; i++ )
 		for( int j=0; j<8 ; j++ ){
 			logicalBoard[i][j] = 0;
@@ -72,6 +73,7 @@ void Board::draw(){
 						if( logicalBoard[i][c] == 2 ){
 							glPushMatrix();
 								black->apply();
+
 								glTranslatef(0.5,0.5,0.0);
 								boardPiece->draw();
 							glPopMatrix();
@@ -92,4 +94,28 @@ void Board::draw(){
 			}
 			glPopMatrix();
 		}
+}
+
+int** Board::getBoard(){
+	return this->logicalBoard;
+}
+
+void Board::setBoardAt( int x, int y, int value ){
+	this->logicalBoard[x][y] = value;
+}
+
+int Board::getBoardAt( int x, int y ){
+	return this->logicalBoard[x][y];
+}
+
+int** Board::getAppBoard(){
+	return this->appBoard;
+}
+
+void Board::setAppBoardAt( int x, int y, int value ){
+	this->appBoard[x][y] = value;
+}
+
+int Board::getAppBoardAt( int x, int y ){
+	return this->appBoard[x][y];
 }
