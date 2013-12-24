@@ -17,6 +17,7 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 	this->appearences = new map<string, Appearence*>;
 	this->graphNodes = new map<string, GraphNode*>;
 	this->animations = new map<string, LinearAnimation*>;
+	this->text = new TextObject();
 }
 
 void SceneGraph::setInitialCamera( char *initCamera){
@@ -157,6 +158,10 @@ void SceneGraph::createBoard(){
 
 Board* SceneGraph::getBoard(){
 	return this->board;
+}
+
+TextObject* SceneGraph::getText(){
+	return this->text;
 }
 
 SceneGraph::~SceneGraph(){

@@ -14,6 +14,7 @@
 #include "Appearence.h"
 #include "GraphNode.h"
 #include "Board.h"
+#include "TextObject.h"
 #include <map>
 
 using namespace std;
@@ -77,6 +78,8 @@ class SceneGraph {
 		void createBoard();
 		Board* getBoard();
 
+		TextObject* getText();
+
 
 	protected:
 		// Global Values //
@@ -114,6 +117,7 @@ class SceneGraph {
 		int actualCamera;
 
 		Board *board;
+		TextObject *text;
 
 	friend class YafScene;
 };

@@ -127,3 +127,9 @@ void Board::setAppBoardAt( int x, int y, int value ){
 int Board::getAppBoardAt( int x, int y ){
 	return this->appBoard[x][y];
 }
+
+void Board::movePiece( int x1, int y1, int x2, int y2 ){
+	glPushMatrix();
+		glTranslatef(0.0, 0.3, 0.0);
+	glPopMatrix();
+}

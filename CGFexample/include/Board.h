@@ -18,6 +18,7 @@ class Board : public CGFobject{
 		void setAppBoardAt( int x, int y, int value );
 		int getAppBoardAt( int x, int y );
 		void draw();
+		void movePiece( int x1, int y1, int x2, int y2 );
 	private:
 		int **logicalBoard;
 		int **appBoard;

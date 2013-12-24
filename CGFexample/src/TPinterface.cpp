@@ -148,6 +148,13 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 			wasfirstPointPicked = 1;
 		}else{
+			// Verificar se o local onde o jogador clickou tem a cor verde na matrix de aparencias
+				// Se tiver
+					// Atualiza matriz logica
+					// Faz animaçao da peça
+				// Se nao tiver
+					// Aviso de que a jogoada nao é possivel (Desenho de letras no ecra) / TextObject.
+			// Faz reset da matriz de aparencias
 			wasfirstPointPicked = 0;
 		}
 	}
