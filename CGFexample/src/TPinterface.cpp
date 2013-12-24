@@ -1,5 +1,6 @@
 #include "../include/TPinterface.h"
 #include "../include/YafScene.h"
+#include "../include/Parser.h"
 #include <winsock2.h>
 #include <iostream>
 
@@ -107,12 +108,19 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 		printf("\n");
 
 		if( wasfirstPointPicked == 0 ){
-			itoa(selected[0], points[0], 10);
-			itoa(selected[1], points[1], 10);
+			char *answer = (char *)malloc(sizeof(char) * 256 );
+			char *msg = possibleMoves( (int)selected[0], (int)selected[1] );
+			envia(msg, strlen(msg));
+			recebe(answer);
+			int resultsLength;
+			int *results = line2results( answer, &resultsLength );
+			printf("Line: ");
+			for(int i=0; i<resultLength; i++)
+				printf("%d ", results[i]);
+			printf("\n");
 			wasfirstPointPicked = 1;
 		}else{
-			itoa(selected[2], points[0], 10);
-			itoa(selected[3], points[1], 10);
+			
 			wasfirstPointPicked = 0;
 		}
 	}

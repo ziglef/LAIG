@@ -12,7 +12,7 @@ char *moveComputer( int line, int column, int random );
 char *cmatrix2pllist( int **src );
 
 // Transforms a Pair ex.:[1,2] of prolog values into two variables
-void pair2variable;
+void pair2variable( char *pair, int *line, int *column );
 
 // Takes a line of pairs of coordinates and parses them
-int *line2results;
+int *line2results( char *line, int *resultsLength );
