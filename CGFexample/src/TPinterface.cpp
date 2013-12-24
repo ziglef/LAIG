@@ -115,12 +115,11 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			int resultsLength;
 			int *results = line2results( answer, &resultsLength );
 			printf("Line: ");
-			for(int i=0; i<resultLength; i++)
+			for(int i=0; i<resultsLength; i++)
 				printf("%d ", results[i]);
 			printf("\n");
 			wasfirstPointPicked = 1;
 		}else{
-			
 			wasfirstPointPicked = 0;
 		}
 	}

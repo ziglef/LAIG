@@ -23,6 +23,7 @@ class Board : public CGFobject{
 		int **appBoard;
 		CGFappearance *white;
 		CGFappearance *black;
+		CGFappearance *green;
 		BoardPiece *boardPiece;
 		
 };

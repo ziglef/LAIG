@@ -38,8 +38,10 @@ Board::Board(){
 
 	white = new CGFappearance();
 	black = new CGFappearance();
+	green = new CGFappearance();
 	white->setTexture("img/white.png");
 	black->setTexture("img/black.png");
+	green->setTexture("img/green.png");
 	boardPiece = new BoardPiece();
 }
 
@@ -83,9 +85,11 @@ void Board::draw(){
 					}else
 						if( appBoard[c][i] == 0 ){
 							white->apply();
-						}else{
-							black->apply();
-						}
+						}else
+							if( appBoard[c][1] == 3 ){
+								green->apply();
+							}else
+								black->apply();
 
 					rect->draw();
 					glPopName();
