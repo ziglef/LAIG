@@ -118,6 +118,14 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			for(int i=0; i<resultsLength; i++)
 				printf("%d ", results[i]);
 			printf("\n");
+			
+			for(int i=0; i<resultsLength; i+=2){
+				if(sg->getBoard()->getBoardAt(results[i], results[i+1]) == 1)
+					sg->getBoard()->setAppBoardAt(results[i], reults[i+1], 4);
+				else
+					sg->getBoard()->setAppBoardAt(results[i], reults[i+1], 3);
+			}
+			
 			wasfirstPointPicked = 1;
 		}else{
 			wasfirstPointPicked = 0;
