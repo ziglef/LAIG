@@ -155,10 +155,10 @@ void TPinterface::initGUI()
 	addRadioButtonToGroup( drawmode, "Line" );
 	addRadioButtonToGroup( drawmode, "Point" );
 	*(sg->getDrawModeChoice()) = 0;
-	
+	socketConnect();
 }
 
-bool TPinterface::socketConnect() {// Initialize Winsock.
+bool TPinterface::socketConnect(){// Initialize Winsock.
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
     if (iResult != NO_ERROR)
