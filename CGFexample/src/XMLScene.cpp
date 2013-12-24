@@ -971,7 +971,7 @@ XMLScene::XMLScene(char *filename, bool debug) {
 
 					  // Board //
 					if( boardNodeGraph ){
-						primitives.push_back( new Board());
+						sg->createBoard();
 					}
 
 					  // Rectangle //

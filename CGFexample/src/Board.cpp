@@ -73,7 +73,6 @@ void Board::draw(){
 						if( logicalBoard[i][c] == 2 ){
 							glPushMatrix();
 								black->apply();
-
 								glTranslatef(0.5,0.5,0.0);
 								boardPiece->draw();
 							glPopMatrix();

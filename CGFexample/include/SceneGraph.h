@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "Appearence.h"
 #include "GraphNode.h"
+#include "Board.h"
 #include <map>
 
 using namespace std;
@@ -73,6 +74,10 @@ class SceneGraph {
 		int *getActualCamera();
 		void setActualCamera( int num );
 
+		void createBoard();
+		Board* getBoard();
+
+
 	protected:
 		// Global Values //
 		float bgX, bgY, bgZ, bgA;
@@ -107,6 +112,8 @@ class SceneGraph {
 
 		int drawModeChoice;
 		int actualCamera;
+
+		Board *board;
 
 	friend class YafScene;
 };

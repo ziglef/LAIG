@@ -151,6 +151,14 @@ void SceneGraph::setActualCamera( int num ){
 	this->actualCamera = num;
 }
 
+void SceneGraph::createBoard(){
+	this->board = new Board();
+}
+
+Board* SceneGraph::getBoard(){
+	return this->board;
+}
+
 SceneGraph::~SceneGraph(){
 
 };
