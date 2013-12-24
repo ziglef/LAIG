@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "Parser.h"
 
 char *endGame( int **board ){
 
