@@ -107,7 +107,25 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 		printf("%d %d",selected[0], selected[1]);
 		printf("\n");
 
-		if( wasfirstPointPicked == 0 ){
+		if( wasfirstPointPicked == 0 ){/*
+			printf("Logical Board: \n");
+			for(int i=0; i<8; i++){
+				printf("Line %d: ", i+1);
+				for(int j=0; j<8; j++){
+					printf("%d ", sg->getBoard()->getBoardAt(i, j));
+				}
+				printf("\n");
+			}
+
+			printf("Appearence Board: \n");
+			for(int i=0; i<8; i++){
+				printf("Line %d: ", i+1);
+				for(int j=0; j<8; j++){
+					printf("%d ", sg->getBoard()->getAppBoardAt(i, j));
+				}
+				printf("\n");
+			}
+			*/
 			char *answer = (char *)malloc(sizeof(char) * 256 );
 			char *msg = possibleMoves( (int)selected[0], (int)selected[1] );
 			envia(msg, strlen(msg));
@@ -120,12 +138,14 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			printf("\n");
 			
 			for(int i=0; i<resultsLength; i+=2){
-				if(sg->getBoard()->getBoardAt(results[i], results[i+1]) == 1)
-					sg->getBoard()->setAppBoardAt(results[i], reults[i+1], 4);
-				else
-					sg->getBoard()->setAppBoardAt(results[i], reults[i+1], 3);
+				printf("Result %d \n", i );
+				if(sg->getBoard()->getBoardAt(results[i]-1, results[i+1]-1) == 1){
+					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 4);
+				}else{
+					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 3);
+				}
 			}
-			
+
 			wasfirstPointPicked = 1;
 		}else{
 			wasfirstPointPicked = 0;
