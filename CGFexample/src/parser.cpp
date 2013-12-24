@@ -7,9 +7,7 @@ char *endGame( int **board ){
 	strcpy(result, "endGame(");
 	
 	strcat(result, cmatrix2pllist(board));
-	strcat(result, ",");
-
-	strcat(result, "Result).\n");
+	strcat(result, ").\n");
 	
 	return result;
 }
@@ -34,9 +32,7 @@ char *validateMove( int line, int column, int Dline, int Dcolumn ){
 	
 	itoa(Dcolumn, itoaaux, 10);
 	strcat(result, itoaaux);
-	strcat(result, ",");
-
-	strcat(result, "Result).\n");
+	strcat(result, ").\n");
 	
 	return result;
 }
@@ -53,9 +49,7 @@ char *possibleMoves( int line, int column ){
 	
 	itoa(column, itoaaux, 10);
 	strcat(result, itoaaux);
-	strcat(result, ",");
-
-	strcat(result, "Result).\n");
+	strcat(result, ").\n");
 	
 	return result;
 }
@@ -76,9 +70,7 @@ char *moveComputer( int line, int column, int random ){
 	
 	itoa(random, itoaaux, 10);
 	strcat(result, itoaaux);
-	strcat(result, ",");
-	
-	strcat(result, "Result).\n");
+	strcat(result, ").\n");
 	
 	return result;
 }
