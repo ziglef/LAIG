@@ -1,7 +1,16 @@
 #include "../include/Board.h"
 
 Board::Board(){
-	logicalBoard = (int **)malloc(sizeof(int *)*8);	appBoard = (int **)malloc(sizeof(int *)*8);	int i;		for(i=0; i<8; i++)		logicalBoard[i] = (int *)malloc(sizeof(int)*8);	for(i=0; i<8; i++)		appBoard[i] = (int *)malloc(sizeof(int)*8);
+	logicalBoard = (int **)malloc(sizeof(int *)*8);
+	appBoard = (int **)malloc(sizeof(int *)*8);
+	int i;
+	
+	for(i=0; i<8; i++)
+		logicalBoard[i] = (int *)malloc(sizeof(int)*8);
+
+	for(i=0; i<8; i++)
+		appBoard[i] = (int *)malloc(sizeof(int)*8);
+
 	for( int i=0; i<8 ; i++ )
 		for( int j=0; j<8 ; j++ ){
 			logicalBoard[i][j] = 0;
@@ -82,21 +91,17 @@ void Board::draw(){
 							glPopMatrix();
 						}
 
-					if( appBoard[c][i] == 1 ){
-						black->apply();
-					}else
-						if( appBoard[c][i] == 0 ){
-							white->apply();
-						}else
-							if( appBoard[c][1] == 3 ){
-								green->apply();
-							}else
-								if( appBoard[c][1] == 4 ){
-									red->apply();
-								}else
-									black->apply();
+					glPushMatrix();
+						switch( appBoard[c][i] ){
+							case 0: white->apply(); break;
+							case 1: black->apply(); break;
+							case 3: green->apply(); break;
+							case 4: red->apply(); break;
+							default: break;
+						}
 
-					rect->draw();
+						rect->draw();
+					glPopMatrix();
 					glPopName();
 				glPopMatrix();
 			}

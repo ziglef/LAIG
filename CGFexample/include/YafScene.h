@@ -14,7 +14,7 @@ class YafScene : public CGFscene{
 		void init();
 		void display();
 		void update(unsigned long t);
-		void processGraph( string rootId );
+		void YafScene::processGraph( string rootid, vector<Appearence*> &appstack );
 		vector<CGFcamera*> *getSceneCameras();
 		void activateCamera( int i );
 		~YafScene();
@@ -23,7 +23,7 @@ class YafScene : public CGFscene{
 		SceneGraph *sg;
 
 	private:
-		void initGraph( string rootId );
+		void initGraph( string rootId, vector<Appearence*> &appstack );
 
 	friend class SceneGraph;
 	friend class GraphNode;

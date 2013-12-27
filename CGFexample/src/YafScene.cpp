@@ -79,7 +79,9 @@ void YafScene::init(){
 	unsigned long updatePeriod=30;
 	setUpdatePeriod(updatePeriod);
 
-	initGraph( this->sg->getRootid() );
+	vector<Appearence*> stack;
+	stack.clear();
+	initGraph( this->sg->getRootid(), stack );
 }
 
 void YafScene::update(unsigned long t){
@@ -92,18 +94,27 @@ void YafScene::update(unsigned long t){
 	}
 }
 
-void YafScene::initGraph( string rootid ){
+void YafScene::initGraph( string rootid, vector<Appearence*> &appstack ){
 
+	bool newApp = false;
 	GraphNode *n0 = sg->graphNodes->at( rootid );
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 	
 	if( !n0->hasDL() ){
-		glMultMatrixf( n0->getTransformationMatrix() );
 
 		if( n0->appRefId != "" ){
-			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive());
-			sg->appearences->at( n0->appRefId )->apply();
+			if( sg->getAppearences()->count(n0->getAppRefId()) ){ // Is this really needed? //
+				appstack.push_back( sg->getAppearences()->at(n0->getAppRefId()));
+				newApp = true;
+			}
 		}
+
+		if(!appstack.empty()){
+			glMaterialfv(GL_FRONT, GL_EMISSION, appstack[appstack.size()-1]->getEmissive() );
+			appstack[appstack.size()-1]->apply();
+		}
+
+		glMultMatrixf( n0->getTransformationMatrix() );
 
 		if( n0->primitives.size() > 0){
 			for(unsigned int i=0; i<n0->primitives.size(); i++){
@@ -111,9 +122,11 @@ void YafScene::initGraph( string rootid ){
 			}
 		}
 
+		if( newApp && !appstack.empty() ) appstack.pop_back();
+
 		for(unsigned int i = 0; i<maxSize; i++){
 			glPushMatrix();
-			initGraph( n0->nodeRefIdVector[i] );
+			initGraph( n0->nodeRefIdVector[i], appstack );
 			glPopMatrix();
 		}
 	} else {
@@ -121,28 +134,44 @@ void YafScene::initGraph( string rootid ){
 			if( maxSize == 0 ){		// If there aren't any more children
 				n0->setDL( glGenLists(1) );
 				glNewList( n0->getDL(), GL_COMPILE );
-					glMultMatrixf( n0->getTransformationMatrix() );
-
 					if( n0->appRefId != "" ){
-						glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
-						sg->appearences->at( n0->appRefId )->apply();
+						if( sg->getAppearences()->count(n0->getAppRefId()) ){ // Is this really needed? //
+							appstack.push_back( sg->getAppearences()->at(n0->getAppRefId()));
+							newApp = true;
+						}
 					}
+
+					if(!appstack.empty()){
+						glMaterialfv(GL_FRONT, GL_EMISSION, appstack[appstack.size()-1]->getEmissive() );
+						appstack[appstack.size()-1]->apply();
+					}
+
+					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->primitives.size() > 0){
 						for(unsigned int i=0; i<n0->primitives.size(); i++){
 							n0->primitives[i]->draw();
 						}
 					}
+
+					if( newApp && !appstack.empty() ) appstack.pop_back(); // Checking
 				glEndList();
 			} else {				// If there are still children
 				// Call Children //
 				glPushMatrix();
-					glMultMatrixf( n0->getTransformationMatrix() );
-
 					if( n0->appRefId != "" ){
-						glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
-						sg->appearences->at( n0->appRefId )->apply();
+						if( sg->getAppearences()->count(n0->getAppRefId()) ){ // Is this really needed? //
+							appstack.push_back( sg->getAppearences()->at(n0->getAppRefId()));
+							newApp = true;
+						}
 					}
+
+					if(!appstack.empty()){
+						glMaterialfv(GL_FRONT, GL_EMISSION, appstack[appstack.size()-1]->getEmissive() );
+						appstack[appstack.size()-1]->apply();
+					}
+
+					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->primitives.size() > 0){
 						for(unsigned int i=0; i<n0->primitives.size(); i++){
@@ -150,9 +179,11 @@ void YafScene::initGraph( string rootid ){
 						}
 					}
 
+					if( newApp && !appstack.empty() ) appstack.pop_back();
+
 					for(unsigned int i = 0; i<maxSize; i++){
 						glPushMatrix();
-						initGraph( n0->nodeRefIdVector[i] );
+						initGraph( n0->nodeRefIdVector[i], appstack );
 						glPopMatrix();
 					}
 				glPopMatrix();
@@ -161,12 +192,20 @@ void YafScene::initGraph( string rootid ){
 				glNewList( n0->getDL(), GL_COMPILE );
 				// Call Children //
 				glPushMatrix();
-					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->appRefId != "" ){
-						glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
-						sg->appearences->at( n0->appRefId )->apply();
+						if( sg->getAppearences()->count(n0->getAppRefId()) ){ // Is this really needed? //
+							appstack.push_back( sg->getAppearences()->at(n0->getAppRefId()));
+							newApp = true;
+						}
 					}
+
+					if(!appstack.empty()){
+						glMaterialfv(GL_FRONT, GL_EMISSION, appstack[appstack.size()-1]->getEmissive() );
+						appstack[appstack.size()-1]->apply();
+					}
+
+					glMultMatrixf( n0->getTransformationMatrix() );
 
 					if( n0->primitives.size() > 0){
 						for(unsigned int i=0; i<n0->primitives.size(); i++){
@@ -174,11 +213,13 @@ void YafScene::initGraph( string rootid ){
 						}
 					}
 
-				for(unsigned int i = 0; i<maxSize; i++){
-					glPushMatrix();
-					initGraph( n0->nodeRefIdVector[i] );
-					glPopMatrix();
-				}
+					if( newApp && !appstack.empty() ) appstack.pop_back();
+
+					for(unsigned int i = 0; i<maxSize; i++){
+						glPushMatrix();
+						initGraph( n0->nodeRefIdVector[i], appstack );
+						glPopMatrix();
+					}
 				glPopMatrix();
 				glEndList();
 			}
@@ -240,7 +281,9 @@ void YafScene::display(){
 
 
 	// ---- END feature demos
-	processGraph( this->sg->getRootid() );
+	vector<Appearence*> stack;
+	stack.clear();
+	processGraph( this->sg->getRootid(), stack );
 	glPushMatrix();
 		glTranslatef(6.0 ,0.5, 6.0);
 		this->sg->getBoard()->draw();
@@ -253,8 +296,10 @@ void YafScene::display(){
 
 }
 
-void YafScene::processGraph( string rootid ){
+void YafScene::processGraph( string rootid, vector<Appearence*> &appstack ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
+
+	bool newApp = false;
 
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
@@ -262,30 +307,33 @@ void YafScene::processGraph( string rootid ){
 		glCallList( n0->getDL() );
 	}else{
 		if( n0->appRefId != "" ){
-			glMaterialfv(GL_FRONT, GL_EMISSION, sg->appearences->at( n0->appRefId )->getEmissive() );
-			sg->appearences->at( n0->appRefId )->apply();
+			if( sg->getAppearences()->count(n0->getAppRefId()) ){ // Is this really needed? //
+				appstack.push_back( sg->getAppearences()->at(n0->getAppRefId()));
+				newApp = true;
+			}
 		}
 
+		if(!appstack.empty()){
+			glMaterialfv(GL_FRONT, GL_EMISSION, appstack[appstack.size()-1]->getEmissive() );
+			appstack[appstack.size()-1]->apply();
+		}
+		
 		glMultMatrixf( n0->getTransformationMatrix() );
 
-		if( !n0->hasAnimation() ){
-			if( n0->primitives.size() > 0){
-				for(unsigned int i=0; i<n0->primitives.size(); i++){
-					n0->primitives[i]->draw();
-				}
+		if( n0->hasAnimation() )
+			sg->getAnimations()->at( n0->getAnimationRef() )->apply( n0->getTransformationMatrix()[12], n0->getTransformationMatrix()[13], n0->getTransformationMatrix()[14] );
+
+		if( n0->primitives.size() > 0){
+			for(unsigned int i=0; i<n0->primitives.size(); i++){
+				n0->primitives[i]->draw();
 			}
-		} else {
-			sg->getAnimations()->at( n0->getAnimationRef() )->apply( n0->getTransformationMatrix()[12], n0->getTransformationMatrix()[13],  n0->getTransformationMatrix()[14] );
-			if( n0->primitives.size() > 0){
-				for(unsigned int i=0; i<n0->primitives.size(); i++){
-					n0->primitives[i]->draw();
-				}
-			}		
 		}
+
+		if( newApp && !appstack.empty() ) appstack.pop_back();
 
 		for(unsigned int i = 0; i<maxSize; i++){
 			glPushMatrix();
-			processGraph( n0->nodeRefIdVector[i] );
+			processGraph( n0->nodeRefIdVector[i], appstack );
 			glPopMatrix();
 		}
 	}
