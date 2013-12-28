@@ -288,4 +288,3 @@ void TPinterface::quit() {
 void TPinterface::processGUI(GLUI_Control *ctrl){
 
 }
-
