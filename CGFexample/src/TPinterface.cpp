@@ -164,14 +164,13 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 				// Old piece //
 				sg->getBoard()->setBoardAt( oldX-1, oldY-1, 0 );
-
-				// Appearence Board Changes //
-				for(int i=0; i<resultsLength; i+=2){
-					if( sg->getBoard()->getAppBoardAt( oldY-1, oldX-1 ) == 1 )
-						sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 0);
-					else
-						sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 1);
-				}
+			}
+			// Appearence Board Changes //
+			for(int i=0; i<resultsLength; i+=2){
+				if( sg->getBoard()->getAppBoardAt( oldY-1, oldX-1 ) == 1 )
+					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 0);
+				else
+					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 1);
 			}
 			wasfirstPointPicked = 0;
 		}
@@ -288,3 +287,4 @@ void TPinterface::quit() {
 void TPinterface::processGUI(GLUI_Control *ctrl){
 
 }
+
