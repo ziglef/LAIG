@@ -49,10 +49,14 @@ Board::Board(){
 	black = new CGFappearance();
 	green = new CGFappearance();
 	red = new CGFappearance();
+	blackPiece = new CGFappearance();
+	whitePiece = new CGFappearance();
 	white->setTexture("img/white.png");
 	black->setTexture("img/black.png");
 	green->setTexture("img/green.png");
 	red->setTexture("img/red.png");
+	blackPiece->setTexture("img/black1.png");
+	whitePiece->setTexture("img/white1.png");
 	boardPiece = new BoardPiece();
 }
 
@@ -78,14 +82,14 @@ void Board::draw(){
 
 					if( logicalBoard[i][c] == 1 ){
 						glPushMatrix();
-							white->apply();
+							whitePiece->apply();
 							glTranslatef(0.5,0.5,0.0);
 							boardPiece->draw();
 						glPopMatrix();
 					}else
 						if( logicalBoard[i][c] == 2 ){
 							glPushMatrix();
-								black->apply();
+								blackPiece->apply();
 								glTranslatef(0.5,0.5,0.0);
 								boardPiece->draw();
 							glPopMatrix();

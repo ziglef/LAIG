@@ -26,6 +26,8 @@ class Board : public CGFobject{
 		CGFappearance *black;
 		CGFappearance *green;
 		CGFappearance *red;
+		CGFappearance *blackPiece;
+		CGFappearance *whitePiece;
 		BoardPiece *boardPiece;
 		
 };

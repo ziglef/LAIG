@@ -15,6 +15,9 @@ SOCKET m_socket;
 
 int wasfirstPointPicked = 0;
 char points[4][2];
+int *results;
+int resultsLength;
+int oldX, oldY;
 
 void TPinterface::processMouse(int button, int state, int x, int y) 
 {
@@ -107,13 +110,13 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 		printf("%d %d",selected[0], selected[1]);
 		printf("\n");
 
-		if( wasfirstPointPicked == 0 ){			
+		if( wasfirstPointPicked == 0 && sg->getBoard()->getBoardAt( selected[0]-1, selected[1]-1) == 1 ){			
 			char *answer = (char *)malloc(sizeof(char) * 256 );
 			char *msg = possibleMoves( (int)selected[0], (int)selected[1] );
 			envia(msg, strlen(msg));
 			recebe(answer);
-			int resultsLength;
-			int *results = line2results( answer, &resultsLength );
+			resultsLength;
+			results = line2results( answer, &resultsLength );
 			printf("Line: ");
 			for(int i=0; i<resultsLength; i++)
 				printf("%d ", results[i]);
@@ -147,17 +150,29 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 				printf("\n");
 			}
 
-
-
+			oldX = selected[0];
+			oldY = selected[1];
 			wasfirstPointPicked = 1;
 		}else{
-			// Verificar se o local onde o jogador clickou tem a cor verde na matrix de aparencias
-				// Se tiver
-					// Atualiza matriz logica
-					// Faz animaçao da peça
-				// Se nao tiver
-					// Aviso de que a jogoada nao é possivel (Desenho de letras no ecra) / TextObject.
-			// Faz reset da matriz de aparencias
+			if( sg->getBoard()->getAppBoardAt( (int)selected[1]-1, (int)selected[0]-1 ) == 3 ){
+				// Logical Board changes //
+				// New piece //
+				if( sg->getBoard()->getBoardAt( oldX-1, oldY-1 ) == 1 )
+					sg->getBoard()->setBoardAt( (int)selected[0]-1, (int)selected[1]-1, 1 );
+				else
+					sg->getBoard()->setBoardAt( (int)selected[0]-1, (int)selected[1]-1, 2 );
+
+				// Old piece //
+				sg->getBoard()->setBoardAt( oldX-1, oldY-1, 0 );
+
+				// Appearence Board Changes //
+				for(int i=0; i<resultsLength; i+=2){
+					if( sg->getBoard()->getAppBoardAt( oldY-1, oldX-1 ) == 1 )
+						sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 0);
+					else
+						sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 1);
+				}
+			}
 			wasfirstPointPicked = 0;
 		}
 	}
