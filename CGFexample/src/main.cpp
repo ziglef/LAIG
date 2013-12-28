@@ -1,6 +1,8 @@
 #include <iostream>
 #include <exception>
 
+#include <time.h>
+
 #include "../include/XMLscene.h"
 #include "../include/SceneGraph.h"
 #include "../include/CGF/CGFapplication.h"
@@ -14,7 +16,7 @@ int main(int argc, char* argv[]) {
 
 	bool debug = false;
 	int debugOption = 0;
-	char f[256];
+	srand( time(NULL) );
 
 	printf("Filename? ");
 	//scanf("%s", f);
