@@ -234,6 +234,7 @@ void SceneGraph::updateTheme(){
 	char *rightApp = strdup( "ap_rightBackground" );
 	char *topApp = strdup( "ap_topBackground" );
 	char *frontApp = strdup( "ap_frontBackground" );
+	char *tableApp = strdup( "ap_table" );
 
 	strcat( backApp, number );
 	strcat( leftApp, number );
@@ -241,6 +242,7 @@ void SceneGraph::updateTheme(){
 	strcat( rightApp, number );
 	strcat( topApp, number );
 	strcat( frontApp, number );
+	strcat( tableApp, number );
 
 	this->graphNodes->at( "backBackground" )->setAppRefId(backApp);
 	this->graphNodes->at( "leftBackground" )->setAppRefId(leftApp);
@@ -248,6 +250,19 @@ void SceneGraph::updateTheme(){
 	this->graphNodes->at( "rightBackground" )->setAppRefId(rightApp);
 	this->graphNodes->at( "topBackground" )->setAppRefId(topApp);
 	this->graphNodes->at( "frontBackground" )->setAppRefId(frontApp);
+	this->graphNodes->at( "table" )->setAppRefId(tableApp);
+
+	switch(*this->getActualTheme()){
+		case 0: this->board->setWhitePieceApp( this->board->getWhitePieceApp() );
+				this->board->setBlackPieceApp( this->board->getBlackPieceApp() );
+				break;
+		case 1: this->board->setWhitePieceApp( this->board->getWhitePieceApp2() );
+				this->board->setBlackPieceApp( this->board->getBlackPieceApp2() );
+				break;
+		case 2: this->board->setWhitePieceApp( this->board->getWhitePieceApp1() );
+				this->board->setBlackPieceApp( this->board->getBlackPieceApp1() );
+				break;
+	}
 }
 
 SceneGraph::~SceneGraph(){

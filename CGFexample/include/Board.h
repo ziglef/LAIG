@@ -21,13 +21,34 @@ class Board : public CGFobject{
 		void movePiece( int x1, int y1, int x2, int y2 );
 		int **logicalBoard;
 		int **appBoard;
+
+		void setWhitePieceApp( CGFappearance *whitePiece );
+		void setBlackPieceApp( CGFappearance *blackPiece );
+
+		CGFappearance* getWhitePieceApp();
+		CGFappearance* getBlackPieceApp();
+
+		CGFappearance* getWhitePieceApp1();
+		CGFappearance* getBlackPieceApp1();
+
+		CGFappearance* getWhitePieceApp2();
+		CGFappearance* getBlackPieceApp2();
+
 	private:
 		CGFappearance *white;
 		CGFappearance *black;
-		CGFappearance *green;
-		CGFappearance *red;
+
+		CGFappearance *actualBlackPiece;
+		CGFappearance *actualWhitePiece;
 		CGFappearance *blackPiece;
 		CGFappearance *whitePiece;
+		CGFappearance *blackPiece1;
+		CGFappearance *whitePiece1;
+		CGFappearance *blackPiece2;
+		CGFappearance *whitePiece2;
+
+		CGFappearance *green;
+		CGFappearance *red;
 		BoardPiece *boardPiece;
 		
 };

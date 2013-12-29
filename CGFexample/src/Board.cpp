@@ -49,14 +49,35 @@ Board::Board(){
 	black = new CGFappearance();
 	green = new CGFappearance();
 	red = new CGFappearance();
+
 	blackPiece = new CGFappearance();
 	whitePiece = new CGFappearance();
-	white->setTexture("img/white.png");
-	black->setTexture("img/black.png");
+	blackPiece1 = new CGFappearance();
+	whitePiece1 = new CGFappearance();
+	blackPiece2 = new CGFappearance();
+	whitePiece2 = new CGFappearance();
+
+	actualWhitePiece = new CGFappearance();
+	actualBlackPiece = new CGFappearance();
+
+	white->setTexture("img/whiteBoard.png");
+	black->setTexture("img/blackBoard.png");
+
+	blackPiece->setTexture("img/black.png");
+	whitePiece->setTexture("img/white.png");
+
+	blackPiece1->setTexture("img/black1.png");
+	whitePiece1->setTexture("img/white1.png");
+
+	blackPiece2->setTexture("img/black2.png");
+	whitePiece2->setTexture("img/white2.png");
+
 	green->setTexture("img/green.png");
 	red->setTexture("img/red.png");
-	blackPiece->setTexture("img/black1.png");
-	whitePiece->setTexture("img/white1.png");
+
+	actualWhitePiece = whitePiece;
+	actualBlackPiece = blackPiece;
+
 	boardPiece = new BoardPiece();
 }
 
@@ -82,14 +103,14 @@ void Board::draw(){
 
 					if( logicalBoard[i][c] == 1 ){
 						glPushMatrix();
-							whitePiece->apply();
+							actualWhitePiece->apply();
 							glTranslatef(0.5,0.5,0.0);
 							boardPiece->draw();
 						glPopMatrix();
 					}else
 						if( logicalBoard[i][c] == 2 ){
 							glPushMatrix();
-								blackPiece->apply();
+								actualBlackPiece->apply();
 								glTranslatef(0.5,0.5,0.0);
 								boardPiece->draw();
 							glPopMatrix();
@@ -141,4 +162,36 @@ void Board::movePiece( int x1, int y1, int x2, int y2 ){
 	glPushMatrix();
 		glTranslatef(0.0, 0.3, 0.0);
 	glPopMatrix();
+}
+
+void Board::setWhitePieceApp( CGFappearance *whitePiece ){
+	this->actualWhitePiece = whitePiece;
+}
+
+void Board::setBlackPieceApp( CGFappearance *blackPiece ){
+	this->actualBlackPiece = blackPiece;
+}
+
+CGFappearance* Board::getWhitePieceApp(){
+	return this->whitePiece;
+}
+
+CGFappearance* Board::getWhitePieceApp1(){
+	return this->whitePiece1;
+}
+
+CGFappearance* Board::getWhitePieceApp2(){
+	return this->whitePiece2;
+}
+
+CGFappearance* Board::getBlackPieceApp(){
+	return this->blackPiece;
+}
+
+CGFappearance* Board::getBlackPieceApp1(){
+	return this->blackPiece1;
+}
+
+CGFappearance* Board::getBlackPieceApp2(){
+	return this->blackPiece2;
 }
