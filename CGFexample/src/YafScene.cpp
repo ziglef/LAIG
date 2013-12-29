@@ -285,7 +285,7 @@ void YafScene::display(){
 	stack.clear();
 	processGraph( this->sg->getRootid(), stack );
 	glPushMatrix();
-		glTranslatef(6.0 ,0.5, 6.0);
+		glTranslatef(8.5 ,0.5, 8.5);
 		this->sg->getBoard()->draw();
 	glPopMatrix();
 	//this->sg->getPainter()->setOrthographicProjection();

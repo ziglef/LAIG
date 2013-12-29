@@ -183,18 +183,21 @@ void SceneGraph::updateTheme(){
 	char *bottomApp = strdup( "ap_bottomBackground" );
 	char *rightApp = strdup( "ap_rightBackground" );
 	char *topApp = strdup( "ap_topBackground" );
+	char *frontApp = strdup( "ap_frontBackground" );
 
 	strcat( backApp, number );
 	strcat( leftApp, number );
 	strcat( bottomApp, number );
 	strcat( rightApp, number );
 	strcat( topApp, number );
+	strcat( frontApp, number );
 
 	this->graphNodes->at( "backBackground" )->setAppRefId(backApp);
 	this->graphNodes->at( "leftBackground" )->setAppRefId(leftApp);
 	this->graphNodes->at( "bottomBackground" )->setAppRefId(bottomApp);
 	this->graphNodes->at( "rightBackground" )->setAppRefId(rightApp);
 	this->graphNodes->at( "topBackground" )->setAppRefId(topApp);
+	this->graphNodes->at( "frontBackground" )->setAppRefId(frontApp);
 }
 
 SceneGraph::~SceneGraph(){
