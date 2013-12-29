@@ -89,6 +89,17 @@ class SceneGraph {
 
 		void updateTheme();
 
+		bool getGameOver();
+		void setGameOver( bool status );
+		bool getPlayingMovie();
+		void setPlayingMovie( bool status );
+
+		int ** getCurrentLogical();
+		void setCurrentLogical( int ** board );
+		int ** getCurrentAppearence();
+		void setCurrentAppearence( int **board );
+
+		vector<int **> pStack;
 	protected:
 		// Global Values //
 		float bgX, bgY, bgZ, bgA;
@@ -128,7 +139,11 @@ class SceneGraph {
 		TextObject *text;
 
 		int actualTheme;
+		bool gameOver;
+		bool playingMovie;
 
+		int ** logical;
+		int ** appearence;
 	friend class YafScene;
 };
 

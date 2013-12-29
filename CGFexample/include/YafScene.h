@@ -10,6 +10,8 @@ class YafScene : public CGFscene{
 	public:
 		YafScene(SceneGraph *sg):CGFscene(){
 			this->sg = sg;
+			this->movieIndex = 0;
+			this->timeElapsed = 0;
 		};
 		void init();
 		void display();
@@ -21,6 +23,8 @@ class YafScene : public CGFscene{
 
 	protected:
 		SceneGraph *sg;
+		int movieIndex;
+		int timeElapsed;
 
 	private:
 		void initGraph( string rootId, vector<Appearence*> &appstack );

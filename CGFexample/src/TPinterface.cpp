@@ -104,15 +104,17 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			ptr++;
 	}
 
-		// If the player made a play, then get the new board
-		if( playermoved ){
-			pStack.push_back( sg->getLogicalBoard() );
-			pStack.push_back( sg->getAppearenceBoard() );
-			playermoved = 0;
-		}
+	// If the player made a play, then get the new board
+	if( playermoved ){
+		sg->pStack.push_back( sg->getLogicalBoard() );
+		sg->pStack.push_back( sg->getAppearenceBoard() );
+		playermoved = 0;
+	}
+
+	isPlayingMovie = sg->getPlayingMovie();
 
 	// if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
-	if((selected!=NULL) && ( !gameOver )){
+	if((selected!=NULL) && ( !gameOver ) && ( !isPlayingMovie )){
 		// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
 		// possibly invoking a method on the scene class and passing "selected" and "nselected"
 		printf("Picked ID's: ");
@@ -255,11 +257,10 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			wasfirstPointPicked = 0;
 			compHasPieces = 0;
 		}
+	} else {
+		printf("Nothing was picked!\n");
 	}
-	else
-		printf("Nothing selected while picking \n");
-
-	if( gameOver ) printf("DO SOMETHING NICE!\nGAME OVER!\n");
+	if( gameOver ) sg->setGameOver(true);
 }
 
 void TPinterface::processKeyboard(unsigned char key, int x, int y){
@@ -270,7 +271,8 @@ void TPinterface::initGUI()
 {
 
 	count = 0;
-	
+	isPlayingMovie = false;
+
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
 	GLUI_Panel *lightsPanel= addPanel( "Lights", 1 );
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++){
@@ -290,8 +292,6 @@ void TPinterface::initGUI()
 	addRadioButtonToGroup( cameras, "Black Player Camera" );
 	addRadioButtonToGroup( cameras, "Sideview Camera" );
 	addRadioButtonToGroup( cameras, "Overview Camera" );
-
-	
 
 	addColumn();
 	GLUI_Panel *drawmodePanels = addPanel("Draw Mode",1);
@@ -409,13 +409,13 @@ void TPinterface::doDebug(){
 		printf("\n");
 	}
 
-	if( pStack.size() > 0 ){
+	if( sg->pStack.size() > 0 ){
 		printf("Top of the stack:\n");
 		printf("Logical Board: \n");
 		for(i=0; i<8; i++){
 			printf("Line %d: ", i+1);
 			for(j=0; j<8; j++){
-				printf("%d ", pStack[pStack.size()-2][i][j]);
+				printf("%d ", sg->pStack[sg->pStack.size()-2][i][j]);
 			}
 			printf("\n");
 		}
@@ -424,7 +424,7 @@ void TPinterface::doDebug(){
 		for(i=0; i<8; i++){
 			printf("Line %d: ", i+1);
 			for(j=0; j<8; j++){
-				printf("%d ", pStack[pStack.size()-1][i][j]);
+				printf("%d ", sg->pStack[sg->pStack.size()-1][i][j]);
 			}
 			printf("\n");
 		}
@@ -438,33 +438,22 @@ void TPinterface::doDebug(){
 void TPinterface::processGUI(GLUI_Control *ctrl){
 	switch( ctrl->user_id ){
 		case 25:
-			if(pStack.size() > 0){
+			isPlayingMovie = sg->getPlayingMovie();
+			if((sg->pStack.size() > 0) && (!isPlayingMovie) && (!gameOver)){
 				doDebug();
-				this->sg->setBothBoards( pStack[pStack.size()-2], pStack[pStack.size()-1] );
-				pStack.pop_back();
-				pStack.pop_back();
+				this->sg->setBothBoards( sg->pStack[sg->pStack.size()-2], sg->pStack[sg->pStack.size()-1] );
+				sg->pStack.pop_back();
+				sg->pStack.pop_back();
 			}
 			break;
 
 		case 26:
-			if(pStack.size() > 0){
-				int ** logical = sg->getLogicalBoard();
-				int ** appearence = sg->getAppearenceBoard();
-				for(int i=0; i<pStack.size(); i+=2){
-					this->sg->setBothBoards( pStack[i], pStack[i+1] );
-					// Force Draw //
-					/*
-					glPushMatrix();
-						glTranslatef(6.0 ,0.5, 6.0);
-						this->sg->getBoard()->draw();
-					glPopMatrix();
-					glutSwapBuffers();
-					Sleep(1000);
-					*/
+			if(sg->pStack.size() > 0){
+				isPlayingMovie = sg->getPlayingMovie();
+				if( !isPlayingMovie ){
+					isPlayingMovie = true;
+					sg->setPlayingMovie( true );
 				}
-				this->sg->setBothBoards( logical, appearence );
-				free(logical);
-				free(appearence);
 			}
 			break;
 

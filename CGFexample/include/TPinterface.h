@@ -12,6 +12,10 @@ class TPinterface: public CGFinterface {
 	GLUI_RadioGroup *cameras;
 	GLUI_RadioGroup *drawmode;
 	GLUI_RadioGroup *themes;
+	
+	private:
+		bool isPlayingMovie;
+
 	public:
 		TPinterface( SceneGraph *sg) : CGFinterface(){
 			this->sg = sg;
@@ -34,7 +38,6 @@ class TPinterface: public CGFinterface {
 
 	protected:
 		SceneGraph *sg;
-		vector<int **> pStack;
 };
 
 

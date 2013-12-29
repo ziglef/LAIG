@@ -298,7 +298,32 @@ void YafScene::display(){
 	vector<Appearence*> stack;
 	stack.clear();
 	processGraph( this->sg->getRootid(), stack );
-	sg->getPainter()->draw("Texto aqui", 10, 10 );
+	if( sg->gameOver ) sg->getPainter()->draw(" GAME OVER ! ", 100, 100);
+
+	if( sg->getPlayingMovie() == true ) {
+
+		if( movieIndex == 0 ){
+			sg->setCurrentLogical( sg->getLogicalBoard() );
+			sg->setCurrentAppearence( sg->getAppearenceBoard() );
+			this->sg->setBothBoards( sg->pStack[movieIndex], sg->pStack[movieIndex+1] );
+			movieIndex += 2;
+			timeElapsed = glutGet(GLUT_ELAPSED_TIME);
+		}
+
+		if((glutGet(GLUT_ELAPSED_TIME) - timeElapsed > 1000 ) && (movieIndex < sg->pStack.size())){
+			this->sg->setBothBoards( sg->pStack[movieIndex], sg->pStack[movieIndex+1] );
+			movieIndex += 2;
+			timeElapsed = glutGet(GLUT_ELAPSED_TIME);
+		}
+
+		if((movieIndex >= sg->pStack.size()) && (glutGet(GLUT_ELAPSED_TIME) - timeElapsed > 1000 )){
+			this->sg->setBothBoards( sg->getCurrentLogical(), sg->getCurrentAppearence() );
+			sg->setPlayingMovie( false );
+			movieIndex = 0;
+			timeElapsed = 0;
+		}
+	}
+
 	glPushMatrix();
 		glTranslatef(8.5 ,0.5, 8.5);
 		this->sg->getBoard()->draw();

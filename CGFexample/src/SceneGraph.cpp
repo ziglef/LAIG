@@ -19,7 +19,57 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 	this->animations = new map<string, LinearAnimation*>;
 	this->text = new TextObject();
 	this->actualTheme = 1;
+	this->gameOver = false;
+	this->playingMovie = false;
+	this->logical = (int **)malloc(sizeof(int *)*8);
+	this->appearence = (int **)malloc(sizeof(int *)*8);
+
+	for(int i=0; i<8; i++){
+		this->logical[i] = (int *)malloc(sizeof(int)*8);
+		this->appearence[i] = (int *)malloc(sizeof(int)*8);
+	}
 }
+
+void SceneGraph::setGameOver( bool status ){
+	this->gameOver = status;
+}
+
+void SceneGraph::setPlayingMovie( bool status ){
+	this->playingMovie = status;
+}
+
+bool SceneGraph::getGameOver(){
+	return this->gameOver;
+}
+
+bool SceneGraph::getPlayingMovie(){
+	return this->playingMovie;
+}
+
+int ** SceneGraph::getCurrentLogical(){
+	return this->logical;
+}
+
+void SceneGraph::setCurrentLogical( int ** board ){
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			this->logical[i][j] = board[i][j];
+		}
+	}
+}
+
+int ** SceneGraph::getCurrentAppearence(){
+	return this->appearence;
+}
+
+void SceneGraph::setCurrentAppearence( int **board ){
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			this->appearence[i][j] = board[i][j];
+		}
+	}
+}
+
 
 void SceneGraph::setInitialCamera( char *initCamera){
 	this->initialCamera = initCamera;
