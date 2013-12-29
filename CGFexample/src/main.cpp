@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 	try {
 		CGFapplication app = CGFapplication();
 		app.init(&argc, argv);
-		XMLScene *GraphScene = new XMLScene("boardgame2.yaf", debug);
+		XMLScene *GraphScene = new XMLScene("boardGame2.yaf", debug);
 		app.setScene( new YafScene( GraphScene->getSG()) );
 		app.setInterface( new TPinterface( GraphScene->getSG()) );
 		app.run();

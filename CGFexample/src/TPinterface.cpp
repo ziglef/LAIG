@@ -285,10 +285,13 @@ void TPinterface::initGUI()
 	addColumn();
 	GLUI_Panel *camerasPanel = addPanel( "Cameras", 1 );
 	cameras = addRadioGroupToPanel( camerasPanel, sg->getActualCamera(), 11 );
-	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++){
-		addRadioButtonToGroup( cameras, (char*)it->second->getID().c_str() );	
-		count++;
-	}
+	addRadioButtonToGroup( cameras, "Free Movement Camera" );
+	addRadioButtonToGroup( cameras, "White Player Camera" );
+	addRadioButtonToGroup( cameras, "Black Player Camera" );
+	addRadioButtonToGroup( cameras, "Sideview Camera" );
+	addRadioButtonToGroup( cameras, "Overview Camera" );
+
+	
 
 	addColumn();
 	GLUI_Panel *drawmodePanels = addPanel("Draw Mode",1);
@@ -299,7 +302,7 @@ void TPinterface::initGUI()
 	*(sg->getDrawModeChoice()) = 0;
 	
 	addColumn();
-	GLUI_Panel *themesPanels = addPanel("Game Themes",0);
+	GLUI_Panel *themesPanels = addPanel("Game Themes",1);
 	themes = addRadioGroupToPanel( themesPanels, sg->getActualTheme(), 21);
 	addRadioButtonToGroup( themes, "Chinese" );
 	addRadioButtonToGroup( themes, "Florest" );

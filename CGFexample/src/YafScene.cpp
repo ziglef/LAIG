@@ -254,12 +254,26 @@ void YafScene::display(){
 	// Apply transformations corresponding to the camera position relative to the origin
 	//activeCamera->applyView();
 
-	for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){      
+	/*for( map<string, Camera*>::iterator it = sg->getCameras()->begin(); it != sg->getCameras()->end(); it++ ){      
 			if( distance(sg->getCameras()->begin(), it) == *(sg->getActualCamera()))
-					this->activateCamera( *(sg->getActualCamera()) );
+					this->activateCamera( *(sg->getActualCamera()) + 3 );
+	}*/
+
+	switch(*(sg->getActualCamera())){
+		case 0 : activeCamera->applyView(); // Free Camera //
+				 break;
+		case 1 : gluLookAt (0.0, 7.5, 12.5, 12.5, 3.0, 12.5, 0.0, 1.0, 0.0); // White Player //
+				 break;
+		case 2 : gluLookAt (25.0, 7.5, 12.5, 12.5, 3.0, 12.5, 0.0, 1.0, 0.0); // Black Player //
+				 break;
+		case 3 : gluLookAt (12.5, 7.5, 0.0, 12.5, 3.0, 12.5, 0.0, 1.0, 0.0); // Sideview //
+				 break;
+		case 4 : gluLookAt (0.0, 15.0, 0.0, 12.5, 5.0, 12.5, 0.0, 1.0, 0.0); // OverView //
+				 break;
+
 	}
 
-	activeCamera->applyView();
+	//activeCamera->applyView();
 
 	// Draw (and update) light
 	for( map<string, Lighting*>::iterator it = sg->getLights()->begin(); it != sg->getLights()->end(); it++ ){	
@@ -274,7 +288,7 @@ void YafScene::display(){
 	}
 	
 	// Draw axis
-	axis.draw();
+	//axis.draw();
 
 
 	// ---- END Background, camera and axis setup
@@ -284,16 +298,11 @@ void YafScene::display(){
 	vector<Appearence*> stack;
 	stack.clear();
 	processGraph( this->sg->getRootid(), stack );
+	sg->getPainter()->draw("Texto aqui");
 	glPushMatrix();
 		glTranslatef(8.5 ,0.5, 8.5);
 		this->sg->getBoard()->draw();
 	glPopMatrix();
-	//this->sg->getPainter()->setOrthographicProjection();
-	/*glPushMatrix();
-		glLoadIdentity();
-		this->sg->getPainter()->renderBitmapString(20,350,GLUT_BITMAP_9_BY_15, "TEXTO AQUI");
-	glPopMatrix();
-	this->sg->getPainter()->resetPerspectiveProjection();*/
 	//this->sg->getText()->draw("FAIL");
 	// We have been drawing in a memory area that is not visible - the back buffer, 
 	// while the graphics card is showing the contents of another buffer - the front buffer

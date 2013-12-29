@@ -53,7 +53,7 @@ void TextObject::draw( char * text )
 	// int glutStrokeWidth(GLUTstrokeFont font, int character);
 
 	// desativa cálculo de iluminação para usar cores diretamente
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
 
 	/*glPushMatrix();
 	glTranslatef(0,0,1);
@@ -70,7 +70,7 @@ void TextObject::draw( char * text )
 	// void glutBitmapCharacter(void *font, int character);	// valores varios...
 	// int glutBitmapWidth(GLUTbitmapFont font, int character);
 
-	glPushMatrix();
+	/*glPushMatrix();
 	glColor3f(1.0,1.0,0.0);		// amarelo
 	glRasterPos3f(5,5,5);
 	for( int i=0; i<strlen(text); i++ ){
@@ -78,6 +78,13 @@ void TextObject::draw( char * text )
 	}
 	glPopMatrix();
 
-	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);*/
+
+	this->setOrthographicProjection();
+	glPushMatrix();
+		glLoadIdentity();
+		this->renderBitmapString(20,350,GLUT_BITMAP_9_BY_15, text);
+	glPopMatrix();
+	this->resetPerspectiveProjection();
 
 }
