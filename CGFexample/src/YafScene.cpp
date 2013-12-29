@@ -79,6 +79,8 @@ void YafScene::init(){
 	unsigned long updatePeriod=30;
 	setUpdatePeriod(updatePeriod);
 
+	glutReshapeWindow( 800,600 );
+
 	vector<Appearence*> stack;
 	stack.clear();
 	initGraph( this->sg->getRootid(), stack );
