@@ -70,7 +70,7 @@ void YafScene::init(){
 	}
 
 	//sg->getLights()->at( sg->getInitialCamera() )->setToogled(1);
-	sg->setActualCamera(0);
+	sg->setActualCamera(4);
 
 	// Defines a default normal
 	glNormal3f(0,0,1);
@@ -79,7 +79,7 @@ void YafScene::init(){
 	unsigned long updatePeriod=30;
 	setUpdatePeriod(updatePeriod);
 
-	glutReshapeWindow( 800,600 );
+	glutReshapeWindow( 1024, 768 );
 
 	vector<Appearence*> stack;
 	stack.clear();

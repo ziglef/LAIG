@@ -16,12 +16,9 @@ class TPinterface: public CGFinterface {
 	private:
 		bool isPlayingMovie;
 		int gameMode;
-		// Game Mode Info:
-		// -1 - Yet to be chosen
-		// 0 - Player vs Player
-		// 1 - Player vs Computer
-		// 2 - Computer vs Player
-		// 3 - Computer vs Computer
+		int dificulty;
+		int turn;
+		int checkBoardForPieces( int pieceType );
 
 	public:
 		TPinterface( SceneGraph *sg) : CGFinterface(){

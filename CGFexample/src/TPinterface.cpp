@@ -81,6 +81,17 @@ void TPinterface::performPicking(int x, int y)
 	processHits(hits, selectBuf);
 }
 
+int TPinterface::checkBoardForPieces( int pieceType ){
+	int i,j;
+	for(i=0; i<8; i++){
+		for(j=0; j<8; j++){
+			if( sg->getBoard()->getBoardAt(i, j) == pieceType ) break;
+		}
+		if( j != 8 ) break;
+	}
+	if( i != 8 ) return 1; else return 0;
+}
+
 void TPinterface::processHits (GLint hits, GLuint buffer[]) 
 {
 	int i, j;
@@ -105,7 +116,7 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 	}
 
 	// If the player made a play, then get the new board
-	if( playermoved ){
+	if( playermoved && gameMode != 3 ){
 		sg->pStack.push_back( sg->getLogicalBoard() );
 		sg->pStack.push_back( sg->getAppearenceBoard() );
 		playermoved = 0;
@@ -113,8 +124,73 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 	isPlayingMovie = sg->getPlayingMovie();
 
-	// if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
-	if((selected!=NULL) && ( !gameOver ) && ( !isPlayingMovie )){
+	// Comp vs Comp
+	if( !gameOver && !isPlayingMovie && gameMode == 3 && dificulty != -1 ){
+		char *answer;
+		char *msg;
+
+		// Save the board //
+		if( turn == 1 ){
+			sg->pStack.push_back( sg->getLogicalBoard() );
+			sg->pStack.push_back( sg->getAppearenceBoard() );
+		}
+
+		// First Comp Plays //
+		int comp1HasPieces = checkBoardForPieces( turn );
+		if( comp1HasPieces ){
+			// Get a random piece //
+			int compX, compY;
+			do{
+				i=0;
+				resultsLength=-1;
+				compX = rand()%8;
+				compY = rand()%8;
+
+				if( sg->getBoard()->getBoardAt( compX, compY ) == turn ){
+					answer = (char *)malloc(sizeof(char) * 256 );
+					msg = possibleMoves( compX+1, compY+1 );
+					envia(msg, strlen(msg));
+					recebe(answer);
+
+					results = line2results( answer, &resultsLength );
+			
+					for(i=0; i<resultsLength; i+=2)
+						if(sg->getBoard()->getBoardAt(results[i]-1, results[i+1]-1) != turn) break;
+
+				}
+			}while( i >= resultsLength );
+
+			// Get new position //
+			int newCompX, newCompY;
+			do{
+				free( answer );
+				answer = (char *)malloc(sizeof(char) * 256 );
+				msg = moveComputer( compX+1, compY+1, rand() );
+				envia(msg, strlen(msg));
+				recebe(answer);
+				pair2variable( answer, &newCompX, &newCompY );
+			}while( sg->getBoard()->getBoardAt( newCompX-1, newCompY-1 ) == turn );
+
+			// Clear old position //
+			sg->getBoard()->setBoardAt( compX, compY, 0 );
+			// Set the new position //
+			sg->getBoard()->setBoardAt( newCompX-1, newCompY-1, turn );
+		}
+		// Check Game Over //
+		free( answer );
+		answer = (char *)malloc(sizeof(char) * 256 );
+		msg = endGame( sg->getBoard()->getBoard() );
+		envia(msg, strlen(msg));
+		recebe(answer);
+			
+		if(answer[0] == '0')
+			gameOver = 0;
+		else
+			gameOver = 1;
+
+		if( turn == 1 ) turn = 2; else turn = 1;
+	} else if((selected!=NULL) && ( !gameOver ) && ( !isPlayingMovie ) && ( gameMode != -1 ) && ( dificulty != -1 )){
+		// if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
 		// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
 		// possibly invoking a method on the scene class and passing "selected" and "nselected"
 		printf("Picked ID's: ");
@@ -183,17 +259,7 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			else
 				gameOver = 1;
 
-			int compHasPieces = 0;
-
-			for(i=0; i<8; i++){
-				for(j=0; j<8; j++){
-					if( sg->getBoard()->getBoardAt(i, j) == 2 ){
-						compHasPieces = 1;
-						break;
-					}
-				}
-				if( compHasPieces ) break;
-			}
+			int compHasPieces = checkBoardForPieces( 2 );
 
 			// Computer Plays //
 			if( playermoved && compHasPieces ){
@@ -240,6 +306,7 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 				// Set the new position //
 				sg->getBoard()->setBoardAt( newCompX-1, newCompY-1, 2 );
 
+				// Common Code //
 				// Detects if game over! //
 				free( answer );
 				answer = (char *)malloc(sizeof(char) * 256 );
@@ -257,9 +324,8 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			wasfirstPointPicked = 0;
 			compHasPieces = 0;
 		}
-	} else {
-		printf("Nothing was picked!\n");
 	}
+
 	if( gameOver ) sg->setGameOver(true);
 }
 
@@ -272,6 +338,9 @@ void TPinterface::initGUI()
 
 	count = 0;
 	isPlayingMovie = false;
+	gameMode = -1;
+	dificulty = -1;
+	turn =1;
 
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
 	GLUI_Panel *lightsPanel= addPanel( "Lights", 1 );
@@ -286,7 +355,7 @@ void TPinterface::initGUI()
 	
 	addColumn();
 	GLUI_Panel *camerasPanel = addPanel( "Cameras", 1 );
-	cameras = addRadioGroupToPanel( camerasPanel, sg->getActualCamera(), 11 );
+	cameras = addRadioGroupToPanel( camerasPanel, sg->getActualCamera(), 12 );
 	addRadioButtonToGroup( cameras, "Free Movement Camera" );
 	addRadioButtonToGroup( cameras, "White Player Camera" );
 	addRadioButtonToGroup( cameras, "Black Player Camera" );
@@ -311,9 +380,33 @@ void TPinterface::initGUI()
 
 	addColumn();
 	GLUI_Panel *gameOptions = addPanel("Game Options", 1);
+	// Game Mode Info:
+		// -1 - Yet to be chosen
+		// 0 - Player vs Player
+		// 1 - Player vs Computer
+		// 2 - Computer vs Player
+		// 3 - Computer vs Computer
+	GLUI_Listbox *GameModeListBox = addListboxToPanel( gameOptions, "Game Mode ", &(this->gameMode), 10 );
+		GameModeListBox->add_item(-1, "Please select game mode");
+		GameModeListBox->add_item(0, "Player vs Player");
+		GameModeListBox->add_item(1, "Player vs Computer");
+		GameModeListBox->add_item(2, "Computer vs Player");
+		GameModeListBox->add_item(3, "Computer vs Computer");
+
+	// Dificulty Info:
+		// -1 - Yet to be chosen
+		// 0 - Easy as Hell
+		// 1 - Still really easy
+		// 2 - Still Easy
+	GLUI_Listbox *GameDificultyListBox = addListboxToPanel( gameOptions, "Dificulty       ", &(this->dificulty), 11 );
+		GameDificultyListBox->add_item(-1, "Please select dificulty");
+		GameDificultyListBox->add_item(0, "Easiest");
+		GameDificultyListBox->add_item(1, "Easier");
+		GameDificultyListBox->add_item(2, "Easy");
+
 	addButtonToPanel(gameOptions, "Undo", 25);
 	addButtonToPanel(gameOptions, "Play Movie", 26);
-	
+
 	socketConnect();
 }
 
@@ -437,6 +530,14 @@ void TPinterface::doDebug(){
 
 void TPinterface::processGUI(GLUI_Control *ctrl){
 	switch( ctrl->user_id ){
+		case 10:
+			ctrl->disable();
+			break;
+
+		case 11:
+			ctrl->disable();
+			break;
+
 		case 25:
 			isPlayingMovie = sg->getPlayingMovie();
 			if((sg->pStack.size() > 0) && (!isPlayingMovie) && (!gameOver)){
