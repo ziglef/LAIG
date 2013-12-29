@@ -288,7 +288,7 @@ void YafScene::display(){
 		glTranslatef(6.0 ,0.5, 6.0);
 		this->sg->getBoard()->draw();
 	glPopMatrix();
-	this->sg->getPainter()->setOrthographicProjection();
+	//this->sg->getPainter()->setOrthographicProjection();
 	/*glPushMatrix();
 		glLoadIdentity();
 		this->sg->getPainter()->renderBitmapString(20,350,GLUT_BITMAP_9_BY_15, "TEXTO AQUI");

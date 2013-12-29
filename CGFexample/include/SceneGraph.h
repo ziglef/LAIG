@@ -78,6 +78,10 @@ class SceneGraph {
 		void createBoard();
 		Board* getBoard();
 
+		int **getLogicalBoard();
+		int **getAppearenceBoard();
+		void setBothBoards( int **logical, int **appearence );
+
 		TextObject* getPainter();
 
 		int *getActualTheme();

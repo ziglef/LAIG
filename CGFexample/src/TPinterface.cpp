@@ -15,7 +15,7 @@ SOCKET m_socket;
 
 int gameOver = 0;
 int wasfirstPointPicked = 0;
-int playermoved = 0;
+int playermoved = 1;
 char points[4][2];
 int *results;
 int resultsLength;
@@ -103,7 +103,14 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 		for (j=0; j < num; j++) 
 			ptr++;
 	}
-	
+
+		// If the player made a play, then get the new board
+		if( playermoved ){
+			pStack.push_back( sg->getLogicalBoard() );
+			pStack.push_back( sg->getAppearenceBoard() );
+			playermoved = 0;
+		}
+
 	// if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
 	if((selected!=NULL) && ( !gameOver )){
 		// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
@@ -135,23 +142,7 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 
 			// DEBUG INFO //
-			printf("Logical Board: \n");
-			for(i=0; i<8; i++){
-				printf("Line %d: ", i+1);
-				for(j=0; j<8; j++){
-					printf("%d ", sg->getBoard()->getBoardAt(i, j));
-				}
-				printf("\n");
-			}
-
-			printf("Appearence Board: \n");
-			for(i=0; i<8; i++){
-				printf("Line %d: ", i+1);
-				for(j=0; j<8; j++){
-					printf("%d ", sg->getBoard()->getAppBoardAt(i, j));
-				}
-				printf("\n");
-			}
+			doDebug();
 
 			oldX = selected[0];
 			oldY = selected[1];
@@ -262,7 +253,6 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 			// End second step //
 			wasfirstPointPicked = 0;
-			playermoved = 0;
 			compHasPieces = 0;
 		}
 	}
@@ -307,6 +297,20 @@ void TPinterface::initGUI()
 	addRadioButtonToGroup( drawmode, "Line" );
 	addRadioButtonToGroup( drawmode, "Point" );
 	*(sg->getDrawModeChoice()) = 0;
+	
+	addColumn();
+	GLUI_Panel *themesPanels = addPanel("Game Themes",0);
+	themes = addRadioGroupToPanel( themesPanels, sg->getActualTheme(), 21);
+	addRadioButtonToGroup( themes, "Chinese" );
+	addRadioButtonToGroup( themes, "Florest" );
+	addRadioButtonToGroup( themes, "Desert" );
+	sg->setActualTheme(1);
+
+	addColumn();
+	GLUI_Panel *gameOptions = addPanel("Game Options", 1);
+	addButtonToPanel(gameOptions, "Undo", 25);
+	addButtonToPanel(gameOptions, "Play Movie", 26);
+	
 	socketConnect();
 }
 
@@ -377,6 +381,90 @@ void TPinterface::quit() {
 	recebe(ans);
 }
 
-void TPinterface::processGUI(GLUI_Control *ctrl){
+void TPinterface::doDebug(){
 
+	int i,j;
+
+	// DEBUG INFO //
+	printf("\n ----- DEBUG INFO ----- ");
+	printf("Game Boards:\n");
+	printf("Logical Board: \n");
+	for(i=0; i<8; i++){
+		printf("Line %d: ", i+1);
+		for(j=0; j<8; j++){
+			printf("%d ", sg->getBoard()->getBoardAt(i, j));
+		}
+		printf("\n");
+	}
+
+	printf("Appearence Board: \n");
+	for(i=0; i<8; i++){
+		printf("Line %d: ", i+1);
+		for(j=0; j<8; j++){
+			printf("%d ", sg->getBoard()->getAppBoardAt(i, j));
+		}
+		printf("\n");
+	}
+
+	if( pStack.size() > 0 ){
+		printf("Top of the stack:\n");
+		printf("Logical Board: \n");
+		for(i=0; i<8; i++){
+			printf("Line %d: ", i+1);
+			for(j=0; j<8; j++){
+				printf("%d ", pStack[pStack.size()-2][i][j]);
+			}
+			printf("\n");
+		}
+
+		printf("Appearence Board: \n");
+		for(i=0; i<8; i++){
+			printf("Line %d: ", i+1);
+			for(j=0; j<8; j++){
+				printf("%d ", pStack[pStack.size()-1][i][j]);
+			}
+			printf("\n");
+		}
+	} else {
+		printf("No stack to print!\n");
+	}
+
+	printf(" ----- END OF DEBUG INFO ----- \n");
+}
+
+void TPinterface::processGUI(GLUI_Control *ctrl){
+	switch( ctrl->user_id ){
+		case 25:
+			if(pStack.size() > 0){
+				doDebug();
+				this->sg->setBothBoards( pStack[pStack.size()-2], pStack[pStack.size()-1] );
+				pStack.pop_back();
+				pStack.pop_back();
+			}
+			break;
+
+		case 26:
+			if(pStack.size() > 0){
+				int ** logical = sg->getLogicalBoard();
+				int ** appearence = sg->getAppearenceBoard();
+				for(int i=0; i<pStack.size(); i+=2){
+					this->sg->setBothBoards( pStack[i], pStack[i+1] );
+					// Force Draw //
+					/*
+					glPushMatrix();
+						glTranslatef(6.0 ,0.5, 6.0);
+						this->sg->getBoard()->draw();
+					glPopMatrix();
+					glutSwapBuffers();
+					Sleep(1000);
+					*/
+				}
+				this->sg->setBothBoards( logical, appearence );
+				free(logical);
+				free(appearence);
+			}
+			break;
+
+		default: break;
+	}
 }

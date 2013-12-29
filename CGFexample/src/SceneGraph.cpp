@@ -174,7 +174,17 @@ void SceneGraph::setActualTheme( int theme ){
 }
 
 void SceneGraph::updateTheme(){
-	char number[2];	number[0] = (char)((*this->getActualTheme()+1)+48);	number[1] = '\0';	char *backApp = strdup( "ap_backBackground" );	char *leftApp = strdup( "ap_leftBackground" );	char *bottomApp = strdup( "ap_bottomBackground" );	char *rightApp = strdup( "ap_rightBackground" );	char *topApp = strdup( "ap_topBackground" );	strcat( backApp, number );
+	char number[2];
+	number[0] = (char)((*this->getActualTheme()+1)+48);
+	number[1] = '\0';
+
+	char *backApp = strdup( "ap_backBackground" );
+	char *leftApp = strdup( "ap_leftBackground" );
+	char *bottomApp = strdup( "ap_bottomBackground" );
+	char *rightApp = strdup( "ap_rightBackground" );
+	char *topApp = strdup( "ap_topBackground" );
+
+	strcat( backApp, number );
 	strcat( leftApp, number );
 	strcat( bottomApp, number );
 	strcat( rightApp, number );
@@ -190,3 +200,30 @@ void SceneGraph::updateTheme(){
 SceneGraph::~SceneGraph(){
 
 };
+
+int ** SceneGraph::getLogicalBoard(){
+	int ** logical = (int **)malloc(sizeof(int *) * 8);
+	for(int i=0; i<8; i++) logical[i] = (int *)malloc(sizeof(int) * 8);
+
+	for(int i=0; i<8; i++) memcpy( logical[i], this->getBoard()->getBoard()[i], sizeof(int)*8);
+
+	return logical;
+}
+
+int ** SceneGraph::getAppearenceBoard(){
+	int ** appearence = (int **)malloc(sizeof(int *) * 8);
+	for(int i=0; i<8; i++) appearence[i] = (int *)malloc(sizeof(int) * 8);
+
+	for(int i=0; i<8; i++) memcpy( appearence[i], this->getBoard()->getAppBoard()[i], sizeof(int)*8);
+
+	return appearence;
+}
+
+void SceneGraph::setBothBoards( int **logical, int **appearence ){
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			this->board->setAppBoardAt(j, i, appearence[j][i]);
+			this->board->setBoardAt(i, j, logical[i][j]);
+		}
+	}
+}

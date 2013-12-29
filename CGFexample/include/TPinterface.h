@@ -1,6 +1,7 @@
 #ifndef TPinterface_H
 #define TPinterface_H
 
+#include <stack>
 #include "CGFinterface.h"
 #include "YafScene.h"
 #pragma comment(lib, "Ws2_32.lib")
@@ -29,8 +30,11 @@ class TPinterface: public CGFinterface {
 
 		int count;
 
+		void doDebug();
+
 	protected:
 		SceneGraph *sg;
+		vector<int **> pStack;
 };
 
 

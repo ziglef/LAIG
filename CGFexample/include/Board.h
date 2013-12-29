@@ -19,9 +19,9 @@ class Board : public CGFobject{
 		int getAppBoardAt( int x, int y );
 		void draw();
 		void movePiece( int x1, int y1, int x2, int y2 );
-	private:
 		int **logicalBoard;
 		int **appBoard;
+	private:
 		CGFappearance *white;
 		CGFappearance *black;
 		CGFappearance *green;
