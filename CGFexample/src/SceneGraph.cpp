@@ -18,6 +18,7 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 	this->graphNodes = new map<string, GraphNode*>;
 	this->animations = new map<string, LinearAnimation*>;
 	this->text = new TextObject();
+	this->actualTheme = 1;
 }
 
 void SceneGraph::setInitialCamera( char *initCamera){
@@ -160,8 +161,30 @@ Board* SceneGraph::getBoard(){
 	return this->board;
 }
 
-TextObject* SceneGraph::getText(){
+TextObject* SceneGraph::getPainter(){
 	return this->text;
+}
+
+int *SceneGraph::getActualTheme(){
+	return &actualTheme;
+}
+
+void SceneGraph::setActualTheme( int theme ){
+	this->actualTheme = theme;
+}
+
+void SceneGraph::updateTheme(){
+	char number[2];	number[0] = (char)((*this->getActualTheme()+1)+48);	number[1] = '\0';	char *backApp = strdup( "ap_backBackground" );	char *leftApp = strdup( "ap_leftBackground" );	char *bottomApp = strdup( "ap_bottomBackground" );	char *rightApp = strdup( "ap_rightBackground" );	char *topApp = strdup( "ap_topBackground" );	strcat( backApp, number );
+	strcat( leftApp, number );
+	strcat( bottomApp, number );
+	strcat( rightApp, number );
+	strcat( topApp, number );
+
+	this->graphNodes->at( "backBackground" )->setAppRefId(backApp);
+	this->graphNodes->at( "leftBackground" )->setAppRefId(leftApp);
+	this->graphNodes->at( "bottomBackground" )->setAppRefId(bottomApp);
+	this->graphNodes->at( "rightBackground" )->setAppRefId(rightApp);
+	this->graphNodes->at( "topBackground" )->setAppRefId(topApp);
 }
 
 SceneGraph::~SceneGraph(){

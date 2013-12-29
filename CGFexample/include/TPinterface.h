@@ -10,6 +10,7 @@ class TPinterface: public CGFinterface {
 	GLUI_RadioGroup *lights;
 	GLUI_RadioGroup *cameras;
 	GLUI_RadioGroup *drawmode;
+	GLUI_RadioGroup *themes;
 	public:
 		TPinterface( SceneGraph *sg) : CGFinterface(){
 			this->sg = sg;

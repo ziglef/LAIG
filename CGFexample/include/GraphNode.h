@@ -19,6 +19,7 @@ class GraphNode{
 		vector<CGFobject*> getPrimitives();
 		float *getTransformationMatrix();
 		string getAppRefId();
+		void setAppRefId( string ref );
 		vector<string> getNodeRefIdVector();
 		string getID();
 		bool hasDL();

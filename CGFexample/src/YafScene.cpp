@@ -288,7 +288,13 @@ void YafScene::display(){
 		glTranslatef(6.0 ,0.5, 6.0);
 		this->sg->getBoard()->draw();
 	glPopMatrix();
-	this->sg->getText()->draw("FAIL");
+	this->sg->getPainter()->setOrthographicProjection();
+	/*glPushMatrix();
+		glLoadIdentity();
+		this->sg->getPainter()->renderBitmapString(20,350,GLUT_BITMAP_9_BY_15, "TEXTO AQUI");
+	glPopMatrix();
+	this->sg->getPainter()->resetPerspectiveProjection();*/
+	//this->sg->getText()->draw("FAIL");
 	// We have been drawing in a memory area that is not visible - the back buffer, 
 	// while the graphics card is showing the contents of another buffer - the front buffer
 	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
@@ -298,13 +304,14 @@ void YafScene::display(){
 
 void YafScene::processGraph( string rootid, vector<Appearence*> &appstack ){
 	GraphNode *n0 = sg->graphNodes->at( rootid );
+	sg->updateTheme();
 
 	bool newApp = false;
 
 	unsigned int maxSize = n0->nodeRefIdVector.size();
 
 	if( n0->hasDL() ){
-		glCallList( n0->getDL() );
+		glCallList( n0->getDL() );	
 	}else{
 		if( n0->appRefId != "" ){
 			if( sg->getAppearences()->count(n0->getAppRefId()) ){ // Is this really needed? //

@@ -78,8 +78,12 @@ class SceneGraph {
 		void createBoard();
 		Board* getBoard();
 
-		TextObject* getText();
+		TextObject* getPainter();
 
+		int *getActualTheme();
+		void setActualTheme( int theme );
+
+		void updateTheme();
 
 	protected:
 		// Global Values //
@@ -118,6 +122,8 @@ class SceneGraph {
 
 		Board *board;
 		TextObject *text;
+
+		int actualTheme;
 
 	friend class YafScene;
 };

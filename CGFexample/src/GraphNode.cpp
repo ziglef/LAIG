@@ -58,6 +58,10 @@ string GraphNode::getAppRefId(){
 	return this->appRefId;
 }
 
+void GraphNode::setAppRefId( string ref ){
+	this->appRefId = ref;
+}
+
 string GraphNode::getID(){
 	return this->id;
 }

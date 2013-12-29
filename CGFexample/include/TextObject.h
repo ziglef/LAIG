@@ -4,6 +4,9 @@
 class TextObject
 {
 	public:
+		void renderBitmapString(float x, float y, void *font,const char *string);
+		void resetPerspectiveProjection();
+		void setOrthographicProjection();
 		void draw( char * text );
 };
 
