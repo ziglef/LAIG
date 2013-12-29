@@ -13,7 +13,9 @@ GLuint selectBuf[BUFSIZE];
 
 SOCKET m_socket;
 
+int gameOver = 0;
 int wasfirstPointPicked = 0;
+int playermoved = 0;
 char points[4][2];
 int *results;
 int resultsLength;
@@ -81,13 +83,15 @@ void TPinterface::performPicking(int x, int y)
 
 void TPinterface::processHits (GLint hits, GLuint buffer[]) 
 {
+	int i, j;
+
 	GLuint *ptr = buffer;
 	GLuint mindepth = 0xFFFFFFFF;
 	GLuint *selected=NULL;
 	GLuint nselected;
 
 	// iterate over the list of hits, and choosing the one closer to the viewer (lower depth)
-	for (int i=0;i<hits;i++) {
+	for (i=0;i<hits;i++) {
 		int num = *ptr; ptr++;
 		GLuint z1 = *ptr; ptr++;
 		ptr++;
@@ -96,13 +100,12 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			selected = ptr;
 			nselected=num;
 		}
-		for (int j=0; j < num; j++) 
+		for (j=0; j < num; j++) 
 			ptr++;
 	}
 	
 	// if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
-	if (selected!=NULL)
-	{
+	if((selected!=NULL) && ( !gameOver )){
 		// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
 		// possibly invoking a method on the scene class and passing "selected" and "nselected"
 		printf("Picked ID's: ");
@@ -115,14 +118,14 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			char *msg = possibleMoves( (int)selected[0], (int)selected[1] );
 			envia(msg, strlen(msg));
 			recebe(answer);
-			resultsLength;
+			
 			results = line2results( answer, &resultsLength );
 			printf("Line: ");
-			for(int i=0; i<resultsLength; i++)
+			for(i=0; i<resultsLength; i++)
 				printf("%d ", results[i]);
 			printf("\n");
 			
-			for(int i=0; i<resultsLength; i+=2){
+			for(i=0; i<resultsLength; i+=2){
 				if(sg->getBoard()->getBoardAt(results[i]-1, results[i+1]-1) == 1){
 					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 4);
 				}else{
@@ -133,18 +136,18 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 			// DEBUG INFO //
 			printf("Logical Board: \n");
-			for(int i=0; i<8; i++){
+			for(i=0; i<8; i++){
 				printf("Line %d: ", i+1);
-				for(int j=0; j<8; j++){
+				for(j=0; j<8; j++){
 					printf("%d ", sg->getBoard()->getBoardAt(i, j));
 				}
 				printf("\n");
 			}
 
 			printf("Appearence Board: \n");
-			for(int i=0; i<8; i++){
+			for(i=0; i<8; i++){
 				printf("Line %d: ", i+1);
-				for(int j=0; j<8; j++){
+				for(j=0; j<8; j++){
 					printf("%d ", sg->getBoard()->getAppBoardAt(i, j));
 				}
 				printf("\n");
@@ -164,19 +167,109 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 				// Old piece //
 				sg->getBoard()->setBoardAt( oldX-1, oldY-1, 0 );
+
+				// Set playermoved true //
+				playermoved = 1;
 			}
 			// Appearence Board Changes //
-			for(int i=0; i<resultsLength; i+=2){
+			for(i=0; i<resultsLength; i+=2){
 				if( sg->getBoard()->getAppBoardAt( oldY-1, oldX-1 ) == 1 )
 					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 0);
 				else
 					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 1);
 			}
+
+			// Detects if game over! //
+			char *answer = (char *)malloc(sizeof(char) * 256 );
+			char *msg = endGame( sg->getBoard()->getBoard() );
+			envia(msg, strlen(msg));
+			recebe(answer);
+			
+			if(answer[0] == '0')
+				gameOver = 0;
+			else
+				gameOver = 1;
+
+			int compHasPieces = 0;
+
+			for(i=0; i<8; i++){
+				for(j=0; j<8; j++){
+					if( sg->getBoard()->getBoardAt(i, j) == 2 ){
+						compHasPieces = 1;
+						break;
+					}
+				}
+				if( compHasPieces ) break;
+			}
+
+			// Computer Plays //
+			if( playermoved && compHasPieces ){
+				// Get a random piece //
+				int compX, compY;
+				do{
+					i=0;
+					resultsLength=-1;
+					compX = rand()%8;
+					compY = rand()%8;
+
+					if( sg->getBoard()->getBoardAt( compX, compY ) == 2 ){
+						free( answer );
+						answer = (char *)malloc(sizeof(char) * 256 );
+						msg = possibleMoves( compX+1, compY+1 );
+						envia(msg, strlen(msg));
+						recebe(answer);
+
+						results = line2results( answer, &resultsLength );
+						printf("Line: ");
+						for(i=0; i<resultsLength; i++)
+							printf("%d ", results[i]);
+						printf("\n");
+			
+						for(i=0; i<resultsLength; i+=2)
+							if(sg->getBoard()->getBoardAt(results[i]-1, results[i+1]-1) != 2) break;
+
+					}
+				}while( i >= resultsLength );
+
+				// Get new position //
+				int newCompX, newCompY;
+				do{
+					free( answer );
+					answer = (char *)malloc(sizeof(char) * 256 );
+					msg = moveComputer( compX+1, compY+1, rand() );
+					envia(msg, strlen(msg));
+					recebe(answer);
+					pair2variable( answer, &newCompX, &newCompY );
+				}while( sg->getBoard()->getBoardAt( newCompX-1, newCompY-1 ) == 2 );
+
+				// Clear old position //
+				sg->getBoard()->setBoardAt( compX, compY, 0 );
+				// Set the new position //
+				sg->getBoard()->setBoardAt( newCompX-1, newCompY-1, 2 );
+
+				// Detects if game over! //
+				free( answer );
+				answer = (char *)malloc(sizeof(char) * 256 );
+				msg = endGame( sg->getBoard()->getBoard() );
+				envia(msg, strlen(msg));
+				recebe(answer);
+			
+				if(answer[0] == '0')
+					gameOver = 0;
+				else
+					gameOver = 1;
+			}
+
+			// End second step //
 			wasfirstPointPicked = 0;
+			playermoved = 0;
+			compHasPieces = 0;
 		}
 	}
 	else
-		printf("Nothing selected while picking \n");	
+		printf("Nothing selected while picking \n");
+
+	if( gameOver ) printf("DO SOMETHING NICE!\nGAME OVER!\n");
 }
 
 void TPinterface::processKeyboard(unsigned char key, int x, int y){
