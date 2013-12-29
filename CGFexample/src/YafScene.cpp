@@ -298,7 +298,7 @@ void YafScene::display(){
 	vector<Appearence*> stack;
 	stack.clear();
 	processGraph( this->sg->getRootid(), stack );
-	sg->getPainter()->draw("Texto aqui");
+	sg->getPainter()->draw("Texto aqui", 10, 10 );
 	glPushMatrix();
 		glTranslatef(8.5 ,0.5, 8.5);
 		this->sg->getBoard()->draw();

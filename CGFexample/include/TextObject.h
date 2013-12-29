@@ -7,7 +7,7 @@ class TextObject
 		void renderBitmapString(float x, float y, void *font,const char *string);
 		void resetPerspectiveProjection();
 		void setOrthographicProjection();
-		void draw( char * text );
+		void draw( char * text, int x, int y );
 };
 
 #endif
