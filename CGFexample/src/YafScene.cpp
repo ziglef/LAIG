@@ -300,7 +300,56 @@ void YafScene::display(){
 	vector<Appearence*> stack;
 	stack.clear();
 	processGraph( this->sg->getRootid(), stack );
-	if( sg->gameOver ) sg->getPainter()->draw(" GAME OVER ! ", 100, 100);
+	if( sg->gameOver ){
+		char *gameOverMsg = (char *)malloc(sizeof(char) * 256 );
+		char *gameOverMsgAux = (char *)malloc(sizeof(char) * 65 );
+		
+		strcpy(gameOverMsg, "GAME OVER ! ");
+		if( sg->p1points > sg->p2points ){
+			strcat(gameOverMsg, "Player ");
+			itoa(1, gameOverMsgAux, 10);
+			strcat(gameOverMsg, gameOverMsgAux);
+			strcat(gameOverMsg, " Wins!");
+		} else if( sg->p2points > sg->p1points ){
+			strcat(gameOverMsg, "Player ");
+			itoa(2, gameOverMsgAux, 10);
+			strcat(gameOverMsg, gameOverMsgAux);
+			strcat(gameOverMsg, " Wins!");
+		} else {
+			strcat(gameOverMsg, "It's a draw!");
+		}
+
+		sg->getPainter()->draw(gameOverMsg, 100, 100);
+
+
+		char *gameTime = (char *)malloc(sizeof(char)*512);
+		char *gameTimeAux = (char *)malloc(sizeof(char)*65);
+
+		strcpy(gameTime, "The game took ");
+		itoa((sg->endTime-sg->startTime)/1000.0, gameTimeAux, 10);
+		strcat(gameTime, gameTimeAux);
+		strcat(gameTime, " seconds!");
+
+		sg->getPainter()->draw(gameTime, 100, 120);
+	}
+
+	char *p1score = (char *)malloc(sizeof(char) *256);
+	char *p2score = (char *)malloc(sizeof(char) *256);
+	char *p1aux = (char *)malloc(sizeof(char)*65);
+	char *p2aux = (char *)malloc(sizeof(char)*65);
+
+	strcat(p1score, "Player 1: ");
+	strcat(p2score, "Player 2: ");
+
+	itoa(sg->p1points, p1aux, 10);
+	strcat(p1score, p1aux);
+	itoa(sg->p2points, p2aux, 10);
+	strcat(p2score, p2aux);
+
+	strcat(p1score, " points!");
+	strcat(p2score, " points!");
+	sg->getPainter()->draw(p1score, 100, 140);
+	sg->getPainter()->draw(p2score, 100, 160);
 
 	if( sg->getPlayingMovie() == true ) {
 

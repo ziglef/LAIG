@@ -100,6 +100,11 @@ class SceneGraph {
 		void setCurrentAppearence( int **board );
 
 		vector<int **> pStack;
+		unsigned long int startTime;
+		unsigned long int endTime;
+		int p1points;
+		int p2points;
+
 	protected:
 		// Global Values //
 		float bgX, bgY, bgZ, bgA;

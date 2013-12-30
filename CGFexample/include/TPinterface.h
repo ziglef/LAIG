@@ -18,7 +18,9 @@ class TPinterface: public CGFinterface {
 		int gameMode;
 		int dificulty;
 		int turn;
+		int playerTurn;
 		int checkBoardForPieces( int pieceType );
+		void makeCompPlay( int mode );
 
 	public:
 		TPinterface( SceneGraph *sg) : CGFinterface(){

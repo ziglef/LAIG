@@ -28,6 +28,10 @@ SceneGraph::SceneGraph( float bgX, float bgY, float bgZ, float bgA, char *drawmo
 		this->logical[i] = (int *)malloc(sizeof(int)*8);
 		this->appearence[i] = (int *)malloc(sizeof(int)*8);
 	}
+
+	startTime = glutGet(GLUT_ELAPSED_TIME);
+	p1points = 0;
+	p2points = 0;
 }
 
 void SceneGraph::setGameOver( bool status ){

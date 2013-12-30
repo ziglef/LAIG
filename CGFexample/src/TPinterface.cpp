@@ -92,45 +92,16 @@ int TPinterface::checkBoardForPieces( int pieceType ){
 	if( i != 8 ) return 1; else return 0;
 }
 
-void TPinterface::processHits (GLint hits, GLuint buffer[]) 
-{
-	int i, j;
+void TPinterface::makeCompPlay( int mode ){
+		if( gameMode != 3 ) turn = mode;
 
-	GLuint *ptr = buffer;
-	GLuint mindepth = 0xFFFFFFFF;
-	GLuint *selected=NULL;
-	GLuint nselected;
-
-	// iterate over the list of hits, and choosing the one closer to the viewer (lower depth)
-	for (i=0;i<hits;i++) {
-		int num = *ptr; ptr++;
-		GLuint z1 = *ptr; ptr++;
-		ptr++;
-		if (z1 < mindepth && num>0) {
-			mindepth = z1;
-			selected = ptr;
-			nselected=num;
-		}
-		for (j=0; j < num; j++) 
-			ptr++;
-	}
-
-	// If the player made a play, then get the new board
-	if( playermoved && gameMode != 3 ){
-		sg->pStack.push_back( sg->getLogicalBoard() );
-		sg->pStack.push_back( sg->getAppearenceBoard() );
-		playermoved = 0;
-	}
-
-	isPlayingMovie = sg->getPlayingMovie();
-
-	// Comp vs Comp
-	if( !gameOver && !isPlayingMovie && gameMode == 3 && dificulty != -1 ){
 		char *answer;
 		char *msg;
 
+		int i;
+
 		// Save the board //
-		if( turn == 1 ){
+		if(( turn == 1 ) && ( gameMode == 3 )){
 			sg->pStack.push_back( sg->getLogicalBoard() );
 			sg->pStack.push_back( sg->getAppearenceBoard() );
 		}
@@ -173,6 +144,13 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 			// Clear old position //
 			sg->getBoard()->setBoardAt( compX, compY, 0 );
+			// Check new position for points //
+			if( sg->getBoard()->getBoardAt( newCompX-1, newCompY-1 ) != 0 && sg->getBoard()->getBoardAt( newCompX-1, newCompY-1 ) != turn ){
+				if( turn == 1)
+					sg->p1points += 1;
+				if( turn == 2 )
+					sg->p2points += 1;
+			}
 			// Set the new position //
 			sg->getBoard()->setBoardAt( newCompX-1, newCompY-1, turn );
 		}
@@ -189,6 +167,43 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			gameOver = 1;
 
 		if( turn == 1 ) turn = 2; else turn = 1;
+}
+
+void TPinterface::processHits (GLint hits, GLuint buffer[]) 
+{
+	int i, j;
+
+	GLuint *ptr = buffer;
+	GLuint mindepth = 0xFFFFFFFF;
+	GLuint *selected=NULL;
+	GLuint nselected;
+
+	// iterate over the list of hits, and choosing the one closer to the viewer (lower depth)
+	for (i=0;i<hits;i++) {
+		int num = *ptr; ptr++;
+		GLuint z1 = *ptr; ptr++;
+		ptr++;
+		if (z1 < mindepth && num>0) {
+			mindepth = z1;
+			selected = ptr;
+			nselected=num;
+		}
+		for (j=0; j < num; j++) 
+			ptr++;
+	}
+
+	// If the player made a play, then get the new board
+	if( playermoved && gameMode != 3 && playerTurn == 1 ){
+		sg->pStack.push_back( sg->getLogicalBoard() );
+		sg->pStack.push_back( sg->getAppearenceBoard() );
+		playermoved = 0;
+	}
+
+	isPlayingMovie = sg->getPlayingMovie();
+
+	// Comp vs Comp
+	if( !gameOver && !isPlayingMovie && gameMode == 3 && dificulty != -1 ){
+		makeCompPlay( 0 );
 	} else if((selected!=NULL) && ( !gameOver ) && ( !isPlayingMovie ) && ( gameMode != -1 ) && ( dificulty != -1 )){
 		// if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
 		// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
@@ -198,7 +213,10 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 		printf("%d %d",selected[0], selected[1]);
 		printf("\n");
 
-		if( wasfirstPointPicked == 0 && sg->getBoard()->getBoardAt( selected[0]-1, selected[1]-1) == 1 ){			
+		if(( gameMode == 2 ) && ( playerTurn == 1 )){
+			makeCompPlay( 1 );
+			playerTurn = 2;
+		} else if( wasfirstPointPicked == 0 && sg->getBoard()->getBoardAt( selected[0]-1, selected[1]-1) == playerTurn ){	
 			char *answer = (char *)malloc(sizeof(char) * 256 );
 			char *msg = possibleMoves( (int)selected[0], (int)selected[1] );
 			envia(msg, strlen(msg));
@@ -211,13 +229,12 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			printf("\n");
 			
 			for(i=0; i<resultsLength; i+=2){
-				if(sg->getBoard()->getBoardAt(results[i]-1, results[i+1]-1) == 1){
+				if(sg->getBoard()->getBoardAt(results[i]-1, results[i+1]-1) == playerTurn){
 					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 4);
 				}else{
 					sg->getBoard()->setAppBoardAt(results[i+1]-1, results[i]-1, 3);
 				}
 			}
-
 
 			// DEBUG INFO //
 			doDebug();
@@ -229,10 +246,13 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			if( sg->getBoard()->getAppBoardAt( (int)selected[1]-1, (int)selected[0]-1 ) == 3 ){
 				// Logical Board changes //
 				// New piece //
-				if( sg->getBoard()->getBoardAt( oldX-1, oldY-1 ) == 1 )
-					sg->getBoard()->setBoardAt( (int)selected[0]-1, (int)selected[1]-1, 1 );
-				else
-					sg->getBoard()->setBoardAt( (int)selected[0]-1, (int)selected[1]-1, 2 );
+				if( sg->getBoard()->getBoardAt( (int)selected[0]-1,(int)selected[1]-1 ) != 0 && sg->getBoard()->getBoardAt( (int)selected[0]-1, (int)selected[1]-1 ) != playerTurn ){
+					if( playerTurn == 1)
+						sg->p1points += 1;
+					if( playerTurn == 2 )
+						sg->p2points += 1;
+				}
+				sg->getBoard()->setBoardAt( (int)selected[0]-1, (int)selected[1]-1, playerTurn );
 
 				// Old piece //
 				sg->getBoard()->setBoardAt( oldX-1, oldY-1, 0 );
@@ -240,6 +260,7 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 				// Set playermoved true //
 				playermoved = 1;
 			}
+
 			// Appearence Board Changes //
 			for(i=0; i<resultsLength; i+=2){
 				if( sg->getBoard()->getAppBoardAt( oldY-1, oldX-1 ) == 1 )
@@ -259,74 +280,32 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 			else
 				gameOver = 1;
 
-			int compHasPieces = checkBoardForPieces( 2 );
+			// If Player vs Comp //
+			if( gameMode == 1 && playermoved ) makeCompPlay( 2 );
 
-			// Computer Plays //
-			if( playermoved && compHasPieces ){
-				// Get a random piece //
-				int compX, compY;
-				do{
-					i=0;
-					resultsLength=-1;
-					compX = rand()%8;
-					compY = rand()%8;
-
-					if( sg->getBoard()->getBoardAt( compX, compY ) == 2 ){
-						free( answer );
-						answer = (char *)malloc(sizeof(char) * 256 );
-						msg = possibleMoves( compX+1, compY+1 );
-						envia(msg, strlen(msg));
-						recebe(answer);
-
-						results = line2results( answer, &resultsLength );
-						printf("Line: ");
-						for(i=0; i<resultsLength; i++)
-							printf("%d ", results[i]);
-						printf("\n");
-			
-						for(i=0; i<resultsLength; i+=2)
-							if(sg->getBoard()->getBoardAt(results[i]-1, results[i+1]-1) != 2) break;
-
-					}
-				}while( i >= resultsLength );
-
-				// Get new position //
-				int newCompX, newCompY;
-				do{
-					free( answer );
-					answer = (char *)malloc(sizeof(char) * 256 );
-					msg = moveComputer( compX+1, compY+1, rand() );
-					envia(msg, strlen(msg));
-					recebe(answer);
-					pair2variable( answer, &newCompX, &newCompY );
-				}while( sg->getBoard()->getBoardAt( newCompX-1, newCompY-1 ) == 2 );
-
-				// Clear old position //
-				sg->getBoard()->setBoardAt( compX, compY, 0 );
-				// Set the new position //
-				sg->getBoard()->setBoardAt( newCompX-1, newCompY-1, 2 );
-
-				// Common Code //
-				// Detects if game over! //
-				free( answer );
-				answer = (char *)malloc(sizeof(char) * 256 );
-				msg = endGame( sg->getBoard()->getBoard() );
-				envia(msg, strlen(msg));
-				recebe(answer);
-			
-				if(answer[0] == '0')
-					gameOver = 0;
+			if(( gameMode == 0 ) && ( playermoved ))
+				if( playerTurn == 1 )
+					playerTurn = 2;
 				else
-					gameOver = 1;
-			}
+					playerTurn = 1;
+
+			if( gameMode == 2 )
+				if( playerTurn == 1 )
+					playerTurn = 2;
+				else
+					playerTurn = 1;
+
+			if( gameMode == 0 ) sg->setActualCamera( playerTurn );
 
 			// End second step //
 			wasfirstPointPicked = 0;
-			compHasPieces = 0;
 		}
 	}
 
-	if( gameOver ) sg->setGameOver(true);
+	if( gameOver ){
+		sg->setGameOver(true);
+		sg->endTime = glutGet(GLUT_ELAPSED_TIME);
+	}
 }
 
 void TPinterface::processKeyboard(unsigned char key, int x, int y){
@@ -340,7 +319,8 @@ void TPinterface::initGUI()
 	isPlayingMovie = false;
 	gameMode = -1;
 	dificulty = -1;
-	turn =1;
+	turn = 1;
+	playerTurn = 1;
 
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
 	GLUI_Panel *lightsPanel= addPanel( "Lights", 1 );
@@ -532,6 +512,7 @@ void TPinterface::processGUI(GLUI_Control *ctrl){
 	switch( ctrl->user_id ){
 		case 10:
 			ctrl->disable();
+			if( gameMode == 0 ) sg->setActualCamera( 1 );
 			break;
 
 		case 11:
